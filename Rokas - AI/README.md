@@ -1,105 +1,204 @@
-# Educational 256-bit hash function (AI-assisted implementation)
+# 256 bitų maišos funkcija
 
-An originally designed hash function for a university Blockchain Technologies
-assignment. This is the AI-assisted track; the manual track shares no code.
+Savos konstrukcijos maišos (hash) funkcija, parašyta C++20 – **DI pagalba kurta** porinės
+užduoties pusė. Iš bet kokios baitų sekos pagamina **256 bitų** santrauką (64 hex simbolius).
 
-> **This is an educational custom hash function. It has not undergone cryptographic
-> analysis and must not be used to protect passwords, credentials, financial data,
-> signatures, authentication systems, or other security-sensitive information.**
+> Funkcija nebuvo kriptografiškai analizuota, todėl netinka slaptažodžiams, parašams ar kitiems
+> saugumui jautriems duomenims apsaugoti.
 
-## Build and use
-
-Requires C++20 and CMake 3.20+. Compiles warning free with `-Wall -Wextra -Wpedantic`.
+## 1. Kaip paleisti
 
 ```bash
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build
-./build/hash-generator --text "hello"      # 2607ba4e...43936c54, 64 hex characters
-./build/hash-generator --file file.bin     # --text "" is valid and hashes empty input
-./build/sanity-checks && ./tests/run_sanity.sh build
+
+./build/hash-generator --text "hello"
+# 2607ba4e2a9bd8521178536b84dffc11bf933871f0e95eeca4357c2e43936c54
+./build/hash-generator --file failas.txt
+
+./build/sanity-checks                   # 54 patikros per API
+./tests/run_sanity.sh build             # 22 patikros per komandinę eilutę
 ```
 
-Exit status is `0` on success, `1` for a usage error and `2` when a file cannot be
-opened or read; a read failure is never silently hashed as empty input.
+Failo režimu maišomas **failo turinys**, o ne jo pavadinimas. Išėjimo kodai: `0` – pavyko,
+`1` – blogi argumentai, `2` – failo nepavyko perskaityti.
 
-## Algorithm
-
-The internal state is **eight 64-bit lanes (512 bits)**; the digest is **256 bits**, made
-by folding lane pairs, so only half as many bits as the state holds are ever published.
-One mixing step consumes one 32-byte block, read as four big-endian words:
-
-1. the words enter lanes 0, 2, 4 and 6, alternating addition and XOR so the entry points
-   differ algebraically, and the block's position tag rides along with the first word;
-2. a **forward sweep** updates lanes 1…7, each from the lane below it;
-3. a **backward sweep** updates lanes 6…0, each from the lane above it.
-
-Both sweeps multiply by a fixed odd constant (the non-linear part) and rotate, feeding
-the high bits a multiplication produces back into low positions. Going both ways makes
-every lane depend on every other lane and on all four words within one step, and odd
-multipliers keep each operation invertible, so the state never collapses. The tail needs
-no delimiter byte: leftover bytes go to the front of a zero-filled block and their count
-into that step's tag, which is what keeps `"ab"` apart from `"ab\0"`.
+## 2. Pagrindinė algoritmo idėja
 
 ```text
-state s[0..7] = LANE_INIT                                 # 512 bits, mod 2^64
-procedure STEP(w0, w1, w2, w3, tag):
-    s[0] += w0 XOR tag ;  s[2] ^= w1 ;  s[4] += w2 ;  s[6] ^= w3
-    for i = 1 to 7:       s[i] = (s[i] XOR rotl(s[i-1], 41)) * MUL_F
-    for i = 6 down to 0:  s[i] = (s[i]  +  rotl(s[i+1], 53)) * MUL_B
-
-function HASH(input):
-    L = length(input) ;  n = L / 32 ;  r = L mod 32
-    for i = 0 to n-1:                                     # whole blocks
-        STEP(four big-endian words of block i, (i+1) * TAG_STEP)
-    tail = last r bytes, followed by (32 - r) zero bytes
-    STEP(four big-endian words of tail, (n+1)*TAG_STEP + (r+1)*TAG_TAIL)
-    STEP(L, rotl(L, 32), 0, 0, TAG_END)                   # length
-    for j = 1 to 3:  STEP(0, 0, 0, 0, TAG_END + j*TAG_STEP)    # no more input
-    for i = 0 to 3:  out[i] = s[i] XOR rotl(s[i+4], 40)        # 512 -> 256
-    return big-endian bytes of out[0..3]                  # 32 bytes
+Įvestis → baitai → 32 baitų blokai → 4 × 64 bitų žodžiai
+   ↓
+512 bitų būsena (8 × uint64_t)
+   ↓  maišymas pirmyn → maišymas atgal
+   ↓  ilgio įmaišymas + 3 tušti maišymo žingsniai
+512 → 256 bitų sulenkimas → 64 hex simboliai
 ```
 
-### Input and output
+## 3. 32 baitų blokas ir 4 žodžiai
 
-Any byte sequence works, including the empty one and binary data. `--text` hashes the
-argument bytes as the shell delivered them (nothing trimmed, re-cased, normalised or
-newline-terminated), `--file` the exact file contents in binary mode, never the name.
-The digest is deterministic, depends on every byte, their order and the exact length, and
-is always 32 bytes / 64 lowercase hex characters, the same on either endianness.
+Vienas įprastas ASCII simbolis užima vieną baitą. **32 įvesties baitai sudaro vieną pilną
+bloką**, kuris skaidomas į keturias 8 baitų dalis, o kiekviena dalis paverčiama vienu
+64 bitų skaičiumi (didžiojo galo tvarka):
 
-## Constants
+```text
+baitai  0–7  -> word0
+baitai  8–15 -> word1
+baitai 16–23 -> word2
+baitai 24–31 -> word3
+```
 
-All of them — eight lane initial values, two multipliers, three tags, three rotations —
-come from one procedure unrelated to any existing hash: concatenate the decimal digits of
-`n^n` for `n = 2, 3, 4, …`, cut into 20-digit chunks, reduce each modulo 2^64 with the
-lowest bit set (so multipliers are odd and invertible) and keep it only if its population
-count is 26…38; rotations follow as `(chunk mod 47) + 9`, required distinct. They are
-compile-time constants in `src/custom_hash.cpp`, never generated at run time, and match
-no published constant or rotation schedule below.
+Jei įvestis ilgesnė: apdorojami pirmi 32 baitai, **būsena nenunulinama**, kiti 32 baitai
+apdorojami jau pakeistoje būsenoje, ir taip iki galo. Kiekvienas blokas gauna savo **pozicijos
+žymę** (`(i + 1) * kTagStep`), todėl tas pats blokas skirtingose vietose maišosi skirtingai.
 
-## Originality
+## 4. Vidinė būsena
 
-Compared against MD5, SHA-1, SHA-2, SHA-3/Keccak, BLAKE2, BLAKE3, SipHash, MurmurHash3,
-xxHash/XXH3, CityHash, FarmHash, FNV, MetroHash, SpookyHash and HighwayHash; it reuses
-none of their constants, round functions, schedules or finalizers. What differs most:
+```text
+s0  s1  s2  s3  s4  s5  s6  s7      8 × 64 bitai = 512 bitų
+```
 
-* no Merkle-Damgård chaining variable or feed-forward and no message schedule — each
-  message word is used exactly once, directly;
-* not a sponge: a fold, not a rate/capacity split, is what holds state back;
-* lanes are chained by a two-directional sweep rather than being independent accumulators
-  (xxHash, MetroHash) or paired butterflies (SipHash);
-* padding has no delimiter byte or appended length field, and the finalizer is the same
-  step with changing tags plus a pairwise fold, not an xor-shift-multiply avalanche.
+Būsena pradedama nuo **fiksuotų konstantų**, įrašytų kode (`kLaneInit`) – jos negeneruojamos
+iš naujo kiekvieno paleidimo metu, nes **ta pati įvestis visada turi duoti tą pačią maišą**.
+Konstantos gautos viena dokumentuota procedūra iš `n^n` dešimtainių skaitmenų, nekopijuojant
+jų iš jokios žinomos maišos funkcijos.
 
-## Known limitations
+## 5. Keturių žodžių įterpimas
 
-* **Not analysed.** No claim is made that this is secure, collision resistant or
-  preimage resistant; a later assignment stage investigates such properties. Measured
-  diffusion shows only that obvious structure is absent.
-* The previous revision kept a 256-bit state and published it unchanged, so a digest
-  named the final state exactly and the computation could be unwound from it directly.
-  The larger internal state and reduced output remove that obvious direct-state-reversal
-  weakness. This does not establish cryptographic security or preimage resistance.
-* Each 32-byte block gets a single step, so there is little margin against an attacker
-  who chooses consecutive blocks. Multiplication carries influence upward only, so
-  spreading downward depends on the rotations.
-* No key, seed or salt input, and no third-party review.
+```cpp
+s[0] += word0 ^ tag;
+s[2] ^= word1;
+s[4] += word2;
+s[6] ^= word3;
+```
+
+* `word0` patenka į `s0` (kartu su pozicijos žyme);
+* `word1` – į `s2`, `word2` – į `s4`, `word3` – į `s6`;
+* naudojama pakaitomis sudėtis ir XOR, kad įėjimo taškai nebūtų vienodi.
+
+> XOR palygina du skaičius bitas po bito. Jei bitai skirtingi, rezultato bitas yra 1;
+> jei vienodi – 0.
+
+## 6. Maišymas pirmyn
+
+```cpp
+for (i = 1; i < 8; ++i)
+    s[i] = (s[i] ^ std::rotl(s[i - 1], 41)) * kMulForward;
+```
+
+1. ankstesnė dalis pasukama per **41** bitą, XOR įmaišo ją į dabartinę;
+2. daugyba iš nelyginės konstantos paskleidžia pokyčius po visą skaičių;
+3. ką tik pakeista dalis **iš karto** naudojama kitai daliai keisti.
+
+```text
+s0 -> s1 -> s2 -> s3 -> s4 -> s5 -> s6 -> s7
+```
+
+## 7. Maišymas atgal
+
+```cpp
+for (i = 6; i >= 0; --i)   // nuo s6 žemyn iki s0
+    s[i] = (s[i] + std::rotl(s[i + 1], 53)) * kMulBackward;
+```
+
+```text
+s0 <- s1 <- s2 <- s3 <- s4 <- s5 <- s6 <- s7
+```
+
+Pirmas perėjimas neša įtaką iš kairės į dešinę, antras – atgal iš dešinės į kairę.
+Todėl **po vieno bloko kiekviena iš aštuonių dalių priklauso nuo visų keturių žodžių**.
+Tai nėra saugumo įrodymas – tik paaiškinimas, kodėl pokytis nelieka vienoje vietoje.
+
+## 8. Likutis ir įvesties ilgis
+
+Jei įvesties ilgis nesidalija iš 32, likusieji baitai (0–31) surašomi į **nuliais užpildytą
+32 baitų buferį** ir apdorojami tokiu pat žingsniu. Pabaigos baitas (pvz. `0x80`) nededamas –
+vietoj to **likučio ilgis įmaišomas į to žingsnio žymę** (`(likutis + 1) * kTagTail`).
+Būtent tai skiria `"ab"` nuo `"ab\0"`.
+
+* 31 baitas – nulis pilnų blokų, 31 baitas patenka į likučio žingsnį;
+* 33 baitai – vienas pilnas 32 baitų blokas, po to 1 baitas likučio žingsnyje.
+
+Likučio žingsnis vykdomas **visada**, net kai įvestis dalijasi iš 32 arba yra tuščia.
+Vėliau atskiru žingsniu įmaišomas ir **tikslus bendras įvesties ilgis** (`uint64_t`).
+
+## 9. Galutinis maišymas ir 256 bitų rezultatas
+
+Apdorojus visą įvestį: įmaišomas tikslus ilgis, tada atliekami **3 maišymo žingsniai be
+įvesties** (kad paskutiniai baitai būtų sumaišyti taip pat gerai kaip pirmieji). Būsena vis
+dar 512 bitų, bet išvedama tik pusė tiek:
+
+```text
+out0 = s0 XOR rotl(s4, 40)
+out1 = s1 XOR rotl(s5, 40)
+out2 = s2 XOR rotl(s6, 40)
+out3 = s3 XOR rotl(s7, 40)
+```
+
+```text
+4 × 64 bitai = 256 bitai = 32 baitai = 64 hex simboliai
+```
+
+## 10. Kodėl 512 bitų būsena?
+
+Ankstesnė versija turėjo **256 bitų būseną ir grąžindavo ją visą**. Kadangi beveik visos
+vidinės operacijos yra apverčiamos, o pradinė būsena ir žymės yra viešos, iš santraukos buvo
+galima tiesiogiai eiti skaičiavimu atgal ir trumpą žinutę atstatyti algebriškai.
+
+Dabartinė versija turi **512 bitų būseną, o grąžina tik 256 bitų derinį**, todėl santrauka
+nebeatskleidžia visos galutinės būsenos.
+
+> Tai pašalina akivaizdų ankstesnės versijos tiesioginio atstatymo kelią, tačiau neįrodo
+> kriptografinio saugumo ar atsparumo pirmavaizdžio paieškai.
+
+## 11. Determinizmas ir įvesties apdorojimas
+
+* vienodi baitai → vienoda santrauka; nenaudojamas laikas, atsitiktinumas ar globali būsena;
+* tekstas maišomas toks, koks perduotas – raidžių dydis nekeičiamas, tarpai nenukerpami,
+  naujos eilutės simbolis nepridedamas;
+* failai atidaromi dvejetainiu režimu, maišomi tikslūs jų baitai; neperskaitytas failas duoda
+  klaidą, o ne tuščios įvesties santrauką;
+* rezultatas visada – 64 mažosiomis raidėmis rašomi šešioliktainiai simboliai.
+
+## 12. Praktiniai įvesties apribojimai
+
+Pats algoritmas apdoroja įvestį blokais, todėl teoriškai tinka bet kokio ilgio baitų sekai,
+o ilgis skaičiuojamas 64 bitų `uint64_t` reikšme. Tačiau **dabartinė komandinės eilutės
+programa pirmiausia įkelia visą failą į atmintį** (`std::vector<std::uint8_t>`). Todėl
+praktinę failo ribą lemia turima RAM ir adresų erdvė. Srautinis (angl. *streaming*)
+skaitymas šiame etape neįgyvendintas.
+
+## 13. Patikrinimai
+
+`sanity-checks` (54 patikros) ir `run_sanity.sh` (22 patikros) tikrina:
+
+* tuščią įvestį, trumpas eilutes (`a`, `b`, `hello`, `Hello`, `abc`, `cba`), dvejetainius duomenis;
+* determinizmą A, B, A ir pakartotinius programos paleidimus;
+* 15/16/17 ir 31/32/33 baitų ribas bei pakeitimus pradžioje, viduryje ir gale;
+* `hello` ir `hello\n` skirtumą, CRLF/LF failus, failo ir tokio pat teksto sutapimą;
+* klaidas dėl neskaitomo failo ir rezultato formą (32 baitai, 64 mažosios hex raidės).
+
+Taip pat: kompiliavimas be įspėjimų (`-Wall -Wextra -Wpedantic`) ir švarus ASan/UBSan
+paleidimas. Kūrimo metu atliktas **preliminarus** lavinos efekto (angl. *avalanche*)
+matavimas – jis rodo tik tai, kad akivaizdžios struktūros nematyti, ir **nieko neįrodo apie
+saugumą**. Oficialūs užduoties eksperimentai dar neatlikti.
+
+## 14. Žinomi apribojimai
+
+* sava konstrukcija, nerecenzuota kriptografų, be jokių saugumo garantijų;
+* vienas maišymo žingsnis 32 baitų blokui – nedidelė atsargos riba;
+* galutinis 512 → 256 sulenkimas paprastas (tiesinis); nėra nei rakto, nei druskos (*salt*);
+* komandinė eilutė įkelia visą failą į atmintį;
+* kolizijų, pirmavaizdžio ir lavinos efekto eksperimentai dar nepadaryti.
+
+## 15. DI naudojimas ir originalumas
+
+Prieš projektuojant buvo peržiūrėtos įprastos maišos funkcijų šeimos – SHA-2, SHA-3,
+BLAKE2/3, SipHash, MurmurHash3, xxHash, CityHash, FarmHash ir FNV – kad nebūtų atkartota
+esama konstrukcija. Sąmoningai nenaudojamos jų konstantos, raundų funkcijos ar galutinio
+maišymo procedūros.
+
+## 16. Ką dar reikės padaryti
+
+* DI pusės realizacija **padaryta ir patikrinta**;
+* dar reikia poros nario savarankiškos, be DI parašytos realizacijos;
+* poros `v0.1` žyma ar leidimas dar **nekuriami**;
+* bendri atkartojami eksperimentai bus daromi, kai bus abi realizacijos.
