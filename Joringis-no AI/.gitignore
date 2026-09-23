@@ -1,1 +1,6 @@
-build/
+.vs/
+x64/
+*.exe
+*.obj
+*.pdb
+*.user
