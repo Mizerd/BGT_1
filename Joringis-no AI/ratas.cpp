@@ -1,12 +1,8 @@
 // Ratas-256 v0.1 - mokomoji 256 bitu maisos funkcija.
 // Porinio darbo pusė, kurta be DI pagalbos.
-//
 // Idėja: būsena yra "ratas" iš 8 stipinų (8 x 32 bitų žodžiai = 256 bitų).
 // Įvestis absorbuojama 16 baitų blokais, po kiekvieno bloko ratas pasukamas.
-// Pabaigoje įmaišomas įvesties ilgis, ratas pasukamas dar kelis kartus, ir
-// santrauka nuskaitoma dviem pusėmis po 128 bitus su pasukimu tarp jų, todėl
-// santrauka niekada nėra visa vidinė būsena.
-//
+// Pabaigoje įmaišomas įvesties ilgis, ratas pasukamas dar kelis kartus, ir santrauka nuskaitoma dviem pusėmis po 128 bitus su pasukimu tarp jų, todėl santrauka niekada nėra visa vidinė būsena.
 // Funkcija nėra kriptografiškai analizuota - tinka tik mokymuisi.
 
 #include <cstddef>
@@ -28,14 +24,12 @@ constexpr size_t kSpokes = 8;        // 8 x 32 bitai = 256 bitų būsena
 constexpr size_t kBlockBytes = 16;   // 4 x 32 bitų žodžiai per bloką
 constexpr size_t kDigestBytes = 32;  // 256 bitai = 32 baitai = 64 hex
 
-// Pasukimų skaičiai: po kiekvieno bloko sukama 2 kartus, pabaigoje daugiau,
-// kad vieno įvesties bito pokytis spėtų pasklisti per visą būseną.
+// Pasukimų skaičiai: po kiekvieno bloko sukama 2 kartus, pabaigoje daugiau, kad vieno įvesties bito pokytis spėtų pasklisti per visą būseną.
 constexpr int kRoundsPerBlock = 2;
 constexpr int kRoundsFinal = 4;
 constexpr int kRoundsSqueeze = 2;
 
 // Pradinė būsena - 32 baitų frazė, skaitoma kaip 8 mažojo galo 32 bitų žodžiai.
-// Konstantos aiškiai savos, o ne nukopijuotos iš žinomos maišos funkcijos.
 constexpr char kSeedPhrase[kSpokes * 4 + 1] = "Vilniaus universitetas, BGT 2026";
 
 using State = uint32_t[kSpokes];
@@ -72,16 +66,13 @@ constexpr uint32_t kIV[kSpokes] = {
     seed_word(4), seed_word(5), seed_word(6), seed_word(7),
 };
 
-// Pasukimo konstanta: r-tasis pradinės būsenos žodis, padaugintas iš nelyginio
-// skaičiaus (2r+1) ir pastumtas per r, kad pasukimai nesikartotų simetriškai.
+// Pasukimo konstanta: r-tasis pradinės būsenos žodis, padaugintas iš nelyginio skaičiaus (2r+1) ir pastumtas per r, kad pasukimai nesikartotų simetriškai.
 uint32_t round_const(unsigned r) {
     return kIV[r % kSpokes] * (2u * r + 1u) + r;
 }
 
-// Vienas rato pasukimas. Kiekvienas stipinas i atnaujinamas pagal stipinus
-// i+1, i+3 ir i+6. Stipinas i+6 parenka ir posūkio dydį - tai pagrindinis
-// netiesiškumo šaltinis šalia sudėties moduliu 2^32. Naujas stipinas iškart
-// perduodamas kitam (i+1), kad pokytis per vieną pasukimą apeitų visą ratą.
+// Vienas rato pasukimas. Kiekvienas stipinas i atnaujinamas pagal stipinus i+1, i+3 ir i+6. Stipinas i+6 parenka ir posūkio dydį - tai pagrindinis netiesiškumo šaltinis šalia sudėties moduliu 2^32. 
+// Naujas stipinas iškart perduodamas kitam (i+1), kad pokytis per vieną pasukimą apeitų visą ratą.
 void turn(State& s, unsigned r) {
     const uint32_t rc = round_const(r);
     for (size_t i = 0; i < kSpokes; ++i) {
@@ -101,8 +92,7 @@ void turns(State& s, int count, unsigned& counter) {
     for (int k = 0; k < count; ++k) turn(s, counter++);
 }
 
-// 16 baitų bloko įmaišymas: keturi žodžiai XOR'inami į stipinus 0..3, bloko
-// eilės numeris pridedamas prie stipino 7, po to ratas pasukamas.
+// 16 baitų bloko įmaišymas: keturi žodžiai XOR'inami į stipinus 0..3, bloko eilės numeris pridedamas prie stipino 7, po to ratas pasukamas.
 void absorb_block(State& s, const uint8_t* block, uint32_t block_index,
                   unsigned& counter) {
     s[0] ^= load_le32(block);
@@ -125,10 +115,8 @@ vector<uint8_t> ratas256(const uint8_t* data, size_t size) {
     for (size_t i = 0; i < full_blocks; ++i, ++index)
         absorb_block(s, data + i * kBlockBytes, index, counter);
 
-    // 2. Paskutinis blokas su užpildu: trūkstamų baitų skaičius n (1..16)
-    //    įrašomas n kartų (kaip PKCS#7). Jei ilgis dalijasi iš 16, pridedamas
-    //    visas blokas iš 16 baitų 0x10, todėl skirtingo ilgio įvestys niekada
-    //    nesutampa po užpildymo.
+    // 2. Paskutinis blokas su užpildu: trūkstamų baitų skaičius n (1..16) įrašomas n kartų (kaip PKCS#7).
+    //    Jei ilgis dalijasi iš 16, pridedamas visas blokas iš 16 baitų 0x10, todėl skirtingo ilgio įvestys niekada nesutampa po užpildymo.
     uint8_t last[kBlockBytes];
     const size_t rest = size - full_blocks * kBlockBytes;
     const uint8_t pad = static_cast<uint8_t>(kBlockBytes - rest);
@@ -174,9 +162,8 @@ bool read_file(const string& path, vector<uint8_t>& bytes) {
     return !f.bad();
 }
 
-// Rankinis įvedimas: viena eilutė iki Enter. Enter sukurtas naujos eilutės
-// simbolis į maišą NEĮTRAUKIAMAS. Windows konsolėje skaitoma UTF-16 ir
-// verčiama į UTF-8, kad ne ASCII raidės būtų maišomos kaip UTF-8 baitai.
+// Rankinis įvedimas: viena eilutė iki Enter. Enter sukurtas naujos eilutės simbolis į maišą NEĮTRAUKIAMAS.
+// Windows konsolėje skaitoma UTF-16 ir verčiama į UTF-8, kad ne ASCII raidės būtų maišomos kaip UTF-8 baitai.
 string read_line() {
 #ifdef _WIN32
     HANDLE h = GetStdHandle(STD_INPUT_HANDLE);
@@ -204,11 +191,6 @@ string read_line() {
     if (!line.empty() && line.back() == '\r') line.pop_back();
     return line;
 }
-
-// Jei konsolės langas atidarytas tik šiai programai (paleista dvigubu pelės
-// spustelėjimu arba iš Visual Studio su F5), jis užsidarytų iškart po atsakymo.
-// Tokiu atveju palaukiame Enter. Paleidus iš terminalo prie konsolės prikabintų
-// procesų yra daugiau, todėl niekas nelaukiama ir išvestį galima nukreipti.
 void hold_console() {
 #ifdef _WIN32
     DWORD pids[2];
@@ -219,8 +201,7 @@ void hold_console() {
 #endif
 }
 
-// Režimai: be argumentų - tekstas įvedamas ranka; su vienu argumentu - to
-// failo TURINIO (ne pavadinimo) maiša.
+// Režimai: be argumentų - tekstas įvedamas ranka; su vienu argumentu - to failo TURINIO (ne pavadinimo) maiša.
 // Išėjimo kodai: 0 - pavyko, 1 - blogi argumentai, 2 - failo neperskaitė.
 int run(int argc, char** argv) {
     vector<uint8_t> bytes;
