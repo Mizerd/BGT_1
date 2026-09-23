@@ -43,7 +43,17 @@ Paleidimas, pseudokodas ir sprendimų pagrindimas – kiekvieno kataloge README.
 
 ## 5. Sparta (4)
 
-_Laukiama spartos matavimų abiem realizacijoms viename kompiuteryje._
+Tas pats kompiuteris (AMD Ryzen 9 7900X, Windows 11, MSVC 19.44 `/O2`); 3 apšilimai + 10 matavimų, be I/O. Vidurkis (min–max):
+
+| Baitai | Ratas-256, µs | DI maiša, µs |
+|---|---|---|
+| 70 | 0,155 (0,153–0,156) | 0,112 (0,112–0,113) |
+| 996 | 1,040 (1,030–1,052) | 0,491 (0,490–0,496) |
+| 9 155 | 9,223 (9,106–9,431) | 3,997 (3,964–4,142) |
+| 75 595 | 74,082 (73,701–75,229) | 32,269 (32,110–32,639) |
+
+Abiejų laikas auga tiesiškai: Ratas-256 ≈ 1 020 MB/s, DI maiša ≈ 2 343 MB/s (visam failui).
+Mažoms įvestims skirtumas mažesnis: 70 B DI maiša greitesnė ≈ 1,4 karto. → [visa lentelė](palyginimas/sparta.md)
 
 ## 6. Kolizijos (5)
 
@@ -83,7 +93,7 @@ Abiejų rezultatai sutampa:
 ## 9. Išvados (8)
 
 * **Statistiškai nesiskiria:** abi praeina 1–3, 0 kolizijų, lavinos efektas ≈ idealus.
-* **Sparta:** _laukiama matavimų._
+* **Sparta:** DI maiša ilgiems failams ≈ 2,3 karto greitesnė; mažoms įvestims skirtumas mažesnis (≈ 1,4 karto).
 * **Testai neįrodo** saugumo, atsparumo kolizijoms ar pirmavaizdžiui; geras lavinos efektas galimas ir silpnai funkcijai.
 * **Pirmavaizdis:** mažą aibę abi perrenka per ≈ 1 ms – sunkumą lemia paieškos erdvė, ne maiša.
 
@@ -98,7 +108,7 @@ Abiem: nerecenzuota, nėra rakto ir druskos, failas įkeliamas į atmintį.
 
 ## 11. DI naudojimas
 
-DI naudota tik **DI maišai** ir bendrai eksperimentų programai: Claude Code (Anthropic), Claude Opus modeliai.
+DI naudota tik **DI maišai** ir bendrai eksperimentų programai, ir bendram README / spartos palyginimui: Claude Code (Anthropic), Claude Opus modeliai.
 Užklausos, priimti ir atmesti pasiūlymai, patikra – [DI maišos README, 18 skyrius](Rokas%20-%20AI/README.md#18-di-naudojimas).
 Ratas-256 sukurta be DI.
 
