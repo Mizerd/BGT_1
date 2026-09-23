@@ -1,8 +1,8 @@
 # 1–3 eksperimentai: įvestys, formatas, determinizmas
 
-Įvestys – bendras poros rinkinys `Joringis-no AI/data/exp1/` (seed 20260920, abėcėlė `!`..`~`) ir papildomas tikras CRLF atvejis, sudarytas atmintyje.
+Įvestys – bendras poros rinkinys `Joringis-no AI/data/exp1/` ir papildomas tikras CRLF atvejis, sudarytas atmintyje.
 
-| Įvestis | Baitai | Simboliai (UTF-8) | Aprašymas | 2 versijos maiša (pradžia) |
+| Įvestis | Baitai | Simboliai (UTF-8) | Aprašymas | Maiša (pradžia) |
 |---|---|---|---|---|
 | `a.bin` | 1 | 1 | vienas baitas `a`, be naujos eilutės | `9572b1ea73ece20f…` |
 | `b.bin` | 1 | 1 | vienas baitas `b`, be naujos eilutės | `fb3e28dc3f71ef78…` |
@@ -42,51 +42,51 @@
 
 ## Palyginimai poromis
 
-| Pora | Tikimasi | 2 versija | 1 versija | Ratas v0.1 |
-|---|---|---|---|---|
-| `random_1_start.txt` ↔ `random_1.txt` | skiriasi | skiriasi ✓ | skiriasi ✓ | skiriasi ✓ |
-| `random_1_middle.txt` ↔ `random_1.txt` | skiriasi | skiriasi ✓ | skiriasi ✓ | skiriasi ✓ |
-| `random_1_end.txt` ↔ `random_1.txt` | skiriasi | skiriasi ✓ | skiriasi ✓ | skiriasi ✓ |
-| `random_2_start.txt` ↔ `random_2.txt` | skiriasi | skiriasi ✓ | skiriasi ✓ | skiriasi ✓ |
-| `random_2_middle.txt` ↔ `random_2.txt` | skiriasi | skiriasi ✓ | skiriasi ✓ | skiriasi ✓ |
-| `random_2_end.txt` ↔ `random_2.txt` | skiriasi | skiriasi ✓ | skiriasi ✓ | skiriasi ✓ |
-| `random_3_start.txt` ↔ `random_3.txt` | skiriasi | skiriasi ✓ | skiriasi ✓ | skiriasi ✓ |
-| `random_3_middle.txt` ↔ `random_3.txt` | skiriasi | skiriasi ✓ | skiriasi ✓ | skiriasi ✓ |
-| `random_3_end.txt` ↔ `random_3.txt` | skiriasi | skiriasi ✓ | skiriasi ✓ | skiriasi ✓ |
-| `b.bin` ↔ `a.bin` | skiriasi | skiriasi ✓ | skiriasi ✓ | skiriasi ✓ |
-| `struct_order_cba.txt` ↔ `struct_order_abc.txt` | skiriasi | skiriasi ✓ | skiriasi ✓ | skiriasi ✓ |
-| `struct_order_words2.txt` ↔ `struct_order_words1.txt` | skiriasi | skiriasi ✓ | skiriasi ✓ | skiriasi ✓ |
-| `struct_pad_ab0.txt` ↔ `struct_pad_ab.txt` | skiriasi | skiriasi ✓ | skiriasi ✓ | skiriasi ✓ |
-| `struct_space_lead.txt` ↔ `struct_space_none.txt` | skiriasi | skiriasi ✓ | skiriasi ✓ | skiriasi ✓ |
-| `struct_space_trail.txt` ↔ `struct_space_none.txt` | skiriasi | skiriasi ✓ | skiriasi ✓ | skiriasi ✓ |
-| `struct_newline_lf.txt` ↔ `struct_space_none.txt` | skiriasi | skiriasi ✓ | skiriasi ✓ | skiriasi ✓ |
-| `crlf_atmintyje` ↔ `struct_newline_lf.txt` | skiriasi | skiriasi ✓ | skiriasi ✓ | skiriasi ✓ |
-| `struct_len16.txt` ↔ `struct_len15.txt` | skiriasi | skiriasi ✓ | skiriasi ✓ | skiriasi ✓ |
-| `struct_len17.txt` ↔ `struct_len16.txt` | skiriasi | skiriasi ✓ | skiriasi ✓ | skiriasi ✓ |
-| `struct_repeat_ab.txt` ↔ `struct_repeat_a.txt` | skiriasi | skiriasi ✓ | skiriasi ✓ | skiriasi ✓ |
-| `struct_space_none_copy.txt` ↔ `struct_space_none.txt` | sutampa | sutampa ✓ | sutampa ✓ | sutampa ✓ |
-| `struct_newline_crlf.txt` ↔ `struct_newline_lf.txt` | sutampa | sutampa ✓ | sutampa ✓ | sutampa ✓ |
+| Pora | Tikimasi | Rezultatas |
+|---|---|---|
+| `random_1_start.txt` ↔ `random_1.txt` | skiriasi | skiriasi ✓ |
+| `random_1_middle.txt` ↔ `random_1.txt` | skiriasi | skiriasi ✓ |
+| `random_1_end.txt` ↔ `random_1.txt` | skiriasi | skiriasi ✓ |
+| `random_2_start.txt` ↔ `random_2.txt` | skiriasi | skiriasi ✓ |
+| `random_2_middle.txt` ↔ `random_2.txt` | skiriasi | skiriasi ✓ |
+| `random_2_end.txt` ↔ `random_2.txt` | skiriasi | skiriasi ✓ |
+| `random_3_start.txt` ↔ `random_3.txt` | skiriasi | skiriasi ✓ |
+| `random_3_middle.txt` ↔ `random_3.txt` | skiriasi | skiriasi ✓ |
+| `random_3_end.txt` ↔ `random_3.txt` | skiriasi | skiriasi ✓ |
+| `b.bin` ↔ `a.bin` | skiriasi | skiriasi ✓ |
+| `struct_order_cba.txt` ↔ `struct_order_abc.txt` | skiriasi | skiriasi ✓ |
+| `struct_order_words2.txt` ↔ `struct_order_words1.txt` | skiriasi | skiriasi ✓ |
+| `struct_pad_ab0.txt` ↔ `struct_pad_ab.txt` | skiriasi | skiriasi ✓ |
+| `struct_space_lead.txt` ↔ `struct_space_none.txt` | skiriasi | skiriasi ✓ |
+| `struct_space_trail.txt` ↔ `struct_space_none.txt` | skiriasi | skiriasi ✓ |
+| `struct_newline_lf.txt` ↔ `struct_space_none.txt` | skiriasi | skiriasi ✓ |
+| `crlf_atmintyje` ↔ `struct_newline_lf.txt` | skiriasi | skiriasi ✓ |
+| `struct_len16.txt` ↔ `struct_len15.txt` | skiriasi | skiriasi ✓ |
+| `struct_len17.txt` ↔ `struct_len16.txt` | skiriasi | skiriasi ✓ |
+| `struct_repeat_ab.txt` ↔ `struct_repeat_a.txt` | skiriasi | skiriasi ✓ |
+| `struct_space_none_copy.txt` ↔ `struct_space_none.txt` | sutampa | sutampa ✓ |
+| `struct_newline_crlf.txt` ↔ `struct_newline_lf.txt` | sutampa | sutampa ✓ |
 
-`struct_newline_crlf.txt` repozitorijoje saugomas su LF, todėl jo baitai sutampa su `_lf` ir maišos turi sutapti. Tikras CRLF atvejis patikrintas eilute `crlf_atmintyje`.
+`struct_newline_crlf.txt` bendrame rinkinyje saugomas su LF, todėl jo baitai sutampa su `_lf`. Tikras CRLF atvejis patikrintas eilute `crlf_atmintyje`.
 
 ## Formatas ir determinizmas
 
-| Patikra | 2 versija | 1 versija | Ratas v0.1 |
-|---|---|---|---|
-| 64 hex simboliai, vienodas raidžių dydis, dekoduojasi į tą pačią maišą | 35/35 | 35/35 | 35/35 |
-| 3 kartotiniai kvietimai duoda tą pačią maišą | 35/35 | 35/35 | 35/35 |
-| Seka A, B, A (A sutampa, B skiriasi) | taip | taip | taip |
-| 1 000 kvietimų su `random_3.txt` | taip | taip | taip |
-| Maišos, prasidedančios `0`, iš `0000`–`9999` (tikėtina ≈ 625) | 626 | 633 | 608 |
-| Maišos, prasidedančios `00` (tikėtina ≈ 39) | 32 | 41 | 30 |
+| Patikra | Rezultatas |
+|---|---|
+| 64 hex simboliai, mažosios raidės, dekoduojasi į tą pačią maišą | 35/35 |
+| 3 kartotiniai kvietimai duoda tą pačią maišą | 35/35 |
+| Seka A, B, A (A sutampa, B skiriasi) | taip |
+| 1 000 kvietimų su `random_3.txt` | taip |
+| Maišos, prasidedančios `0`, iš `0000`–`9999` (tikėtina ≈ 625) | 626 |
+| Maišos, prasidedančios `00` (tikėtina ≈ 39) | 32 |
 
-Pradiniai nuliai išsaugomi (2 versija):
+Pradiniai nuliai išsaugomi:
 
 * `0321` → `00de9b72f46c4aead3b5a952a9f78bfca2e4d9af9b25f0db2397ace89f1f44b3` (64 simboliai)
 * `0417` → `0021bafafcbc2df30ac728f67ef57f8df97dd4d48453175076e93d444fff4086` (64 simboliai)
 * `0481` → `00cefba73464e2581714e41770cfdbe451676169c9f13576a2db6b96bfb116f2` (64 simboliai)
 
-## Komandinė eilutė (2 versija)
+## Komandinė eilutė
 
 | Patikra | Rezultatas |
 |---|---|

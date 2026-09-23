@@ -2,7 +2,7 @@
 #include "impl.hpp"
 
 #ifndef IMPL_NAME
-#define IMPL_NAME "v2"
+#define IMPL_NAME "di"
 #endif
 
 namespace impl {

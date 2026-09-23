@@ -6,7 +6,7 @@
 #include <cstdint>
 #include <string>
 
-// Common interface so every experiment runs unchanged against each implementation.
+// Interface between the experiments and the hash implementation.
 namespace impl {
 
 using Digest = std::array<std::uint8_t, 32>;

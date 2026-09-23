@@ -1,30 +1,10 @@
-struct,v2,visi 1 baito,256,256,0
-struct,v2,visi 2 baitų,65536,65536,0
-struct,v2,nuliniai baitai (0–4096),4097,4097,0
-struct,v2,'a' kartojimas (0–4096),4097,4097,0
-struct,v2,32 B blokas ×1–512,512,512,0
-struct,v2,'abcdefgh' perstatymai,40320,40320,0
-struct,v2,32 B blokų tvarka XY / YX,2000,2000,0
-struct,v2,'ab' su nuliais priekyje / gale,2050,2049,0
-struct,v2,vieno bito pakeitimai 64 B įvestyje,513,513,0
-struct,v2,visi kartu,119381,119374,0
-struct,v1,visi 1 baito,256,256,0
-struct,v1,visi 2 baitų,65536,65536,0
-struct,v1,nuliniai baitai (0–4096),4097,4097,0
-struct,v1,'a' kartojimas (0–4096),4097,4097,0
-struct,v1,32 B blokas ×1–512,512,512,0
-struct,v1,'abcdefgh' perstatymai,40320,40320,0
-struct,v1,32 B blokų tvarka XY / YX,2000,2000,0
-struct,v1,'ab' su nuliais priekyje / gale,2050,2049,0
-struct,v1,vieno bito pakeitimai 64 B įvestyje,513,513,0
-struct,v1,visi kartu,119381,119374,0
-struct,ratas,visi 1 baito,256,256,0
-struct,ratas,visi 2 baitų,65536,65536,0
-struct,ratas,nuliniai baitai (0–4096),4097,4097,0
-struct,ratas,'a' kartojimas (0–4096),4097,4097,0
-struct,ratas,32 B blokas ×1–512,512,512,0
-struct,ratas,'abcdefgh' perstatymai,40320,40320,0
-struct,ratas,32 B blokų tvarka XY / YX,2000,2000,0
-struct,ratas,'ab' su nuliais priekyje / gale,2050,2049,0
-struct,ratas,vieno bito pakeitimai 64 B įvestyje,513,513,0
-struct,ratas,visi kartu,119381,119374,0
+struct,di,visi 1 baito,256,256,0
+struct,di,visi 2 baitų,65536,65536,0
+struct,di,nuliniai baitai (0–4096),4097,4097,0
+struct,di,'a' kartojimas (0–4096),4097,4097,0
+struct,di,32 B blokas ×1–512,512,512,0
+struct,di,'abcdefgh' perstatymai,40320,40320,0
+struct,di,32 B blokų tvarka XY / YX,2000,2000,0
+struct,di,'ab' su nuliais priekyje / gale,2050,2049,0
+struct,di,vieno bito pakeitimai 64 B įvestyje,513,513,0
+struct,di,visi kartu,119381,119374,0
