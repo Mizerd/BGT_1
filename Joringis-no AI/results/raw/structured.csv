@@ -1,0 +1,10 @@
+struct,beDI,visi 1 baito,256,256,0
+struct,beDI,visi 2 baitų,65536,65536,0
+struct,beDI,nuliniai baitai (0–4096),4097,4097,0
+struct,beDI,'a' kartojimas (0–4096),4097,4097,0
+struct,beDI,32 B blokas ×1–512,512,512,0
+struct,beDI,'abcdefgh' perstatymai,40320,40320,0
+struct,beDI,32 B blokų tvarka XY / YX,2000,2000,0
+struct,beDI,'ab' su nuliais priekyje / gale,2050,2049,0
+struct,beDI,vieno bito pakeitimai 64 B įvestyje,513,513,0
+struct,beDI,visi kartu,119381,119374,0

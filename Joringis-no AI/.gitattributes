@@ -1,0 +1,3 @@
+# Testiniai duomenys turi likti baitas i baita tokie patys visose OS
+data/** -text
+*.sh text eol=lf
