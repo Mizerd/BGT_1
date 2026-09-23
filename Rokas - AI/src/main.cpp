@@ -1,10 +1,7 @@
-// Minimal command line front end.  It only collects bytes and prints a digest;
-// all hashing logic lives in custom_hash.cpp.
-
 #include <cstdint>
-#include <cstdlib>
 #include <fstream>
 #include <iostream>
+#include <span>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -14,14 +11,13 @@
 namespace {
 
 void print_usage(std::ostream& out, const char* program) {
-  out << "usage:\n"
-      << "  " << program << " --text \"<string>\"   hash the exact bytes of the argument\n"
-      << "  " << program << " --file <path>        hash the exact contents of a file\n";
+  out << "Naudojimas:\n"
+      << "  " << program << "                     tekstas įvedamas ranka, Enter baigia įvestį\n"
+      << "  " << program << " --text \"<tekstas>\"  maišomi argumento baitai\n"
+      << "  " << program << " --file <kelias>     maišomas failo turinys\n";
 }
 
-/// Reads a whole file in binary mode.  Returns false if the file cannot be
-/// opened or if reading fails part way through, so that a failure is never
-/// mistaken for an empty input.
+// Reads the whole file in binary mode; false on open or read failure.
 bool read_file_bytes(const std::string& path, std::vector<std::uint8_t>& bytes) {
   std::ifstream file(path, std::ios::binary);
   if (!file) {
@@ -37,10 +33,30 @@ bool read_file_bytes(const std::string& path, std::vector<std::uint8_t>& bytes) 
   return !file.bad();
 }
 
+void print_digest(std::span<const std::uint8_t> bytes) {
+  std::cout << eduhash::to_hex(eduhash::custom_hash(bytes)) << '\n';
+}
+
+std::span<const std::uint8_t> as_bytes(std::string_view text) {
+  return {reinterpret_cast<const std::uint8_t*>(text.data()), text.size()};
+}
+
 }  // namespace
 
 int main(int argc, char** argv) {
   const char* program = (argc > 0 && argv[0] != nullptr) ? argv[0] : "hash-generator";
+
+  if (argc == 1) {
+    // One typed line; the newline produced by Enter is not part of the input.
+    std::cerr << "Režimas: ranka įvestas tekstas (Enter neįtraukiamas)\nĮveskite tekstą: ";
+    std::string line;
+    if (!std::getline(std::cin, line)) {
+      std::cerr << "\nklaida: nepavyko nuskaityti įvesties\n";
+      return 2;
+    }
+    print_digest(as_bytes(line));
+    return 0;
+  }
 
   if (argc == 2) {
     const std::string_view option = argv[1];
@@ -58,21 +74,19 @@ int main(int argc, char** argv) {
   const std::string_view mode = argv[1];
 
   if (mode == "--text") {
-    // The argument bytes are hashed exactly as the shell delivered them:
-    // nothing is trimmed, re-cased, normalised, or terminated with a newline.
-    const std::string_view text = argv[2];
-    const auto* first = reinterpret_cast<const std::uint8_t*>(text.data());
-    std::cout << eduhash::to_hex(eduhash::custom_hash({first, text.size()})) << '\n';
+    std::cerr << "Režimas: tekstas iš argumento\n";
+    print_digest(as_bytes(argv[2]));
     return 0;
   }
 
   if (mode == "--file") {
+    std::cerr << "Režimas: failo turinys (" << argv[2] << ")\n";
     std::vector<std::uint8_t> bytes;
     if (!read_file_bytes(argv[2], bytes)) {
-      std::cerr << "error: cannot read file: " << argv[2] << '\n';
+      std::cerr << "klaida: nepavyko perskaityti failo: " << argv[2] << '\n';
       return 2;
     }
-    std::cout << eduhash::to_hex(eduhash::custom_hash(bytes)) << '\n';
+    print_digest(bytes);
     return 0;
   }
 
