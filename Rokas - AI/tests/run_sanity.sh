@@ -116,6 +116,32 @@ else
   check yes "no typed line at all returns a non-zero exit status"
 fi
 
+# --- UTF-8, edge spaces and carriage returns in every mode ------------------
+printf 'ąčęėįšųūž €' > "${work_dir}/utf8"
+utf8_text="$(run --text 'ąčęėįšųūž €')"
+[[ "${utf8_text}" == "$(run --file "${work_dir}/utf8")" && "${utf8_text}" == "$(printf 'ąčęėįšųūž €\n' | run)" ]] \
+  && check yes "UTF-8 text gives the same digest via --text, --file and typing" \
+  || check no  "UTF-8 text gives the same digest via --text, --file and typing"
+printf '  tarpai  ' > "${work_dir}/spaces"
+spaced="$(run --text '  tarpai  ')"
+[[ "${spaced}" == "$(run --file "${work_dir}/spaces")" && "${spaced}" == "$(printf '  tarpai  \n' | run)" \
+   && "${spaced}" != "$(run --text 'tarpai')" ]] \
+  && check yes "leading and trailing spaces are kept in every mode" \
+  || check no  "leading and trailing spaces are kept in every mode"
+printf 'a\r' > "${work_dir}/a_cr"
+[[ "$(printf 'a\r\n' | run)" == "$(run --file "${work_dir}/a_cr")" ]] \
+  && check yes "typing a line ending in CRLF drops only the LF" \
+  || check no  "typing a line ending in CRLF drops only the LF"
+
+# --- bad arguments ------------------------------------------------------------
+bad_args=0
+for args in "--text" "--bogus x" "--text a b"; do
+  # shellcheck disable=SC2086
+  "${binary}" ${args} > /dev/null 2>&1; [[ $? -eq 1 ]] || bad_args=1
+done
+[[ "${bad_args}" -eq 0 ]] && check yes "malformed arguments exit with status 1" \
+                          || check no  "malformed arguments exit with status 1"
+
 # --- read failures are reported, never hashed as empty ----------------------
 if "${binary}" --file "${work_dir}/does_not_exist" > "${work_dir}/out" 2> "${work_dir}/err"; then
   check no "a missing file returns a non-zero exit status"
@@ -125,6 +151,16 @@ fi
 [[ -s "${work_dir}/err" && ! -s "${work_dir}/out" ]] \
   && check yes "a missing file prints an error and no digest" \
   || check no  "a missing file prints an error and no digest"
+printf 'x' > "${work_dir}/locked"
+chmod 000 "${work_dir}/locked"
+if [[ -r "${work_dir}/locked" ]]; then
+  check yes "unreadable file check skipped (running with read access, e.g. as root)"
+elif "${binary}" --file "${work_dir}/locked" > "${work_dir}/out3" 2>/dev/null || [[ -s "${work_dir}/out3" ]]; then
+  check no "an unreadable file returns a non-zero exit status and no digest"
+else
+  check yes "an unreadable file returns a non-zero exit status and no digest"
+fi
+chmod 600 "${work_dir}/locked"
 if "${binary}" --file "${work_dir}" > "${work_dir}/out2" 2>/dev/null; then
   check no "a directory argument returns a non-zero exit status"
 else

@@ -5,6 +5,7 @@
 // changes.  The statistical experiments (collisions, avalanche, benchmarks)
 // belong to a later stage of the assignment and are not implemented here.
 
+#include <algorithm>
 #include <array>
 #include <bit>
 #include <cstdint>
@@ -12,6 +13,7 @@
 #include <span>
 #include <string>
 #include <string_view>
+#include <utility>
 #include <vector>
 
 #include "custom_hash.hpp"
@@ -147,6 +149,43 @@ int main() {
     }
   }
   check(boundary_distinct, "the six boundary lengths give six different digests");
+
+  // Known answers, computed with an independent Python reimplementation.
+  // Any accidental change to the algorithm or output format breaks these.
+  std::string pattern1000;
+  for (int i = 0; i < 1000; ++i) pattern1000.push_back(static_cast<char>((i * 7 + 3) & 0xff));
+  std::string all_bytes;
+  for (int i = 0; i < 256; ++i) all_bytes.push_back(static_cast<char>(i));
+  const std::vector<std::pair<std::string, std::string>> known = {
+      {"", "547ac2e87baff5183c537ca0a12efbcd18a385a59f3c1b39c6e332388b34350c"},
+      {"a", "9572b1ea73ece20fd3cb0c6b79a1f24a62e3b7b4871b0c19d2e210061eb2d980"},
+      {"abc", "060f1c0f305405e02d5faa3d12af3e4f326e5aad3fe8097b357614a4c12b55b0"},
+      {"hello", "2607ba4e2a9bd8521178536b84dffc11bf933871f0e95eeca4357c2e43936c54"},
+      {std::string(31, 'x'), "c024d9d1a379ec5e0435cef26fc1cef761803b2c5c98e894e8b58dcf44b73ee6"},
+      {std::string(32, 'x'), "faddd9ac674668d2f8e201ddfe440dfc7b45c7ffad8589ad37db7e70201b4d76"},
+      {std::string(33, 'x'), "6a928d2364a27401cffb911635b2ef9416ca870f0c22a386541d987c657d82f8"},
+      {"tekstas\r\n", "d07259291e5a06212f9861cfa48a417883f264c63f14ddebb76d3a7328476841"},
+      {all_bytes, "c98c398ab567d02e9d56854894a6dd2c16d91b01ac80de02264f2bfd685ef69e"},
+      {pattern1000, "158e7e70f832db35bd5e5229abf7ea0984f3857585ae3ca474dfa5577b25878b"},
+  };
+  bool all_known = true;
+  for (const auto& [input, expected] : known) {
+    all_known = all_known && hex_of(input) == expected;
+  }
+  check(all_known, "10 known-answer vectors match the reference implementation");
+
+  // Leading zero bytes and nibbles must survive hex formatting.
+  eduhash::Digest256 zeros{};
+  zeros[1] = 0x0a;
+  zeros[31] = 0x01;
+  check(eduhash::to_hex(zeros) == std::string("000a") + std::string(58, '0') + "01",
+        "to_hex keeps leading zero bytes and nibbles");
+
+  // Every single-byte input gets its own digest.
+  std::vector<std::string> single;
+  for (int i = 0; i < 256; ++i) single.push_back(hex_of(std::string(1, static_cast<char>(i))));
+  std::sort(single.begin(), single.end());
+  check(std::adjacent_find(single.begin(), single.end()) == single.end(), "all 256 one-byte inputs give distinct digests");
 
   // Structural illustration of the change made in this revision.  The digest is
   // a fold of a 512 bit state, output[i] = lane[i] XOR rotl(lane[i + 4], 40),
