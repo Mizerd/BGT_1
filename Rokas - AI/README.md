@@ -208,3 +208,9 @@ Peržiūrėtos SHA-2, SHA-3, BLAKE2/3, SipHash, MurmurHash3, xxHash, CityHash, F
 VU BGT 1 užduotis ir kontrolinis sąrašas (2026) · [NIST Hash Functions](https://csrc.nist.gov/projects/hash-functions) ·
 [BLAKE2](https://www.blake2.net/) · [SipHash](https://cr.yp.to/siphash/siphash-20120918.pdf) ·
 [xxHash](https://github.com/Cyan4973/xxHash/blob/dev/doc/xxhash_spec.md) · [MurmurHash3](https://github.com/aappleby/smhasher)
+
+## 20. Versijos
+
+* **V0.1** – algoritmas, rankinis įvedimas, 1–8 eksperimentai.
+* **V0.11** – maišos reikšmės **nepakito** (tikrina 10 žinomų atsakymų). Pataisytas CRLF testinis failas, pridėti žinomų atsakymų
+  ir komandinės eilutės testai, griežtesnės lavinos patikros, duomenų kontrolinės sumos; rezultatai sugeneruoti iš naujo.

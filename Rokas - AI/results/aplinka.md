@@ -16,3 +16,4 @@
 **V0.11 (2026-09-29):** po CRLF testinio failo pataisymo iš naujo sugeneruoti tik `inputs.csv` ir `cli.csv` bei ataskaitos.
 Kiti neapdoroti duomenys atkuriami baitas į baitą, todėl nekeisti. Sparta ir spėjimo laikai – 2026-09-23 matavimai
 (maišos ir matavimo kodas nuo tada nepakito); V0.11 metu kompiuteris buvo apkrautas, todėl sparta nematuota iš naujo.
+Duomenų SHA-256 (V0.11, kaip `run_all.sh`): `c7c2c392b53ee7ca…`
