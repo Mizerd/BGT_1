@@ -13,8 +13,9 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build
 ./build/hash-generator --text "hello"   # 2607ba4e…43936c54
 ./build/hash-generator --file failas.txt
 
-./build/sanity-checks                   # 54 patikros
-./tests/run_sanity.sh build             # 27 patikros
+./build/sanity-checks                   # 57 patikros, iš jų 10 žinomų atsakymų
+./tests/run_sanity.sh build             # 32 patikros
+python3 tests/check_fixtures.py "../Joringis-no AI/data"   # bendri testiniai failai
 ./experiments/run_all.sh                # visi eksperimentai → results/
 ```
 
@@ -120,8 +121,8 @@ HASH(input):
 
 | Patikra | Rezultatas |
 |---|---|
-| 1 baito pakeitimai, tvarka, tarpai, LF / CRLF, `\0`, 15/16/17 B | 22/22 ✓ |
-| 64 hex, mažosios raidės, pradiniai nuliai | 35/35 ✓ |
+| 1 baito pakeitimai, tvarka, tarpai, LF / CRLF, `\0`, 15/16/17 B | 21/21 ✓ |
+| 64 hex, mažosios raidės, pradiniai nuliai | 34/34 ✓ |
 | kartotiniai kvietimai, A, B, A | ✓ |
 | atskiri paleidimai / ranka = failas / `--text` = failas | 34/34, 31/31, 31/31 ✓ |
 
@@ -197,7 +198,8 @@ UTF-8: `utf8_lt.txt` – 15 simbolių, 26 baitai. → [exp1_3_teisingumas.md](re
 * **Įrankis:** Claude Code (Anthropic), Claude Opus modeliai.
 * **Užklausos:** sukurti savą 256 bitų maišą, neatkartojant žinomų; pašalinti silpnybes; atlikti 1–8 eksperimentus.
 * **Atmesta:** pradinė 256 bitų būsena (maiša atskleisdavo visą būseną); xor-shift finalizatorius (per daug panašus į MurmurHash).
-* **Patikrinta:** nepriklausoma Python realizacija, ASan / UBSan, 81 patikra, konstantos palygintos su žinomomis.
+* **Patikrinta:** nepriklausoma Python realizacija, ASan / UBSan, 89 patikros, konstantos palygintos su žinomomis.
+* Išsamiau – [DI sąveikos žurnalas](docs/DI_zurnalas.md).
 
 Peržiūrėtos SHA-2, SHA-3, BLAKE2/3, SipHash, MurmurHash3, xxHash, CityHash, FNV – jų konstantos ir funkcijos nenaudojamos.
 

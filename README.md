@@ -28,7 +28,7 @@ Paleidimas, pseudokodas ir sprendimų pagrindimas – kiekvieno kataloge README.
 ## 3. Vienodos sąlygos
 
 * **Ta pati eksperimentų programa** – skiriasi tik adapteris `experiments/impl_*.cpp`.
-* **Tie patys duomenys:** `exp1` (34 failai), `konstitucija.txt`, seed 20260920, abėcėlė `!`..`~`.
+* **Tie patys duomenys:** `exp1` (34 failai, turinys tikrinamas `check_fixtures.py`), `konstitucija.txt`, seed 20260920, abėcėlė `!`..`~`.
 * **Atkartojamumas:** 1–3, 5 ir 6 eksperimentų rezultatai paleidus iš naujo sutampa **baitas į baitą** (Ratas-256 – net Windows / MSVC ir Linux / g++).
 * **Sparta** matuojama abiem viename kompiuteryje (`palyginimas/`).
 
@@ -36,12 +36,14 @@ Paleidimas, pseudokodas ir sprendimų pagrindimas – kiekvieno kataloge README.
 
 | Patikra | Ratas-256 | DI maiša |
 |---|---|---|
-| 22 įvesčių poros: 1 B pakeitimai, tvarka, tarpai, LF / CRLF, `\0` | 22/22 | 22/22 |
-| 64 hex, mažosios raidės, pradiniai nuliai | 35/35 | 35/35 |
+| 21 įvesčių pora: 1 B pakeitimai, tvarka, tarpai, LF / CRLF, `\0` | 21/21 | 21/21 |
+| 64 hex, mažosios raidės, pradiniai nuliai | 34/34 | 34/34 |
 | A, B, A ir kartotiniai kvietimai | ✓ | ✓ |
 | atskiri paleidimai / ranka = failas | 34/34, 31/31 | 34/34, 31/31 |
 
 ## 5. Sparta (4)
+
+![Sparta](palyginimas/sparta.svg)
 
 Tas pats kompiuteris (AMD Ryzen 9 7900X, Windows 11, MSVC 19.44 `/O2`); 3 apšilimai + 10 matavimų, be I/O. Vidurkis (min–max):
 
@@ -108,7 +110,7 @@ Abiem: nerecenzuota, nėra rakto ir druskos, failas įkeliamas į atmintį.
 
 ## 11. DI naudojimas
 
-DI naudota tik **DI maišai** ir bendrai eksperimentų programai, ir bendram README / spartos palyginimui: Claude Code (Anthropic), Claude Opus modeliai.
+DI naudota **DI maišai**, bendrai eksperimentų programai, bendram README ir spartos palyginimui: Claude Code (Anthropic), Claude Opus modeliai.
 Užklausos, priimti ir atmesti pasiūlymai, patikra – [DI maišos README, 18 skyrius](Rokas%20-%20AI/README.md#18-di-naudojimas).
 Ratas-256 sukurta be DI.
 
