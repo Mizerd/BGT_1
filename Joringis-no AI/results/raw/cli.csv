@@ -52,7 +52,7 @@ text,struct_len16.txt,1
 runs,struct_len17.txt,32e362a484bb183448a7b81cd64117e4d17a43dd7399d8c3c06c435984ed7e40,1
 typed,struct_len17.txt,1
 text,struct_len17.txt,1
-runs,struct_newline_crlf.txt,24ef7e95a97721b67bb9c8697cfc3c17d03814a25e49f721ff1942d48a4da769,1
+runs,struct_newline_crlf.txt,4958acbadeeb0fbd9c11eb353f6dca4efbea2efd8d9390cb16b0e013e111357c,1
 runs,struct_newline_lf.txt,24ef7e95a97721b67bb9c8697cfc3c17d03814a25e49f721ff1942d48a4da769,1
 runs,struct_order_abc.txt,0592e0a70d07a3c4d295d4179a5ccca5100b07a6a5900c823c79263c4732fba9,1
 typed,struct_order_abc.txt,1
