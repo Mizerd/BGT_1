@@ -16,7 +16,7 @@ input,di,random_3_start.txt,4096,4096,21da002d7b10cd7d56d6701939603d51112b915c91
 input,di,struct_len15.txt,15,15,09940d6257aba70765e5e8fb8996170d316291f9265cc10a7729fb666da3d0bf,1,1
 input,di,struct_len16.txt,16,16,7b15abd49be581fc9ecefe2c75c0fe0f6aa5e7753e3803086b88503edc720302,1,1
 input,di,struct_len17.txt,17,17,d701d7e68a2d8be7f299e04eb41405803a02ed87898e322a9cefb7d8a548bf2a,1,1
-input,di,struct_newline_crlf.txt,8,8,2f9364dc946f475a1a915be062d62f61defced3bed3fe3946e1c72d801fe77b8,1,1
+input,di,struct_newline_crlf.txt,9,9,d07259291e5a06212f9861cfa48a417883f264c63f14ddebb76d3a7328476841,1,1
 input,di,struct_newline_lf.txt,8,8,2f9364dc946f475a1a915be062d62f61defced3bed3fe3946e1c72d801fe77b8,1,1
 input,di,struct_order_abc.txt,3,3,060f1c0f305405e02d5faa3d12af3e4f326e5aad3fe8097b357614a4c12b55b0,1,1
 input,di,struct_order_cba.txt,3,3,907404a8ef8088e68be65cf3d83d5b269c95d2028732a0adc5d6c11bacfd760b,1,1
@@ -32,7 +32,6 @@ input,di,struct_space_none_copy.txt,7,7,0e02e50db24ca48827a6b803ce94f0e3160050ae
 input,di,struct_space_trail.txt,8,8,7d24c45b6d2ee3aa87885d69e939feeccbc0e569f14378ee061ebe45752cbf38,1,1
 input,di,utf8_lt.txt,26,15,6a4e81e1a536904465c6b9ea909d3ad07af07321f4d98420798fed73a25396a6,1,1
 input,di,utf8_mixed.txt,23,19,6498dec29cae97da99f3c8659ea47d2e82e4998d8001a07a3c089ceaa519293f,1,1
-input,di,crlf_atmintyje,9,9,d07259291e5a06212f9861cfa48a417883f264c63f14ddebb76d3a7328476841,1,1
 aba,di,1
 repeat,di,random_3.txt,1000,1
 leadex,di,0321,00de9b72f46c4aead3b5a952a9f78bfca2e4d9af9b25f0db2397ace89f1f44b3,1

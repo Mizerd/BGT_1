@@ -12,3 +12,7 @@
 | Generatorius | `std::mt19937_64`, simbolis = `'!' + (x mod 94)`, bazinis seed 20260920 |
 | Duomenys | bendras poros rinkinys `Joringis-no AI/data/` (`exp1/`, `konstitucija.txt`) |
 | Realizacija | commit d0c1201 |
+
+**V0.11 (2026-09-29):** po CRLF testinio failo pataisymo iš naujo sugeneruoti tik `inputs.csv` ir `cli.csv` bei ataskaitos.
+Kiti neapdoroti duomenys atkuriami baitas į baitą, todėl nekeisti. Sparta ir spėjimo laikai – 2026-09-23 matavimai
+(maišos ir matavimo kodas nuo tada nepakito); V0.11 metu kompiuteris buvo apkrautas, todėl sparta nematuota iš naujo.

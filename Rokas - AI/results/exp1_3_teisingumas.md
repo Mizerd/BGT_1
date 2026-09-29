@@ -1,6 +1,6 @@
 # 1–3 eksperimentai: įvestys, formatas, determinizmas
 
-Įvestys – bendras poros rinkinys `Joringis-no AI/data/exp1/` ir papildomas tikras CRLF atvejis, sudarytas atmintyje.
+Įvestys – bendras poros rinkinys `Joringis-no AI/data/exp1/` (34 failai; turinys tikrinamas `tests/check_fixtures.py`).
 
 | Įvestis | Baitai | Simboliai (UTF-8) | Aprašymas | Maiša (pradžia) |
 |---|---|---|---|---|
@@ -22,7 +22,7 @@
 | `struct_len15.txt` | 15 | 15 | `x` × 15 | `09940d6257aba707…` |
 | `struct_len16.txt` | 16 | 16 | `x` × 16 | `7b15abd49be581fc…` |
 | `struct_len17.txt` | 17 | 17 | `x` × 17 | `d701d7e68a2d8be7…` |
-| `struct_newline_crlf.txt` | 8 | 8 | pagal pavadinimą CRLF, bet faile LF (baitai kaip `_lf`) | `2f9364dc946f475a…` |
+| `struct_newline_crlf.txt` | 9 | 9 | `tekstas` + CRLF | `d07259291e5a0621…` |
 | `struct_newline_lf.txt` | 8 | 8 | `tekstas` + LF | `2f9364dc946f475a…` |
 | `struct_order_abc.txt` | 3 | 3 | `abc` | `060f1c0f305405e0…` |
 | `struct_order_cba.txt` | 3 | 3 | `cba` | `907404a8ef8088e6…` |
@@ -38,7 +38,6 @@
 | `struct_space_trail.txt` | 8 | 8 | tarpas gale | `7d24c45b6d2ee3aa…` |
 | `utf8_lt.txt` | 26 | 15 | lietuviškos raidės (UTF-8) | `6a4e81e1a5369044…` |
 | `utf8_mixed.txt` | 23 | 19 | ASCII, brūkšnys ir € (UTF-8) | `6498dec29cae97da…` |
-| `crlf_atmintyje` | 9 | 9 | `tekstas` + CRLF (sudaryta atmintyje) | `d07259291e5a0621…` |
 
 ## Palyginimai poromis
 
@@ -60,21 +59,18 @@
 | `struct_space_lead.txt` ↔ `struct_space_none.txt` | skiriasi | skiriasi ✓ |
 | `struct_space_trail.txt` ↔ `struct_space_none.txt` | skiriasi | skiriasi ✓ |
 | `struct_newline_lf.txt` ↔ `struct_space_none.txt` | skiriasi | skiriasi ✓ |
-| `crlf_atmintyje` ↔ `struct_newline_lf.txt` | skiriasi | skiriasi ✓ |
+| `struct_newline_crlf.txt` ↔ `struct_newline_lf.txt` | skiriasi | skiriasi ✓ |
 | `struct_len16.txt` ↔ `struct_len15.txt` | skiriasi | skiriasi ✓ |
 | `struct_len17.txt` ↔ `struct_len16.txt` | skiriasi | skiriasi ✓ |
 | `struct_repeat_ab.txt` ↔ `struct_repeat_a.txt` | skiriasi | skiriasi ✓ |
 | `struct_space_none_copy.txt` ↔ `struct_space_none.txt` | sutampa | sutampa ✓ |
-| `struct_newline_crlf.txt` ↔ `struct_newline_lf.txt` | sutampa | sutampa ✓ |
-
-`struct_newline_crlf.txt` bendrame rinkinyje saugomas su LF, todėl jo baitai sutampa su `_lf`. Tikras CRLF atvejis patikrintas eilute `crlf_atmintyje`.
 
 ## Formatas ir determinizmas
 
 | Patikra | Rezultatas |
 |---|---|
-| 64 hex simboliai, mažosios raidės, dekoduojasi į tą pačią maišą | 35/35 |
-| 3 kartotiniai kvietimai duoda tą pačią maišą | 35/35 |
+| 64 hex simboliai, mažosios raidės, dekoduojasi į tą pačią maišą | 34/34 |
+| 3 kartotiniai kvietimai duoda tą pačią maišą | 34/34 |
 | Seka A, B, A (A sutampa, B skiriasi) | taip |
 | 1 000 kvietimų su `random_3.txt` | taip |
 | Maišos, prasidedančios `0`, iš `0000`–`9999` (tikėtina ≈ 625) | 626 |
