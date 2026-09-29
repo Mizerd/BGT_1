@@ -34,7 +34,8 @@ with open(os.path.join(OUT, "sparta.md"), "w") as f:
     f.write("Laikas vienai maišai, µs: vidurkis (min–max), 10 matavimų.\n\n" + "\n".join(rows) + "\n")
 
 W, H, L, R, T, B = 760, 430, 78, 150, 64, 62
-x0, x1, y0, y1 = 1, 5, -2, 2
+x0, x1 = math.floor(math.log10(min(size.values()))), math.ceil(math.log10(max(size.values())))
+y0, y1 = math.floor(math.log10(min(mean.values()))), math.ceil(math.log10(max(mean.values())))
 px = lambda b: L + (math.log10(b) - x0) / (x1 - x0) * (W - L - R)
 py = lambda us: H - B - (math.log10(us) - y0) / (y1 - y0) * (H - T - B)
 
