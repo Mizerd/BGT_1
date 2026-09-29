@@ -10,14 +10,26 @@ results="$here/results"
 raw="$results/raw"
 
 [[ -d "$data/exp1" && -f "$data/konstitucija.txt" ]] || { echo "nerasta bendrų duomenų: $data" >&2; exit 1; }
-rm -rf "$results"
-mkdir -p "$build" "$raw"
+python3 "$here/tests/check_fixtures.py" "$data" > /dev/null || { echo "blogi bendri duomenys (tests/check_fixtures.py)" >&2; exit 1; }
 
+mkdir -p "$build"
 cmake -S "$here" -B "$build" -DCMAKE_BUILD_TYPE=Release > /dev/null
 cmake --build "$build" -j > /dev/null
+"$build/sanity-checks" > /dev/null || { echo "nepraėjo sanity-checks" >&2; exit 1; }
+"$here/tests/run_sanity.sh" "$build" > /dev/null || { echo "nepraėjo run_sanity.sh" >&2; exit 1; }
+
+rm -rf "$results"
+mkdir -p "$raw"
 
 pin=()
 command -v taskset > /dev/null && pin=(taskset -c 2)
+
+# CPU load right before timing; results measured on a busy machine are not comparable.
+read -r _ a b c d e f g h _ < /proc/stat; busy1=$((a+b+c+f+g+h)); total1=$((a+b+c+d+e+f+g+h))
+sleep 2
+read -r _ a b c d e f g h _ < /proc/stat; busy2=$((a+b+c+f+g+h)); total2=$((a+b+c+d+e+f+g+h))
+load=$(( 100 * (busy2 - busy1) / (total2 - total1) ))
+(( load > 20 )) && echo "ĮSPĖJIMAS: CPU apkrova ${load} % – spartos matavimai gali būti netikslūs" >&2
 
 exp="$build/experiments"
 "$exp" inputs "$data/exp1" > "$raw/inputs.csv"
@@ -59,8 +71,12 @@ cat > "$results/aplinka.md" <<EOF
 | Parinktys | \`-std=c++20 $flags\` (CMake Release), viena gija |
 | Spartos matavimai | prisegti prie branduolio 2 (\`taskset -c 2\`), dažnio valdiklis \`$(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor 2>/dev/null || echo nežinomas)\` |
 | Generatorius | \`std::mt19937_64\`, simbolis = \`'!' + (x mod 94)\`, bazinis seed 20260920 |
+| CPU apkrova prieš spartos matavimą | ${load} % |
 | Duomenys | bendras poros rinkinys \`Joringis-no AI/data/\` (\`exp1/\`, \`konstitucija.txt\`) |
+| Duomenų SHA-256 | \`$(cd "$data" && find exp1 konstitucija.txt -type f | LC_ALL=C sort | xargs sha256sum | sha256sum | cut -c1-16)…\` |
 | Realizacija | commit $(git -C "$repo" log -1 --format=%h -- "Rokas - AI/src") |
+| Eksperimentų programa | commit $(git -C "$repo" log -1 --format=%h -- "Rokas - AI/experiments") |
+| Darbo medis | $(git -C "$repo" status --porcelain -- "Rokas - AI/src" "Rokas - AI/include" "Rokas - AI/experiments" "Rokas - AI/CMakeLists.txt" "Joringis-no AI/data" | grep -q . && echo "yra neįrašytų pakeitimų" || echo "švarus") |
 EOF
 
 python3 "$here/experiments/report.py" "$raw" "$results"

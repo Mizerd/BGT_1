@@ -5,6 +5,7 @@
 #include <cmath>
 #include <cstdint>
 #include <cstdio>
+#include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -372,10 +373,17 @@ int cmd_avalanche() {
         } else {
           t[p] ^= static_cast<std::uint8_t>(1u << (rng() % 8));
         }
+        std::size_t changed_bytes = 0, changed_bits = 0;
+        for (std::size_t k = 0; k < L; ++k) {
+          changed_bytes += s[k] != t[k];
+          changed_bits += static_cast<std::size_t>(std::popcount(static_cast<unsigned>(s[k] ^ t[k])));
+        }
         const std::string ha = impl::to_hex(H(s)), hb = impl::to_hex(H(t));
         impl::Digest xa{}, xb{};
-        decode_hex(ha, xa);
-        decode_hex(hb, xb);
+        if (changed_bytes != 1 || (mode == 1 && changed_bits != 1) || !decode_hex(ha, xa) || !decode_hex(hb, xb)) {
+          std::fprintf(stderr, "avalanche: invalid pair (length %zu, pair %zu)\n", L, i);
+          std::exit(2);
+        }
         int diff_bits = 0, diff_hex = 0;
         for (std::size_t k = 0; k < xa.size(); ++k) diff_bits += std::popcount(static_cast<unsigned>(xa[k] ^ xb[k]));
         for (std::size_t k = 0; k < ha.size(); ++k) diff_hex += ha[k] != hb[k];

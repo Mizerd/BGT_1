@@ -179,8 +179,8 @@ def report_speed():
     write("exp4_sparta.md", out)
 
     W, H, L, R, T, B = 760, 420, 78, 40, 52, 62
-    x0, x1 = 1, 5
-    y0, y1 = -2, 2
+    x0, x1 = math.floor(math.log10(min(size.values()))), math.ceil(math.log10(max(size.values())))
+    y0, y1 = math.floor(math.log10(min(mean.values()))), math.ceil(math.log10(max(mean.values())))
     px = lambda b: L + (math.log10(b) - x0) / (x1 - x0) * (W - L - R)
     py = lambda us: H - B - (math.log10(us) - y0) / (y1 - y0) * (H - T - B)
     s = svg_open(W, H, "Vienos maišos skaičiavimo laikas pagal įvesties dydį", "Vienos maišos skaičiavimo laikas pagal įvesties dydį")
