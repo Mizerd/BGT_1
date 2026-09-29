@@ -61,8 +61,7 @@ DESC = {
     "struct_len16.txt": "`x` × 16",
     "struct_len17.txt": "`x` × 17",
     "struct_newline_lf.txt": "`tekstas` + LF",
-    "struct_newline_crlf.txt": "pagal pavadinimą CRLF, bet faile LF (baitai kaip `_lf`)",
-    "crlf_atmintyje": "`tekstas` + CRLF (sudaryta atmintyje)",
+    "struct_newline_crlf.txt": "`tekstas` + CRLF",
     "struct_order_abc.txt": "`abc`",
     "struct_order_cba.txt": "`cba`",
     "struct_order_words1.txt": "`labas rytas`",
@@ -91,12 +90,11 @@ COMPARE = [(f"random_{k}_{p}.txt", f"random_{k}.txt", True) for k in (1, 2, 3) f
     ("struct_space_lead.txt", "struct_space_none.txt", True),
     ("struct_space_trail.txt", "struct_space_none.txt", True),
     ("struct_newline_lf.txt", "struct_space_none.txt", True),
-    ("crlf_atmintyje", "struct_newline_lf.txt", True),
+    ("struct_newline_crlf.txt", "struct_newline_lf.txt", True),
     ("struct_len16.txt", "struct_len15.txt", True),
     ("struct_len17.txt", "struct_len16.txt", True),
     ("struct_repeat_ab.txt", "struct_repeat_a.txt", True),
     ("struct_space_none_copy.txt", "struct_space_none.txt", False),
-    ("struct_newline_crlf.txt", "struct_newline_lf.txt", False),
 ]
 
 
@@ -121,8 +119,8 @@ def report_inputs():
     n = len(info)
 
     out = ["# 1–3 eksperimentai: įvestys, formatas, determinizmas", "",
-           "Įvestys – bendras poros rinkinys `Joringis-no AI/data/exp1/` ir papildomas tikras CRLF atvejis, sudarytas atmintyje.", ""]
-    names = sorted(info, key=lambda x: (x.startswith("crlf"), x))
+           "Įvestys – bendras poros rinkinys `Joringis-no AI/data/exp1/` (34 failai; turinys tikrinamas `tests/check_fixtures.py`).", ""]
+    names = sorted(info)
     out += table(["Įvestis", "Baitai", "Simboliai (UTF-8)", "Aprašymas", "Maiša (pradžia)"],
                  [[f"`{x}`", info[x][0], info[x][1], DESC.get(x, ""), f"`{hexes[x][:16]}…`"] for x in names])
     out += ["", "## Palyginimai poromis", ""]
@@ -132,8 +130,7 @@ def report_inputs():
         body.append([f"`{a}` ↔ `{b}`", "skiriasi" if differ else "sutampa",
                      ("sutampa" if same else "skiriasi") + (" ✓" if same != differ else " ✗")])
     out += table(["Pora", "Tikimasi", "Rezultatas"], body)
-    out += ["", "`struct_newline_crlf.txt` bendrame rinkinyje saugomas su LF, todėl jo baitai sutampa su `_lf`. "
-            "Tikras CRLF atvejis patikrintas eilute `crlf_atmintyje`.", "", "## Formatas ir determinizmas", ""]
+    out += ["", "## Formatas ir determinizmas", ""]
     out += table(["Patikra", "Rezultatas"], [
         ["64 hex simboliai, mažosios raidės, dekoduojasi į tą pačią maišą", f"{fmt}/{n}"],
         ["3 kartotiniai kvietimai duoda tą pačią maišą", f"{rep}/{n}"],

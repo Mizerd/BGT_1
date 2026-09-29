@@ -104,7 +104,6 @@ int cmd_inputs(const std::string& dir) {
   for (const auto& e : std::filesystem::directory_iterator(dir)) files.push_back(e.path());
   std::sort(files.begin(), files.end());
   for (const auto& f : files) inputs.emplace_back(f.filename().string(), read_file(f.string()));
-  inputs.emplace_back("crlf_atmintyje", to_bytes("tekstas\r\n"));
 
   for (const auto& [name, bytes] : inputs) {
     const impl::Digest d1 = H(bytes), d2 = H(bytes), d3 = H(bytes);
