@@ -1,5 +1,5 @@
-// Ratas-256 v0.1 - mokomoji 256 bitu maisos funkcija.
-// Porinio darbo pusė, kurta be DI pagalbos.
+// Ratas-256 v0.11 - mokomoji 256 bitu maisos funkcija.
+// v0.1 kurta be DI pagalbos. v0.11 kurta su minimalia DI pagalba.
 // Idėja: būsena yra "ratas" iš 8 stipinų (8 x 32 bitų žodžiai = 256 bitų).
 // Įvestis absorbuojama 16 baitų blokais, po kiekvieno bloko ratas pasukamas.
 // Pabaigoje įmaišomas įvesties ilgis, ratas pasukamas dar kelis kartus, ir santrauka nuskaitoma dviem pusėmis po 128 bitus su pasukimu tarp jų, todėl santrauka niekada nėra visa vidinė būsena.
@@ -7,6 +7,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -14,6 +15,8 @@
 
 #ifdef _WIN32
 #include <windows.h>
+#include <shellapi.h>
+#pragma comment(lib, "shell32.lib")
 #endif
 
 using namespace std;
@@ -73,6 +76,8 @@ uint32_t round_const(unsigned r) {
 
 // Vienas rato pasukimas. Kiekvienas stipinas i atnaujinamas pagal stipinus i+1, i+3 ir i+6. Stipinas i+6 parenka ir posūkio dydį - tai pagrindinis netiesiškumo šaltinis šalia sudėties moduliu 2^32. 
 // Naujas stipinas iškart perduodamas kitam (i+1), kad pokytis per vieną pasukimą apeitų visą ratą.
+// v0.11: posūkis visada 1..31 bitų. v0.1 naudojo d mod 32, todėl kas 32-ame žingsnyje (d mod 32 = 0) posūkio visai nebuvo.
+// Nulis pakeičiamas vienetu; d % 31 + 1 duotų tolygesnį pasiskirstymą, bet dalyba sulėtino maišą ~40 %.
 void turn(State& s, unsigned r) {
     const uint32_t rc = round_const(r);
     for (size_t i = 0; i < kSpokes; ++i) {
@@ -81,7 +86,8 @@ void turn(State& s, unsigned r) {
         const uint32_t d = s[(i + 6) % kSpokes];
         uint32_t a = s[i];
         a += (b ^ c);
-        a = rotl32(a, d);
+        const unsigned rot = d & 31u;
+        a = rotl32(a, rot + (rot == 0u));
         a ^= (d + rc);
         s[i] = a;
         s[(i + 1) % kSpokes] += rotl32(a, 9);
@@ -151,10 +157,41 @@ string to_hex(const vector<uint8_t>& d) {
     return s;
 }
 
+#ifdef _WIN32
+string utf8_from_wide(const wstring& w) {
+    if (w.empty()) return string();
+    const int n = WideCharToMultiByte(CP_UTF8, 0, w.data(), static_cast<int>(w.size()),
+                                      nullptr, 0, nullptr, nullptr);
+    string s(static_cast<size_t>(n), 0);
+    WideCharToMultiByte(CP_UTF8, 0, w.data(), static_cast<int>(w.size()),
+                        &s[0], n, nullptr, nullptr);
+    return s;
+}
+
+wstring wide_from_utf8(const string& s) {
+    if (s.empty()) return wstring();
+    const int n = MultiByteToWideChar(CP_UTF8, 0, s.data(), static_cast<int>(s.size()),
+                                      nullptr, 0);
+    wstring w(static_cast<size_t>(n), 0);
+    MultiByteToWideChar(CP_UTF8, 0, s.data(), static_cast<int>(s.size()), &w[0], n);
+    return w;
+}
+#endif
+
+// Kelias programoje laikomas UTF-8. Windows'e siauras kelias būtų skaitomas ANSI
+// kodų puslapiu, todėl failas „ąžuolas.txt“ neatsidarytų (v0.1 klaida) - paverčiame UTF-16.
+filesystem::path to_path(const string& utf8) {
+#ifdef _WIN32
+    return filesystem::path(wide_from_utf8(utf8));
+#else
+    return filesystem::path(utf8);
+#endif
+}
+
 // Failas skaitomas dvejetainiu režimu, be jokio eilučių pabaigų keitimo.
 // Neatsidaręs ar nepilnai perskaitytas failas -> false (ne tuščia įvestis).
 bool read_file(const string& path, vector<uint8_t>& bytes) {
-    ifstream f(path, ios::binary);
+    ifstream f(to_path(path), ios::binary);
     if (!f) return false;
     char buf[1 << 16];
     while (f.read(buf, sizeof(buf)) || f.gcount() > 0)
@@ -177,13 +214,7 @@ string read_line() {
             if (w.back() == L'\n') break;
         }
         while (!w.empty() && (w.back() == L'\n' || w.back() == L'\r')) w.pop_back();
-        if (w.empty()) return string();
-        const int n = WideCharToMultiByte(CP_UTF8, 0, w.data(), static_cast<int>(w.size()),
-                                          nullptr, 0, nullptr, nullptr);
-        string s(static_cast<size_t>(n), 0);
-        WideCharToMultiByte(CP_UTF8, 0, w.data(), static_cast<int>(w.size()),
-                            &s[0], n, nullptr, nullptr);
-        return s;
+        return utf8_from_wide(w);
     }
 #endif
     string line;
@@ -209,9 +240,18 @@ int run(int argc, char** argv) {
 
     if (argc == 2) {
         // Failas nurodytas komandinės eilutės argumentu (arba užtempus jį ant .exe).
-        mode = string("failas: ") + argv[1];
-        if (!read_file(argv[1], bytes)) {
-            cerr << "Klaida: nepavyko perskaityti failo: " << argv[1] << '\n';
+        string path = argv[1];
+#ifdef _WIN32
+        // argv Windows'e yra ANSI koduotės, todėl argumentą paimame iš UTF-16 komandinės eilutės.
+        int wargc = 0;
+        if (LPWSTR* wargv = CommandLineToArgvW(GetCommandLineW(), &wargc)) {
+            if (wargc == 2) path = utf8_from_wide(wargv[1]);
+            LocalFree(wargv);
+        }
+#endif
+        mode = "failas: " + path;
+        if (!read_file(path, bytes)) {
+            cerr << "Klaida: nepavyko perskaityti failo: " << path << '\n';
             return 2;
         }
     } else if (argc == 1) {
@@ -256,6 +296,9 @@ int run(int argc, char** argv) {
 }  // namespace
 
 int main(int argc, char** argv) {
+#ifdef _WIN32
+    SetConsoleOutputCP(CP_UTF8);  // kad UTF-8 failų keliai būtų atspausdinti teisingai
+#endif
     const int code = run(argc, argv);
     hold_console();
     return code;

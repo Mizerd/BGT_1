@@ -4,8 +4,8 @@
 // abiem poros realizacijoms ir naudojama nepakeista, kad palyginimo sąlygos
 // sutaptų: tie patys seed'ai, ta pati abėcėlė, tie patys imčių dydžiai.
 //
-// `ratas.cpp` įtraukiamas tiesiogiai ir NEKEIČIAMAS - toks, koks pažymėtas
-// v0.1. Kad nesusidurtų dvi `main` funkcijos, komandinės eilutės `main` čia
+// `ratas.cpp` įtraukiamas tiesiogiai ir NEKEIČIAMAS - tokia versija, kokia yra
+// kataloge (dabar v0.11). Kad nesusidurtų dvi `main` funkcijos, komandinės eilutės `main` čia
 // laikinai pervadinamas. Taip visoje užduotyje lieka viena vienintelė
 // algoritmo kopija, kuri negali prasilenkti su v0.1 programa.
 
