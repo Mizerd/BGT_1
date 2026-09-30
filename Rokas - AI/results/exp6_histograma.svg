@@ -9,48 +9,46 @@
 <line class="grid" stroke="#e4e3de" x1="78" y1="188.0" x2="720" y2="188.0"/><text class="t2" x="70" y="192.0" font-size="12" text-anchor="end">6 000</text>
 <line class="grid" stroke="#e4e3de" x1="78" y1="138.0" x2="720" y2="138.0"/><text class="t2" x="70" y="142.0" font-size="12" text-anchor="end">8 000</text>
 <line class="grid" stroke="#e4e3de" x1="78" y1="88.0" x2="720" y2="88.0"/><text class="t2" x="70" y="92.0" font-size="12" text-anchor="end">10 000</text>
-<text class="t2" x="165.9" y="356" font-size="12" text-anchor="middle">40 %</text>
-<text class="t2" x="274.0" y="356" font-size="12" text-anchor="middle">45 %</text>
-<text class="t2" x="382.1" y="356" font-size="12" text-anchor="middle">50 %</text>
-<text class="t2" x="490.2" y="356" font-size="12" text-anchor="middle">55 %</text>
-<text class="t2" x="598.4" y="356" font-size="12" text-anchor="middle">60 %</text>
-<text class="t2" x="706.5" y="356" font-size="12" text-anchor="middle">65 %</text>
-<rect class="fs" fill="#2a78d6" x="95.9" y="338.0" width="14.9" height="0.0" rx="1"><title>94–95 bitų skiriasi – 1 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="112.8" y="337.9" width="14.9" height="0.1" rx="1"><title>96–97 bitų skiriasi – 2 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="129.7" y="337.8" width="14.9" height="0.2" rx="1"><title>98–99 bitų skiriasi – 6 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="146.6" y="337.2" width="14.9" height="0.8" rx="1"><title>100–101 bitų skiriasi – 32 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="163.5" y="336.2" width="14.9" height="1.8" rx="1"><title>102–103 bitų skiriasi – 71 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="180.4" y="335.1" width="14.9" height="2.9" rx="1"><title>104–105 bitų skiriasi – 117 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="197.3" y="330.8" width="14.9" height="7.2" rx="1"><title>106–107 bitų skiriasi – 286 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="214.2" y="324.6" width="14.9" height="13.4" rx="1"><title>108–109 bitų skiriasi – 536 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="231.1" y="314.5" width="14.9" height="23.5" rx="1"><title>110–111 bitų skiriasi – 938 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="247.9" y="301.0" width="14.9" height="37.0" rx="1"><title>112–113 bitų skiriasi – 1 481 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="264.8" y="279.4" width="14.9" height="58.6" rx="1"><title>114–115 bitų skiriasi – 2 345 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="281.7" y="248.4" width="14.9" height="89.6" rx="1"><title>116–117 bitų skiriasi – 3 583 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="298.6" y="212.5" width="14.9" height="125.5" rx="1"><title>118–119 bitų skiriasi – 5 018 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="315.5" y="175.4" width="14.9" height="162.6" rx="1"><title>120–121 bitų skiriasi – 6 502 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="332.4" y="140.6" width="14.9" height="197.4" rx="1"><title>122–123 bitų skiriasi – 7 895 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="349.3" y="113.1" width="14.9" height="224.9" rx="1"><title>124–125 bitų skiriasi – 8 994 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="366.2" y="96.5" width="14.9" height="241.5" rx="1"><title>126–127 bitų skiriasi – 9 661 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="383.1" y="90.3" width="14.9" height="247.7" rx="1"><title>128–129 bitų skiriasi – 9 908 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="400.0" y="99.7" width="14.9" height="238.3" rx="1"><title>130–131 bitų skiriasi – 9 533 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="416.9" y="123.3" width="14.9" height="214.7" rx="1"><title>132–133 bitų skiriasi – 8 588 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="433.8" y="159.2" width="14.9" height="178.8" rx="1"><title>134–135 bitų skiriasi – 7 152 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="450.7" y="195.3" width="14.9" height="142.7" rx="1"><title>136–137 bitų skiriasi – 5 706 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="467.6" y="234.4" width="14.9" height="103.6" rx="1"><title>138–139 bitų skiriasi – 4 145 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="484.5" y="264.6" width="14.9" height="73.4" rx="1"><title>140–141 bitų skiriasi – 2 936 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="501.4" y="290.7" width="14.9" height="47.3" rx="1"><title>142–143 bitų skiriasi – 1 891 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="518.3" y="307.8" width="14.9" height="30.2" rx="1"><title>144–145 bitų skiriasi – 1 208 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="535.2" y="319.6" width="14.9" height="18.4" rx="1"><title>146–147 bitų skiriasi – 736 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="552.1" y="328.4" width="14.9" height="9.6" rx="1"><title>148–149 bitų skiriasi – 385 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="568.9" y="333.4" width="14.9" height="4.6" rx="1"><title>150–151 bitų skiriasi – 182 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="585.8" y="335.8" width="14.9" height="2.2" rx="1"><title>152–153 bitų skiriasi – 87 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="602.7" y="336.7" width="14.9" height="1.3" rx="1"><title>154–155 bitų skiriasi – 53 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="619.6" y="337.7" width="14.9" height="0.3" rx="1"><title>156–157 bitų skiriasi – 12 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="636.5" y="337.8" width="14.9" height="0.2" rx="1"><title>158–159 bitų skiriasi – 6 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="653.4" y="337.9" width="14.9" height="0.1" rx="1"><title>160–161 bitų skiriasi – 3 porų</title></rect>
-<rect class="fs" fill="#2a78d6" x="687.2" y="338.0" width="14.9" height="0.0" rx="1"><title>164–165 bitų skiriasi – 1 porų</title></rect>
-<path class="ref" stroke="#52514e" fill="none" stroke-width="2" d="M86.4,338.0 L103.3,338.0 L120.2,337.9 L137.1,337.7 L154.0,337.3 L170.9,336.4 L187.8,334.6 L204.7,331.2 L221.6,325.1 L238.5,315.0 L255.4,299.6 L272.3,277.6 L289.2,248.9 L306.1,214.6 L323.0,177.3 L339.9,141.4 L356.8,111.9 L373.7,93.7 L390.6,89.9 L407.4,101.1 L424.3,125.5 L441.2,158.8 L458.1,196.0 L475.0,232.3 L491.9,264.1 L508.8,289.4 L525.7,308.0 L542.6,320.6 L559.5,328.6 L576.4,333.2 L593.3,335.7 L610.2,337.0 L627.1,337.6 L644.0,337.8 L660.9,337.9 L677.8,338.0 L694.7,338.0 L711.6,338.0"/>
+<text class="t2" x="152.9" y="356" font-size="12" text-anchor="middle">40 %</text>
+<text class="t2" x="267.0" y="356" font-size="12" text-anchor="middle">45 %</text>
+<text class="t2" x="381.2" y="356" font-size="12" text-anchor="middle">50 %</text>
+<text class="t2" x="495.3" y="356" font-size="12" text-anchor="middle">55 %</text>
+<text class="t2" x="609.4" y="356" font-size="12" text-anchor="middle">60 %</text>
+<rect class="fs" fill="#2a78d6" x="96.8" y="337.9" width="15.8" height="0.1" rx="1"><title>96–97 bitų skiriasi – 4 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="114.7" y="337.7" width="15.8" height="0.3" rx="1"><title>98–99 bitų skiriasi – 12 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="132.5" y="337.3" width="15.8" height="0.7" rx="1"><title>100–101 bitų skiriasi – 28 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="150.3" y="336.4" width="15.8" height="1.6" rx="1"><title>102–103 bitų skiriasi – 65 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="168.2" y="335.3" width="15.8" height="2.7" rx="1"><title>104–105 bitų skiriasi – 106 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="186.0" y="331.8" width="15.8" height="6.2" rx="1"><title>106–107 bitų skiriasi – 248 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="203.8" y="325.3" width="15.8" height="12.7" rx="1"><title>108–109 bitų skiriasi – 507 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="221.7" y="314.6" width="15.8" height="23.4" rx="1"><title>110–111 bitų skiriasi – 936 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="239.5" y="300.2" width="15.8" height="37.8" rx="1"><title>112–113 bitų skiriasi – 1 513 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="257.3" y="278.1" width="15.8" height="59.9" rx="1"><title>114–115 bitų skiriasi – 2 394 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="275.2" y="248.9" width="15.8" height="89.1" rx="1"><title>116–117 bitų skiriasi – 3 564 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="293.0" y="215.7" width="15.8" height="122.3" rx="1"><title>118–119 bitų skiriasi – 4 892 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="310.8" y="174.9" width="15.8" height="163.1" rx="1"><title>120–121 bitų skiriasi – 6 524 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="328.7" y="138.0" width="15.8" height="200.0" rx="1"><title>122–123 bitų skiriasi – 7 998 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="346.5" y="113.3" width="15.8" height="224.7" rx="1"><title>124–125 bitų skiriasi – 8 989 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="364.3" y="93.2" width="15.8" height="244.8" rx="1"><title>126–127 bitų skiriasi – 9 791 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="382.2" y="91.6" width="15.8" height="246.4" rx="1"><title>128–129 bitų skiriasi – 9 856 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="400.0" y="103.2" width="15.8" height="234.8" rx="1"><title>130–131 bitų skiriasi – 9 392 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="417.8" y="121.0" width="15.8" height="217.0" rx="1"><title>132–133 bitų skiriasi – 8 678 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="435.7" y="159.7" width="15.8" height="178.3" rx="1"><title>134–135 bitų skiriasi – 7 132 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="453.5" y="195.7" width="15.8" height="142.3" rx="1"><title>136–137 bitų skiriasi – 5 692 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="471.3" y="233.1" width="15.8" height="104.9" rx="1"><title>138–139 bitų skiriasi – 4 195 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="489.2" y="262.8" width="15.8" height="75.2" rx="1"><title>140–141 bitų skiriasi – 3 009 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="507.0" y="288.8" width="15.8" height="49.2" rx="1"><title>142–143 bitų skiriasi – 1 969 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="524.8" y="308.9" width="15.8" height="29.1" rx="1"><title>144–145 bitų skiriasi – 1 165 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="542.7" y="321.0" width="15.8" height="17.0" rx="1"><title>146–147 bitų skiriasi – 679 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="560.5" y="329.7" width="15.8" height="8.3" rx="1"><title>148–149 bitų skiriasi – 331 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="578.3" y="333.5" width="15.8" height="4.5" rx="1"><title>150–151 bitų skiriasi – 179 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="596.2" y="335.6" width="15.8" height="2.4" rx="1"><title>152–153 bitų skiriasi – 96 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="614.0" y="337.2" width="15.8" height="0.8" rx="1"><title>154–155 bitų skiriasi – 32 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="631.8" y="337.6" width="15.8" height="0.4" rx="1"><title>156–157 bitų skiriasi – 17 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="649.7" y="337.9" width="15.8" height="0.1" rx="1"><title>158–159 bitų skiriasi – 2 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="667.5" y="337.9" width="15.8" height="0.1" rx="1"><title>160–161 bitų skiriasi – 3 porų</title></rect>
+<rect class="fs" fill="#2a78d6" x="685.3" y="337.9" width="15.8" height="0.1" rx="1"><title>162–163 bitų skiriasi – 2 porų</title></rect>
+<path class="ref" stroke="#52514e" fill="none" stroke-width="2" d="M86.9,338.0 L104.8,337.9 L122.6,337.7 L140.4,337.3 L158.2,336.4 L176.1,334.6 L193.9,331.2 L211.8,325.1 L229.6,315.0 L247.4,299.6 L265.2,277.6 L283.1,248.9 L300.9,214.6 L318.8,177.3 L336.6,141.4 L354.4,111.9 L372.2,93.7 L390.1,89.9 L407.9,101.1 L425.8,125.5 L443.6,158.8 L461.4,196.0 L479.2,232.3 L497.1,264.1 L514.9,289.4 L532.8,308.0 L550.6,320.6 L568.4,328.6 L586.2,333.2 L604.1,335.7 L621.9,337.0 L639.8,337.6 L657.6,337.8 L675.4,337.9 L693.2,338.0 L711.1,338.0"/>
 <line class="axis" stroke="#52514e" x1="78" y1="338" x2="720" y2="338"/>
 <text class="t2" x="399.0" y="384" font-size="13" text-anchor="middle">Pasikeitusių maišos bitų dalis</text>
 <text class="t2" transform="translate(20 204.0) rotate(-90)" font-size="13" text-anchor="middle">Porų skaičius</text>

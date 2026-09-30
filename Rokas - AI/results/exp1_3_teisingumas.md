@@ -4,40 +4,40 @@
 
 | Įvestis | Baitai | Simboliai (UTF-8) | Aprašymas | Maiša (pradžia) |
 |---|---|---|---|---|
-| `a.bin` | 1 | 1 | vienas baitas `a`, be naujos eilutės | `9572b1ea73ece20f…` |
-| `b.bin` | 1 | 1 | vienas baitas `b`, be naujos eilutės | `fb3e28dc3f71ef78…` |
-| `empty.bin` | 0 | 0 | tuščias failas | `547ac2e87baff518…` |
-| `random_1.txt` | 1500 | 1500 | atsitiktinis ASCII `!`..`~` | `c9b9d655d6fc8132…` |
-| `random_1_end.txt` | 1500 | 1500 | `random_1`, pakeistas 1 baitas gale | `b626132890d5b4f8…` |
-| `random_1_middle.txt` | 1500 | 1500 | `random_1`, pakeistas 1 baitas viduryje | `f688c959f0ab934b…` |
-| `random_1_start.txt` | 1500 | 1500 | `random_1`, pakeistas 1 baitas pradžioje | `cac8c3a77bfd7f67…` |
-| `random_2.txt` | 2048 | 2048 | atsitiktinis ASCII `!`..`~` | `5c625363aa69616f…` |
-| `random_2_end.txt` | 2048 | 2048 | `random_2`, pakeistas 1 baitas gale | `fee069a80ad98938…` |
-| `random_2_middle.txt` | 2048 | 2048 | `random_2`, pakeistas 1 baitas viduryje | `88e7f589c8b34675…` |
-| `random_2_start.txt` | 2048 | 2048 | `random_2`, pakeistas 1 baitas pradžioje | `3fd7ac2c89971895…` |
-| `random_3.txt` | 4096 | 4096 | atsitiktinis ASCII `!`..`~` | `3260e997acd0a9f8…` |
-| `random_3_end.txt` | 4096 | 4096 | `random_3`, pakeistas 1 baitas gale | `84a7c6f90e9805f3…` |
-| `random_3_middle.txt` | 4096 | 4096 | `random_3`, pakeistas 1 baitas viduryje | `c18538a95873bd25…` |
-| `random_3_start.txt` | 4096 | 4096 | `random_3`, pakeistas 1 baitas pradžioje | `21da002d7b10cd7d…` |
-| `struct_len15.txt` | 15 | 15 | `x` × 15 | `09940d6257aba707…` |
-| `struct_len16.txt` | 16 | 16 | `x` × 16 | `7b15abd49be581fc…` |
-| `struct_len17.txt` | 17 | 17 | `x` × 17 | `d701d7e68a2d8be7…` |
-| `struct_newline_crlf.txt` | 9 | 9 | `tekstas` + CRLF | `d07259291e5a0621…` |
-| `struct_newline_lf.txt` | 8 | 8 | `tekstas` + LF | `2f9364dc946f475a…` |
-| `struct_order_abc.txt` | 3 | 3 | `abc` | `060f1c0f305405e0…` |
-| `struct_order_cba.txt` | 3 | 3 | `cba` | `907404a8ef8088e6…` |
-| `struct_order_words1.txt` | 11 | 11 | `labas rytas` | `1837ab2190821c5e…` |
-| `struct_order_words2.txt` | 11 | 11 | `rytas labas` | `06d42660d06b83ed…` |
-| `struct_pad_ab.txt` | 2 | 2 | `ab` | `938953512772dcca…` |
-| `struct_pad_ab0.txt` | 3 | 3 | `ab` + nulinis baitas | `00eb6a31277464fe…` |
-| `struct_repeat_a.txt` | 32 | 32 | `a` × 32 | `7afb03652689b938…` |
-| `struct_repeat_ab.txt` | 32 | 32 | `ab` × 16 | `41482166d4950b01…` |
-| `struct_space_lead.txt` | 8 | 8 | tarpas pradžioje | `5ec0d8d62cd54d96…` |
-| `struct_space_none.txt` | 7 | 7 | `tekstas` | `0e02e50db24ca488…` |
-| `struct_space_none_copy.txt` | 7 | 7 | `tekstas`, kitas failo vardas | `0e02e50db24ca488…` |
-| `struct_space_trail.txt` | 8 | 8 | tarpas gale | `7d24c45b6d2ee3aa…` |
-| `utf8_lt.txt` | 26 | 15 | lietuviškos raidės (UTF-8) | `6a4e81e1a5369044…` |
-| `utf8_mixed.txt` | 23 | 19 | ASCII, brūkšnys ir € (UTF-8) | `6498dec29cae97da…` |
+| `a.bin` | 1 | 1 | vienas baitas `a`, be naujos eilutės | `23c85b745d9b9078…` |
+| `b.bin` | 1 | 1 | vienas baitas `b`, be naujos eilutės | `8b6a10c5d1d27b2a…` |
+| `empty.bin` | 0 | 0 | tuščias failas | `f83958be8ca002bc…` |
+| `random_1.txt` | 1500 | 1500 | atsitiktinis ASCII `!`..`~` | `2bb37b4acf07217f…` |
+| `random_1_end.txt` | 1500 | 1500 | `random_1`, pakeistas 1 baitas gale | `cce4bf38dda099c8…` |
+| `random_1_middle.txt` | 1500 | 1500 | `random_1`, pakeistas 1 baitas viduryje | `0e765b4084d9bd52…` |
+| `random_1_start.txt` | 1500 | 1500 | `random_1`, pakeistas 1 baitas pradžioje | `e5d649dfc9acb9b7…` |
+| `random_2.txt` | 2048 | 2048 | atsitiktinis ASCII `!`..`~` | `89731f3200f853c2…` |
+| `random_2_end.txt` | 2048 | 2048 | `random_2`, pakeistas 1 baitas gale | `18b511acf7c2163f…` |
+| `random_2_middle.txt` | 2048 | 2048 | `random_2`, pakeistas 1 baitas viduryje | `35e345e78e87f014…` |
+| `random_2_start.txt` | 2048 | 2048 | `random_2`, pakeistas 1 baitas pradžioje | `68a75546b22a2e12…` |
+| `random_3.txt` | 4096 | 4096 | atsitiktinis ASCII `!`..`~` | `16d13d59db0651d5…` |
+| `random_3_end.txt` | 4096 | 4096 | `random_3`, pakeistas 1 baitas gale | `ed3abdfa24f08e80…` |
+| `random_3_middle.txt` | 4096 | 4096 | `random_3`, pakeistas 1 baitas viduryje | `31a67f85b6fe27d7…` |
+| `random_3_start.txt` | 4096 | 4096 | `random_3`, pakeistas 1 baitas pradžioje | `e90bddbbc282e433…` |
+| `struct_len15.txt` | 15 | 15 | `x` × 15 | `23a4b23a47ffd070…` |
+| `struct_len16.txt` | 16 | 16 | `x` × 16 | `51aae143ea611f13…` |
+| `struct_len17.txt` | 17 | 17 | `x` × 17 | `1e584fbda21fe880…` |
+| `struct_newline_crlf.txt` | 9 | 9 | `tekstas` + CRLF | `8736b5476001cd12…` |
+| `struct_newline_lf.txt` | 8 | 8 | `tekstas` + LF | `53c0ea455f7248e8…` |
+| `struct_order_abc.txt` | 3 | 3 | `abc` | `a881978cbef8990b…` |
+| `struct_order_cba.txt` | 3 | 3 | `cba` | `ebef26ee20cf53c2…` |
+| `struct_order_words1.txt` | 11 | 11 | `labas rytas` | `2b750aa87656da72…` |
+| `struct_order_words2.txt` | 11 | 11 | `rytas labas` | `2eccd148493f4be7…` |
+| `struct_pad_ab.txt` | 2 | 2 | `ab` | `60227218b93b6550…` |
+| `struct_pad_ab0.txt` | 3 | 3 | `ab` + nulinis baitas | `91f8cb30491164a4…` |
+| `struct_repeat_a.txt` | 32 | 32 | `a` × 32 | `928672f1c5c3aa94…` |
+| `struct_repeat_ab.txt` | 32 | 32 | `ab` × 16 | `989039bd6d7a3ae8…` |
+| `struct_space_lead.txt` | 8 | 8 | tarpas pradžioje | `74614ef24314ed8f…` |
+| `struct_space_none.txt` | 7 | 7 | `tekstas` | `0a55e930958d244b…` |
+| `struct_space_none_copy.txt` | 7 | 7 | `tekstas`, kitas failo vardas | `0a55e930958d244b…` |
+| `struct_space_trail.txt` | 8 | 8 | tarpas gale | `3eab323f895c8cca…` |
+| `utf8_lt.txt` | 26 | 15 | lietuviškos raidės (UTF-8) | `903e6edf7496a365…` |
+| `utf8_mixed.txt` | 23 | 19 | ASCII, brūkšnys ir € (UTF-8) | `8e60cb75ebf8d3fd…` |
 
 ## Palyginimai poromis
 
@@ -73,14 +73,14 @@
 | 3 kartotiniai kvietimai duoda tą pačią maišą | 34/34 |
 | Seka A, B, A (A sutampa, B skiriasi) | taip |
 | 1 000 kvietimų su `random_3.txt` | taip |
-| Maišos, prasidedančios `0`, iš `0000`–`9999` (tikėtina ≈ 625) | 626 |
+| Maišos, prasidedančios `0`, iš `0000`–`9999` (tikėtina ≈ 625) | 629 |
 | Maišos, prasidedančios `00` (tikėtina ≈ 39) | 32 |
 
 Pradiniai nuliai išsaugomi:
 
-* `0321` → `00de9b72f46c4aead3b5a952a9f78bfca2e4d9af9b25f0db2397ace89f1f44b3` (64 simboliai)
-* `0417` → `0021bafafcbc2df30ac728f67ef57f8df97dd4d48453175076e93d444fff4086` (64 simboliai)
-* `0481` → `00cefba73464e2581714e41770cfdbe451676169c9f13576a2db6b96bfb116f2` (64 simboliai)
+* `0244` → `00bb64c1ec9ad497b65d8ea598408466833a9c666461b034cabfe8452c8bdac3` (64 simboliai)
+* `1088` → `0054568b9045875532b39a6ee22f45fbb607ce1af928e07c3ef0b6324be19429` (64 simboliai)
+* `1439` → `00a39079f068e6df29944aa3d7d6533ca4edf02fa9ef76a0b630eaf56b13b3a5` (64 simboliai)
 
 ## Komandinė eilutė
 

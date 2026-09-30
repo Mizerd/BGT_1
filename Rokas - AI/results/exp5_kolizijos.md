@@ -15,8 +15,8 @@ Idealiai n bitų maišai vienos poros kolizijos tikimybė ≈ 2^(−n), o m įve
 
 | Sutrumpinta iki | Tikėtina | Rasta |
 |---|---|---|
-| 24 bitai | 4 768,35 | 4 654 |
-| 32 bitai | 18,63 | 19 |
+| 24 bitai | 4 768,35 | 4 718 |
+| 32 bitai | 18,63 | 20 |
 | 40 bitai | 0,07 | 0 |
 
 ## Struktūruotos įvestys
