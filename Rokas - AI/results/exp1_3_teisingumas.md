@@ -1,6 +1,6 @@
 # 1–3 eksperimentai: įvestys, formatas, determinizmas
 
-Įvestys – bendras poros rinkinys `Joringis-no AI/data/exp1/` (34 failai; turinys tikrinamas `tests/check_fixtures.py`).
+Įvestys – bendras poros rinkinys `Joringis-no AI/data/exp1/` (34 failai; turinys tikrinamas `Rokas - AI/tests/check_fixtures.py`).
 
 | Įvestis | Baitai | Simboliai (UTF-8) | Aprašymas | Maiša (pradžia) |
 |---|---|---|---|---|
