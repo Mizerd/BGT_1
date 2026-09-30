@@ -17,20 +17,26 @@ void print_usage(std::ostream& out, const char* program) {
       << "  " << program << " --file <kelias>     maišomas failo turinys\n";
 }
 
-// Reads the whole file in binary mode; false on open or read failure.
-bool read_file_bytes(const std::string& path, std::vector<std::uint8_t>& bytes) {
+// Hashes the file in 64 KiB pieces, so memory use does not depend on its size.
+// False on open or read failure.
+bool hash_file(const std::string& path, eduhash::Digest256& digest) {
   std::ifstream file(path, std::ios::binary);
   if (!file) {
     return false;
   }
-  char buffer[4096];
-  while (file.read(buffer, sizeof(buffer)) || file.gcount() > 0) {
-    bytes.insert(bytes.end(), buffer, buffer + file.gcount());
+  eduhash::Hasher hasher;
+  std::vector<char> buffer(64 * 1024);
+  while (file.read(buffer.data(), static_cast<std::streamsize>(buffer.size())) || file.gcount() > 0) {
+    hasher.update({reinterpret_cast<const std::uint8_t*>(buffer.data()), static_cast<std::size_t>(file.gcount())});
     if (!file) {
       break;
     }
   }
-  return !file.bad();
+  if (file.bad()) {
+    return false;
+  }
+  digest = hasher.finish();
+  return true;
 }
 
 void print_digest(std::span<const std::uint8_t> bytes) {
@@ -81,12 +87,12 @@ int main(int argc, char** argv) {
 
   if (mode == "--file") {
     std::cerr << "Režimas: failo turinys (" << argv[2] << ")\n";
-    std::vector<std::uint8_t> bytes;
-    if (!read_file_bytes(argv[2], bytes)) {
+    eduhash::Digest256 digest;
+    if (!hash_file(argv[2], digest)) {
       std::cerr << "klaida: nepavyko perskaityti failo: " << argv[2] << '\n';
       return 2;
     }
-    print_digest(bytes);
+    std::cout << eduhash::to_hex(digest) << '\n';
     return 0;
   }
 

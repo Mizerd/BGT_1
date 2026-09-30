@@ -1,5 +1,6 @@
 #include "custom_hash.hpp"
 
+#include <algorithm>
 #include <bit>
 #include <cstddef>
 
@@ -19,7 +20,7 @@ namespace {
 // ---------------------------------------------------------------------------
 
 // Starting values of the eight lanes.
-constexpr std::uint64_t kLaneInit[8] = {
+constexpr std::array<std::uint64_t, 8> kLaneInit = {
     0x50EFEF418AACDDB3ull, 0x06837D22C9EC9F1Bull, 0x93ED2CF209AF0CA9ull,
     0x1511760347A610CBull, 0xE0613E1645D94F07ull, 0x7AA3E75445026145ull,
     0x0976B9398CFCD1FFull, 0x2B84EC77CA013781ull,
@@ -43,7 +44,7 @@ constexpr std::size_t kLanes = 8;         // 512 bits of internal state
 constexpr std::size_t kBlockBytes = 32;   // four 64 bit words per block
 constexpr int kDrainSteps = 3;            // input-free steps before folding
 
-using State = std::uint64_t[kLanes];
+using State = std::array<std::uint64_t, kLanes>;
 
 /// Reads eight bytes as one big-endian 64 bit word.  Written with explicit
 /// shifts so that the result does not depend on the byte order of the host.
@@ -88,38 +89,32 @@ void step(State& s, std::uint64_t word0, std::uint64_t word1, std::uint64_t word
   }
 }
 
-}  // namespace
-
-Digest256 custom_hash(std::span<const std::uint8_t> input) {
-  State state;
-  for (std::size_t i = 0; i < kLanes; ++i) {
-    state[i] = kLaneInit[i];
+/// Stage 1: absorbs `count` whole 32 byte blocks.  Each block is tagged with
+/// its position in the whole input (1, 2, 3, ...), so that the same block
+/// contributes differently at different offsets.
+void absorb_blocks(State& state, const std::uint8_t* data, std::size_t count, std::uint64_t first) {
+  State s = state;  // a local copy stays in registers; input bytes cannot alias it
+  for (std::size_t i = 0; i < count; ++i) {
+    const std::uint8_t* block = data + i * kBlockBytes;
+    step(s, load_be64(block), load_be64(block + 8), load_be64(block + 16),
+         load_be64(block + 24), (first + i) * kTagStep);
   }
+  state = s;
+}
 
-  const std::uint64_t length = static_cast<std::uint64_t>(input.size());
-  const std::size_t whole_blocks = input.size() / kBlockBytes;
-  const std::size_t tail_size = input.size() % kBlockBytes;
-
-  // Stage 1: every whole 32 byte block, tagged with its own position so that
-  // the same block contributes differently at different offsets.
-  for (std::size_t i = 0; i < whole_blocks; ++i) {
-    const std::uint8_t* block = input.data() + i * kBlockBytes;
-    const std::uint64_t position = static_cast<std::uint64_t>(i) + 1;
-    step(state, load_be64(block), load_be64(block + 8), load_be64(block + 16),
-         load_be64(block + 24), position * kTagStep);
-  }
+/// Stages 2-5, after all whole blocks: tail, length, drain and fold.
+/// Inlined so that short inputs do not pay for a call and a state copy.
+inline Digest256 finalize(State state, const std::uint8_t* rest, std::size_t rest_size, std::uint64_t blocks) {
+  const std::uint64_t length = blocks * kBlockBytes + rest_size;
 
   // Stage 2: exactly one tail step, performed even when the input divides
   // evenly into blocks.  The leftover bytes go to the front of a zero filled
   // block; no delimiter byte is appended.  Instead the number of leftover bytes
   // is folded into the tag, which is what keeps "ab" and "ab\0" apart.
   std::uint8_t tail[kBlockBytes] = {};
-  for (std::size_t i = 0; i < tail_size; ++i) {
-    tail[i] = input[whole_blocks * kBlockBytes + i];
-  }
-  const std::uint64_t tail_position = static_cast<std::uint64_t>(whole_blocks) + 1;
-  const std::uint64_t tail_tag = tail_position * kTagStep +
-                                 (static_cast<std::uint64_t>(tail_size) + 1) * kTagTail;
+  std::copy_n(rest, rest_size, tail);
+  const std::uint64_t tail_tag = (blocks + 1) * kTagStep +
+                                 (static_cast<std::uint64_t>(rest_size) + 1) * kTagTail;
   step(state, load_be64(tail), load_be64(tail + 8), load_be64(tail + 16),
        load_be64(tail + 24), tail_tag);
 
@@ -144,6 +139,39 @@ Digest256 custom_hash(std::span<const std::uint8_t> input) {
   }
   return digest;
 }
+
+}  // namespace
+
+Digest256 custom_hash(std::span<const std::uint8_t> input) {
+  State state = kLaneInit;
+  const std::size_t whole_blocks = input.size() / kBlockBytes;
+  absorb_blocks(state, input.data(), whole_blocks, 1);
+  return finalize(state, input.data() + whole_blocks * kBlockBytes, input.size() % kBlockBytes, whole_blocks);
+}
+
+Hasher::Hasher() : state_(kLaneInit) {}
+
+void Hasher::update(std::span<const std::uint8_t> bytes) {
+  if (pending_size_ > 0) {
+    const std::size_t take = std::min(kBlockBytes - pending_size_, bytes.size());
+    std::copy_n(bytes.begin(), take, pending_.begin() + pending_size_);
+    pending_size_ += take;
+    bytes = bytes.subspan(take);
+    if (pending_size_ < kBlockBytes) {
+      return;
+    }
+    absorb_blocks(state_, pending_.data(), 1, ++blocks_);
+    pending_size_ = 0;
+  }
+  const std::size_t count = bytes.size() / kBlockBytes;
+  absorb_blocks(state_, bytes.data(), count, blocks_ + 1);
+  blocks_ += count;
+  const std::span<const std::uint8_t> rest = bytes.subspan(count * kBlockBytes);
+  std::copy(rest.begin(), rest.end(), pending_.begin());
+  pending_size_ = rest.size();
+}
+
+Digest256 Hasher::finish() const { return finalize(state_, pending_.data(), pending_size_, blocks_); }
 
 std::string to_hex(const Digest256& digest) {
   static constexpr char kHexDigits[] = "0123456789abcdef";
