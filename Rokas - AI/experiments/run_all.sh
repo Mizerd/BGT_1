@@ -18,6 +18,7 @@ cmake --build "$build" -j > /dev/null
 "$build/sanity-checks" > /dev/null || { echo "nepraėjo sanity-checks" >&2; exit 1; }
 "$here/tests/run_sanity.sh" "$build" > /dev/null || { echo "nepraėjo run_sanity.sh" >&2; exit 1; }
 python3 "$here/tests/reference_check.py" "$build" > /dev/null || { echo "nepraėjo reference_check.py" >&2; exit 1; }
+python3 "$here/tests/attack_v012.py" "$build" "$data" > /dev/null || { echo "nepraėjo attack_v012.py" >&2; exit 1; }
 
 rm -rf "$results"
 mkdir -p "$raw"
@@ -25,20 +26,42 @@ mkdir -p "$raw"
 pin=()
 command -v taskset > /dev/null && pin=(taskset -c 2)
 
-# CPU load right before timing; results measured on a busy machine are not comparable.
-read -r _ a b c d e f g h _ < /proc/stat; busy1=$((a+b+c+f+g+h)); total1=$((a+b+c+d+e+f+g+h))
-sleep 2
-read -r _ a b c d e f g h _ < /proc/stat; busy2=$((a+b+c+f+g+h)); total2=$((a+b+c+d+e+f+g+h))
-load=$(( 100 * (busy2 - busy1) / (total2 - total1) ))
-(( load > 20 )) && echo "ĮSPĖJIMAS: CPU apkrova ${load} % – spartos matavimai gali būti netikslūs" >&2
+# Timings are repeated when other processes disturbed them: the whole CPU more than 12 % busy during the
+# run (one measurement alone is about 5 %), or for speed a size whose max - min exceeds 10 % of its mean.
+cpu() { read -r _ a b c d e f g h _ < /proc/stat; echo "$((a + b + c + f + g + h)) $((a + b + c + d + e + f + g + h))"; }
+spread() {
+  awk -F, '{ s[$3] += $8; n[$3]++; if (!($3 in lo) || $8 < lo[$3]) lo[$3] = $8; if ($8 > hi[$3]) hi[$3] = $8 }
+           END { w = 0; for (k in s) { v = 100 * (hi[k] - lo[k]) / (s[k] / n[k]); if (v > w) w = v }; printf "%d", w }' "$1"
+}
+worst=0
+repeated=0
+timed() {
+  local out="$1" busy1 total1 busy2 total2 load
+  shift
+  for try in $(seq 20); do
+    read -r busy1 total1 <<< "$(cpu)"
+    "$@" > "$out"
+    read -r busy2 total2 <<< "$(cpu)"
+    load=$(( 100 * (busy2 - busy1) / (total2 - total1) ))
+    if (( load <= 12 )) && [[ "$out" != */speed.csv || $(spread "$out") -le 10 ]]; then
+      (( load > worst )) && worst=$load
+      return 0
+    fi
+    echo "$(basename "$out"): CPU apkrova ${load} % – kartojama po 20 s" >&2
+    repeated=$((repeated + 1))
+    sleep 20
+  done
+  echo "CPU nuolat apkrautas, $(basename "$out") nematuota" >&2
+  exit 1
+}
 
 exp="$build/experiments"
 "$exp" inputs "$data/exp1" > "$raw/inputs.csv"
-"${pin[@]}" "$exp" speed "$data/konstitucija.txt" > "$raw/speed.csv"
+timed "$raw/speed.csv" "${pin[@]}" "$exp" speed "$data/konstitucija.txt"
 "$exp" collisions > "$raw/collisions.csv"
 "$exp" structured > "$raw/structured.csv"
 "$exp" avalanche > "$raw/avalanche.csv"
-"${pin[@]}" "$exp" guess > "$raw/guess.csv"
+timed "$raw/guess.csv" "${pin[@]}" "$exp" guess
 
 cli="$build/hash-generator"
 {
@@ -72,7 +95,7 @@ cat > "$results/aplinka.md" <<EOF
 | Parinktys | \`-std=c++20 $flags\` (CMake Release), viena gija |
 | Spartos matavimai | prisegti prie branduolio 2 (\`taskset -c 2\`), dažnio valdiklis \`$(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor 2>/dev/null || echo nežinomas)\` |
 | Generatorius | \`std::mt19937_64\`, simbolis = \`'!' + (x mod 94)\`, bazinis seed 20260920 |
-| CPU apkrova prieš spartos matavimą | ${load} % |
+| CPU apkrova matuojant laiką | ≤ ${worst} % (dėl kitų procesų pakartotų paleidimų: ${repeated}) |
 | Duomenys | bendras poros rinkinys \`Joringis-no AI/data/\` (\`exp1/\`, \`konstitucija.txt\`) |
 | Duomenų SHA-256 | \`$(cd "$data" && find exp1 konstitucija.txt -type f | LC_ALL=C sort | xargs sha256sum | sha256sum | cut -c1-16)…\` |
 | Realizacija | commit $(git -C "$repo" log -1 --format=%h -- "Rokas - AI/src") |
