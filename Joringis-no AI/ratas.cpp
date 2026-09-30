@@ -1,10 +1,3 @@
-// Ratas-256 v0.11 - mokomoji 256 bitu maisos funkcija.
-// v0.1 kurta be DI pagalbos. v0.11 kurta su minimalia DI pagalba.
-// Idėja: būsena yra "ratas" iš 8 stipinų (8 x 32 bitų žodžiai = 256 bitų).
-// Įvestis absorbuojama 16 baitų blokais, po kiekvieno bloko ratas pasukamas.
-// Pabaigoje įmaišomas įvesties ilgis, ratas pasukamas dar kelis kartus, ir santrauka nuskaitoma dviem pusėmis po 128 bitus su pasukimu tarp jų, todėl santrauka niekada nėra visa vidinė būsena.
-// Funkcija nėra kriptografiškai analizuota - tinka tik mokymuisi.
-
 #include <cstddef>
 #include <cstdint>
 #include <filesystem>
@@ -23,16 +16,14 @@ using namespace std;
 
 namespace {
 
-constexpr size_t kSpokes = 8;        // 8 x 32 bitai = 256 bitų būsena
-constexpr size_t kBlockBytes = 16;   // 4 x 32 bitų žodžiai per bloką
-constexpr size_t kDigestBytes = 32;  // 256 bitai = 32 baitai = 64 hex
+constexpr size_t kSpokes = 8;
+constexpr size_t kBlockBytes = 16;
+constexpr size_t kDigestBytes = 32;
 
-// Pasukimų skaičiai: po kiekvieno bloko sukama 2 kartus, pabaigoje daugiau, kad vieno įvesties bito pokytis spėtų pasklisti per visą būseną.
 constexpr int kRoundsPerBlock = 2;
 constexpr int kRoundsFinal = 4;
 constexpr int kRoundsSqueeze = 2;
 
-// Pradinė būsena - 32 baitų frazė, skaitoma kaip 8 mažojo galo 32 bitų žodžiai.
 constexpr char kSeedPhrase[kSpokes * 4 + 1] = "Vilniaus universitetas, BGT 2026";
 
 using State = uint32_t[kSpokes];
@@ -69,15 +60,10 @@ constexpr uint32_t kIV[kSpokes] = {
     seed_word(4), seed_word(5), seed_word(6), seed_word(7),
 };
 
-// Pasukimo konstanta: r-tasis pradinės būsenos žodis, padaugintas iš nelyginio skaičiaus (2r+1) ir pastumtas per r, kad pasukimai nesikartotų simetriškai.
 uint32_t round_const(unsigned r) {
     return kIV[r % kSpokes] * (2u * r + 1u) + r;
 }
 
-// Vienas rato pasukimas. Kiekvienas stipinas i atnaujinamas pagal stipinus i+1, i+3 ir i+6. Stipinas i+6 parenka ir posūkio dydį - tai pagrindinis netiesiškumo šaltinis šalia sudėties moduliu 2^32. 
-// Naujas stipinas iškart perduodamas kitam (i+1), kad pokytis per vieną pasukimą apeitų visą ratą.
-// v0.11: posūkis visada 1..31 bitų. v0.1 naudojo d mod 32, todėl kas 32-ame žingsnyje (d mod 32 = 0) posūkio visai nebuvo.
-// Nulis pakeičiamas vienetu; d % 31 + 1 duotų tolygesnį pasiskirstymą, bet dalyba sulėtino maišą ~40 %.
 void turn(State& s, unsigned r) {
     const uint32_t rc = round_const(r);
     for (size_t i = 0; i < kSpokes; ++i) {
@@ -98,31 +84,30 @@ void turns(State& s, int count, unsigned& counter) {
     for (int k = 0; k < count; ++k) turn(s, counter++);
 }
 
-// 16 baitų bloko įmaišymas: keturi žodžiai XOR'inami į stipinus 0..3, bloko eilės numeris pridedamas prie stipino 7, po to ratas pasukamas.
-void absorb_block(State& s, const uint8_t* block, uint32_t block_index,
+void absorb_block(State& s, const uint8_t* block, uint64_t block_index,
                   unsigned& counter) {
+    State h;
+    for (size_t i = 0; i < kSpokes; ++i) h[i] = s[i];
     s[0] ^= load_le32(block);
     s[1] ^= load_le32(block + 4);
     s[2] ^= load_le32(block + 8);
     s[3] ^= load_le32(block + 12);
-    s[7] += block_index;
+    s[6] += static_cast<uint32_t>(block_index >> 32);
+    s[7] += static_cast<uint32_t>(block_index);
     turns(s, kRoundsPerBlock, counter);
+    for (size_t i = 0; i < kSpokes; ++i) s[i] += h[i];
 }
 
-// Pagrindinė maišos funkcija: tikslūs baitai -> 32 baitų santrauka.
 vector<uint8_t> ratas256(const uint8_t* data, size_t size) {
     State s;
     for (size_t i = 0; i < kSpokes; ++i) s[i] = kIV[i];
-    unsigned counter = 0;  // pasukimų numeratorius per visą skaičiavimą
+    unsigned counter = 0;
 
-    // 1. Pilni blokai.
     const size_t full_blocks = size / kBlockBytes;
-    uint32_t index = 1;
+    uint64_t index = 1;
     for (size_t i = 0; i < full_blocks; ++i, ++index)
         absorb_block(s, data + i * kBlockBytes, index, counter);
 
-    // 2. Paskutinis blokas su užpildu: trūkstamų baitų skaičius n (1..16) įrašomas n kartų (kaip PKCS#7).
-    //    Jei ilgis dalijasi iš 16, pridedamas visas blokas iš 16 baitų 0x10, todėl skirtingo ilgio įvestys niekada nesutampa po užpildymo.
     uint8_t last[kBlockBytes];
     const size_t rest = size - full_blocks * kBlockBytes;
     const uint8_t pad = static_cast<uint8_t>(kBlockBytes - rest);
@@ -130,14 +115,12 @@ vector<uint8_t> ratas256(const uint8_t* data, size_t size) {
         last[i] = (i < rest) ? data[full_blocks * kBlockBytes + i] : pad;
     absorb_block(s, last, index, counter);
 
-    // 3. Ilgio (baitais, 64 bitai) įmaišymas ir uždarymo žymė.
     const uint64_t len = static_cast<uint64_t>(size);
     s[4] ^= static_cast<uint32_t>(len);
     s[5] ^= static_cast<uint32_t>(len >> 32);
     s[6] ^= 0xFFFFFFFFu;
     turns(s, kRoundsFinal, counter);
 
-    // 4. Rezultatas dviem pusėmis: stipinai 0..3, pasukimai, vėl stipinai 0..3.
     vector<uint8_t> out(kDigestBytes);
     for (size_t i = 0; i < 4; ++i) store_le32(s[i], &out[4 * i]);
     turns(s, kRoundsSqueeze, counter);
@@ -145,7 +128,6 @@ vector<uint8_t> ratas256(const uint8_t* data, size_t size) {
     return out;
 }
 
-// 64 mažųjų hex simboliai su visais pradiniais nuliais.
 string to_hex(const vector<uint8_t>& d) {
     static const char* digits = "0123456789abcdef";
     string s;
@@ -178,8 +160,6 @@ wstring wide_from_utf8(const string& s) {
 }
 #endif
 
-// Kelias programoje laikomas UTF-8. Windows'e siauras kelias būtų skaitomas ANSI
-// kodų puslapiu, todėl failas „ąžuolas.txt“ neatsidarytų (v0.1 klaida) - paverčiame UTF-16.
 filesystem::path to_path(const string& utf8) {
 #ifdef _WIN32
     return filesystem::path(wide_from_utf8(utf8));
@@ -188,8 +168,6 @@ filesystem::path to_path(const string& utf8) {
 #endif
 }
 
-// Failas skaitomas dvejetainiu režimu, be jokio eilučių pabaigų keitimo.
-// Neatsidaręs ar nepilnai perskaitytas failas -> false (ne tuščia įvestis).
 bool read_file(const string& path, vector<uint8_t>& bytes) {
     ifstream f(to_path(path), ios::binary);
     if (!f) return false;
@@ -199,8 +177,6 @@ bool read_file(const string& path, vector<uint8_t>& bytes) {
     return !f.bad();
 }
 
-// Rankinis įvedimas: viena eilutė iki Enter. Enter sukurtas naujos eilutės simbolis į maišą NEĮTRAUKIAMAS.
-// Windows konsolėje skaitoma UTF-16 ir verčiama į UTF-8, kad ne ASCII raidės būtų maišomos kaip UTF-8 baitai.
 string read_line() {
 #ifdef _WIN32
     HANDLE h = GetStdHandle(STD_INPUT_HANDLE);
@@ -232,17 +208,13 @@ void hold_console() {
 #endif
 }
 
-// Režimai: be argumentų - tekstas įvedamas ranka; su vienu argumentu - to failo TURINIO (ne pavadinimo) maiša.
-// Išėjimo kodai: 0 - pavyko, 1 - blogi argumentai, 2 - failo neperskaitė.
 int run(int argc, char** argv) {
     vector<uint8_t> bytes;
     string mode;
 
     if (argc == 2) {
-        // Failas nurodytas komandinės eilutės argumentu (arba užtempus jį ant .exe).
         string path = argv[1];
 #ifdef _WIN32
-        // argv Windows'e yra ANSI koduotės, todėl argumentą paimame iš UTF-16 komandinės eilutės.
         int wargc = 0;
         if (LPWSTR* wargv = CommandLineToArgvW(GetCommandLineW(), &wargc)) {
             if (wargc == 2) path = utf8_from_wide(wargv[1]);
@@ -255,7 +227,6 @@ int run(int argc, char** argv) {
             return 2;
         }
     } else if (argc == 1) {
-        // Paleista be argumentų (pvz., dvigubu spustelėjimu) - klausiame režimo.
         cout << "Pasirinkite rezima:\n"
                 "  1 - ivesti teksta ranka\n"
                 "  2 - maisyti faila\n"
@@ -270,7 +241,6 @@ int run(int argc, char** argv) {
         } else if (choice == "2") {
             cout << "Failo kelias: ";
             string path = read_line();
-            // Nuimame kabutes, jei kelias nukopijuotas per Explorer "Copy as path".
             if (path.size() >= 2 && path.front() == '"' && path.back() == '"')
                 path = path.substr(1, path.size() - 2);
             mode = "failas: " + path;
@@ -293,11 +263,11 @@ int run(int argc, char** argv) {
     return 0;
 }
 
-}  // namespace
+}
 
 int main(int argc, char** argv) {
 #ifdef _WIN32
-    SetConsoleOutputCP(CP_UTF8);  // kad UTF-8 failų keliai būtų atspausdinti teisingai
+    SetConsoleOutputCP(CP_UTF8);
 #endif
     const int code = run(argc, argv);
     hold_console();
