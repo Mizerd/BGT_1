@@ -64,6 +64,7 @@ timed "$raw/speed.csv" "${pin[@]}" "$exp" speed "$data/konstitucija.txt"
 timed "$raw/guess.csv" "${pin[@]}" "$exp" guess
 
 cli="$build/hash-generator"
+timed "$raw/file.csv" python3 "$here/experiments/file_speed.py" "${pin[@]}" "$cli"
 {
   for f in "$data"/exp1/*; do
     name="$(basename "$f")"

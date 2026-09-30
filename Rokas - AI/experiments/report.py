@@ -176,6 +176,13 @@ def report_speed():
                  [[k, whole(size[k]), num(mean[k], 3), f"{num(min(groups[k]), 3)}–{num(max(groups[k]), 3)}",
                    whole(size[k] / mean[k])] for k in order])
     out += ["", "Neapdoroti matavimai: `raw/speed.csv`."]
+    if os.path.exists(os.path.join(RAW, "file.csv")):
+        _, nbytes, secs, kb = rows("file")[0]
+        mib, secs = int(nbytes) / 2**20, float(secs)
+        out += ["", "## Visa programa su I/O (matuojama atskirai)", "",
+                f"`hash-generator --file`, {whole(mib / 1024)} GiB per kanalą (`/dev/stdin`): {num(secs, 2)} s "
+                f"({whole(int(nbytes) / secs / 1e6)} MB/s), didžiausia atmintis {num(int(kb) / 1024, 1)} MB. "
+                "Failas skaitomas 64 KiB dalimis, todėl atmintis nuo failo dydžio nepriklauso. Neapdoroti duomenys: `raw/file.csv`."]
     write("exp4_sparta.md", out)
 
     W, H, L, R, T, B = 760, 420, 78, 40, 52, 62
