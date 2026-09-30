@@ -1,6 +1,6 @@
 # BGT 1 užduotis: dvi 256 bitų maišos funkcijos · V0.11
 
-Porinis darbas: dvi atskiros realizacijos – viena be DI, kita su DI – palygintos tomis pačiomis sąlygomis.
+Porinis darbas: dvi atskiros realizacijos – Ratas-256 ir DI maiša – palygintos tomis pačiomis sąlygomis.
 
 > Abi funkcijos kriptografiškai neanalizuotos – netinka slaptažodžiams ir saugumui.
 
@@ -9,7 +9,6 @@ Porinis darbas: dvi atskiros realizacijos – viena be DI, kita su DI – palygi
 | | Ratas-256 | DI maiša |
 |---|---|---|
 | Katalogas | [`Joringis-no AI/`](Joringis-no%20AI/README.md) | [`Rokas - AI/`](Rokas%20-%20AI/README.md) |
-| DI | nenaudotas v0.1–v0.11 (pasak autoriaus README) | naudotas nuo pradžių |
 | Kalba | C++17, vienas failas `ratas.cpp` | C++20, CMake |
 | Indėlis į bendrą dalį | duomenų rinkinys: `data/exp1`, `konstitucija.txt` | eksperimentų programa: `experiments.cpp`, `report.py` |
 
@@ -114,11 +113,10 @@ Abiem: nerecenzuota, nėra rakto ir druskos, failas įkeliamas į atmintį.
 
 DI naudota **DI maišai**, bendrai eksperimentų programai, bendram README ir spartos palyginimui: Claude Code (Anthropic), Claude Opus modeliai.
 Užklausos, priimti ir atmesti pasiūlymai, patikra – [DI maišos README, 18 skyrius](Rokas%20-%20AI/README.md#18-di-naudojimas).
-Ratas-256 v0.1–v0.11 – be DI (pasak autoriaus README).
 
 ## 12. Versija
 
-* `V0.1` – be DI sukurta Ratas-256 ir DI maiša, palygintos šiame README.
+* `V0.1` – Ratas-256 ir DI maiša, palygintos šiame README.
 * `V0.11` – abi realizacijos V0.11:
   * DI maiša: pataisytas bendras CRLF testinis failas (anksčiau jame buvo LF), nauji testai, griežtesnės eksperimentų patikros;
     maišos reikšmės nepakito.
