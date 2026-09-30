@@ -157,16 +157,16 @@ int main() {
   std::string all_bytes;
   for (int i = 0; i < 256; ++i) all_bytes.push_back(static_cast<char>(i));
   const std::vector<std::pair<std::string, std::string>> known = {
-      {"", "547ac2e87baff5183c537ca0a12efbcd18a385a59f3c1b39c6e332388b34350c"},
-      {"a", "9572b1ea73ece20fd3cb0c6b79a1f24a62e3b7b4871b0c19d2e210061eb2d980"},
-      {"abc", "060f1c0f305405e02d5faa3d12af3e4f326e5aad3fe8097b357614a4c12b55b0"},
-      {"hello", "2607ba4e2a9bd8521178536b84dffc11bf933871f0e95eeca4357c2e43936c54"},
-      {std::string(31, 'x'), "c024d9d1a379ec5e0435cef26fc1cef761803b2c5c98e894e8b58dcf44b73ee6"},
-      {std::string(32, 'x'), "faddd9ac674668d2f8e201ddfe440dfc7b45c7ffad8589ad37db7e70201b4d76"},
-      {std::string(33, 'x'), "6a928d2364a27401cffb911635b2ef9416ca870f0c22a386541d987c657d82f8"},
-      {"tekstas\r\n", "d07259291e5a06212f9861cfa48a417883f264c63f14ddebb76d3a7328476841"},
-      {all_bytes, "c98c398ab567d02e9d56854894a6dd2c16d91b01ac80de02264f2bfd685ef69e"},
-      {pattern1000, "158e7e70f832db35bd5e5229abf7ea0984f3857585ae3ca474dfa5577b25878b"},
+      {"", "f83958be8ca002bca110726b8b5c768ebc1a8cc5a2f2e183538c783707d97286"},
+      {"a", "23c85b745d9b90784895ef9c56457094ed1f5fb0bf9a07bca618013466a8f59d"},
+      {"abc", "a881978cbef8990b0868ec299003e871d8523ccd3f7cfb8f9bd667b568f476bf"},
+      {"hello", "f89c7a5af119d3d76f90f84157cecbaa50ddb5dd2a5458eceee37c3c88375bf1"},
+      {std::string(31, 'x'), "2c8dc9996b724fd4b022b16190491cd746f9753d01229b8ce187caa420ed107e"},
+      {std::string(32, 'x'), "3eebed151c765901c76a2d79b87650de3c40c6ab4f85a8f84e9e35d8e5472573"},
+      {std::string(33, 'x'), "6abd69d10fd08e6881d586509647dab2aebbc27e1b69d7c355117c10001d5c2a"},
+      {"tekstas\r\n", "8736b5476001cd12c126359e77b61219cd347627eea1529da385cf7e02eef487"},
+      {all_bytes, "acacaec70fc5d4592aac3830823a43cf7ef7c632a5e9a81d2f9f34de8f03be45"},
+      {pattern1000, "64409476c8f77de470535c5fbff999c1ae8e63fd33ff53d04d8d5c5b441793e4"},
   };
   bool all_known = true;
   for (const auto& [input, expected] : known) {

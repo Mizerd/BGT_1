@@ -42,6 +42,7 @@ constexpr int kRotFold = 40;
 
 constexpr std::size_t kLanes = 8;         // 512 bits of internal state
 constexpr std::size_t kBlockBytes = 32;   // four 64 bit words per block
+constexpr int kRounds = 2;                // mixing rounds per step
 constexpr int kDrainSteps = 3;            // input-free steps before folding
 
 using State = std::array<std::uint64_t, kLanes>;
@@ -63,29 +64,41 @@ void store_be64(std::uint64_t word, std::uint8_t* bytes) {
   }
 }
 
-/// The single mixing step: it absorbs one block of four message words plus a
-/// tag, then sweeps the eight lanes once upwards and once downwards.
-///
-/// The words enter four alternating lanes, using addition and XOR in turn so
-/// that the entry points are not algebraically identical.  The forward sweep
-/// carries everything up to lane 7, the backward sweep carries it back down to
-/// lane 0, so after one step every lane depends on every other lane and on all
-/// four words of the block.  The multiplications by fixed odd constants are the
+/// One mixing round: sweeps the eight lanes once upwards and once downwards.
+/// The forward sweep carries everything up to lane 7, the backward sweep
+/// carries it back down to lane 0, so after one round every lane depends on
+/// every other lane.  The multiplications by fixed odd constants are the
 /// non-linear part; the rotations feed the high bits a multiplication produces
-/// back into low bit positions.  Odd multipliers keep each operation
-/// invertible, so the state never collapses.
-void step(State& s, std::uint64_t word0, std::uint64_t word1, std::uint64_t word2,
-          std::uint64_t word3, std::uint64_t tag) {
-  s[0] += word0 ^ tag;  // the position tag rides along with the first word
-  s[2] ^= word1;
-  s[4] += word2;
-  s[6] ^= word3;
-
+/// back into low bit positions.
+void mix(State& s) {
   for (std::size_t i = 1; i < kLanes; ++i) {  // upwards: lane 0 -> lane 7
     s[i] = (s[i] ^ std::rotl(s[i - 1], kRotForward)) * kMulForward;
   }
   for (std::size_t i = kLanes - 1; i-- > 0;) {  // downwards: lane 7 -> lane 0
     s[i] = (s[i] + std::rotl(s[i + 1], kRotBackward)) * kMulBackward;
+  }
+}
+
+/// The step: absorbs one block of four message words plus a tag.
+///
+/// The words enter four alternating lanes, using addition and XOR in turn so
+/// that the entry points are not algebraically identical.  Two rounds follow:
+/// with a single round the message words could be chosen to set the other four
+/// lanes to any value, which gave instant collisions (see tests/attack_v012.py).
+/// Finally the state from before the step is XORed back in (feed-forward), so
+/// a step can no longer be run backwards from its result.
+void step(State& s, std::uint64_t word0, std::uint64_t word1, std::uint64_t word2,
+          std::uint64_t word3, std::uint64_t tag) {
+  const State before = s;
+  s[0] += word0 ^ tag;  // the position tag rides along with the first word
+  s[2] ^= word1;
+  s[4] += word2;
+  s[6] ^= word3;
+  for (int round = 0; round < kRounds; ++round) {
+    mix(s);
+  }
+  for (std::size_t i = 0; i < kLanes; ++i) {
+    s[i] ^= before[i];
   }
 }
 

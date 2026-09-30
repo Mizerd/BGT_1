@@ -22,14 +22,18 @@ def rotl(x, n):
 
 
 def step(s, words, tag):
+    before = list(s)
     s[0] = (s[0] + (words[0] ^ tag)) & MASK
     s[2] ^= words[1]
     s[4] = (s[4] + words[2]) & MASK
     s[6] ^= words[3]
-    for i in range(1, 8):
-        s[i] = ((s[i] ^ rotl(s[i - 1], 41)) * MUL_F) & MASK
-    for i in range(6, -1, -1):
-        s[i] = ((s[i] + rotl(s[i + 1], 53)) * MUL_B) & MASK
+    for _ in range(2):
+        for i in range(1, 8):
+            s[i] = ((s[i] ^ rotl(s[i - 1], 41)) * MUL_F) & MASK
+        for i in range(6, -1, -1):
+            s[i] = ((s[i] + rotl(s[i + 1], 53)) * MUL_B) & MASK
+    for i in range(8):
+        s[i] ^= before[i]
 
 
 def words_of(block):
