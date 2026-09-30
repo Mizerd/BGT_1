@@ -68,7 +68,7 @@ def block(p):
             + " ".join(f".f-{i}{{fill:{p[i]}}} .s-{i}{{stroke:{p[i]}}}" for i in IMPLS) + f" .ring{{stroke:{p['bg']}}}")
 
 
-title = "Vienos maišos laikas pagal įvesties dydį (tas pats kompiuteris)"
+title = f"Vienos maišos laikas pagal įvesties dydį (tas pats kompiuteris, {'Linux' if has_linux else 'Windows'})"
 s = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" aria-label="{title}">',
      f"<style>text{{font-family:system-ui,-apple-system,'Segoe UI',sans-serif}} {block(LIGHT)} "
      f"@media (prefers-color-scheme: dark){{{block(DARK)}}}</style>",
