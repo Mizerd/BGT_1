@@ -13,7 +13,7 @@ skiriasi tik adapteris `experiments/impl_*.cpp`.
 | `raw/std_*.csv`, `standartai.md`, `standartai.svg` | jos duomenys, lentelės ir spartos grafikas |
 
 Windows: AMD Ryzen 9 7900X, Windows 11, MSVC 19.44, `/std:c++20 /O2 /DNDEBUG`, viena gija, V0.1 kodas.
-Linux: Intel i9-10900K, g++ 15.2, `-O3` (DI maišai ir `-fno-tree-reassoc`, kaip CMake), viena gija; DI maiša V0.13, Ratas-256 v0.11.
+Linux: Intel i9-10900K, g++ 15.2, `-O3` (DI maišai ir `-fno-tree-reassoc`, kaip CMake), viena gija; DI maiša V0.13, Ratas-256 v0.12.
 
 ## Linux
 
