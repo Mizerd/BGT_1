@@ -117,3 +117,5 @@ Ratas-256 sukurta be DI.
 * `V0.1` – be DI sukurta Ratas-256 ir DI maiša, palygintos šiame README.
 * `V0.11` – pataisytas bendras CRLF testinis failas (anksčiau jame buvo LF), abiejų 1–3 eksperimentų rezultatai sugeneruoti iš naujo;
   DI maišos testai ir eksperimentų patikros sugriežtinti, maišos reikšmės nepakito. Ratas-256 algoritmas nekeistas.
+* `V0.12` – DI maiša: failai skaitomi dalimis, iki 3 % greitesnė, nauji testai; maišos reikšmės nepakito.
+  Spartos palyginimas pakartotas Linux (Windows matavimai palikti). Ratas-256 nekeistas.

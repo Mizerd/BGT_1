@@ -222,3 +222,5 @@ VU BGT 1 užduotis ir kontrolinis sąrašas (2026) · [NIST Hash Functions](http
 * **V0.1** – algoritmas, rankinis įvedimas, 1–8 eksperimentai.
 * **V0.11** – maišos reikšmės **nepakito** (tikrina 10 žinomų atsakymų). Pataisytas CRLF testinis failas, pridėti žinomų atsakymų
   ir komandinės eilutės testai, griežtesnės lavinos patikros, duomenų kontrolinės sumos; rezultatai sugeneruoti iš naujo.
+* **V0.12** – maišos reikšmės **nepakito**. Failai skaitomi dalimis (`Hasher`), GCC kodas pasiekia daugybų grandinės ribą,
+  CMake numatytai `Release`; pridėti srautinio maišymo ir Python palyginimo testai; sparta išmatuota iš naujo.
