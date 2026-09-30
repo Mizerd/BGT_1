@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Data | 2026-09-30 (v0.11; v0.1 rezultatai – 2026-09-23, `results/v0.1/`) |
+| Data | 2026-09-23 |
 | Procesorius | AMD Ryzen 9 7900X 12-Core, 24 loginiai branduoliai |
 | Atmintis | 31 GB |
 | OS | Windows 11 Pro 10.0.26200 |
@@ -11,13 +11,10 @@
 | Spartos matavimai | be branduolio prisegimo (`taskset` Windows'e nėra) |
 | Generatorius | `std::mt19937_64`, simbolis = `'!' + (x mod 94)`, bazinis seed 20260920 |
 | Duomenys | bendras poros rinkinys `Joringis-no AI/data/` (`exp1/`, `konstitucija.txt`) |
-| Realizacija | `ratas.cpp` v0.11 (v0.1 – commit c6622a9) |
+| Realizacija | commit c6622a9 (`ratas.cpp`, v0.1) |
 | Eksperimentų programa | `Rokas - AI/experiments/experiments.cpp`, nepakeista; adapteris `experiments/impl_ratas.cpp` |
 
 ## Atkūrimas
-
-Visa tai (kompiliavimą, eksperimentus, `cli.csv` ir ataskaitas) atlieka vienas scenarijus
-`python -X utf8 experiments\run_all.py`. Rankiniai žingsniai:
 
 ```bat
 :: „x64 Native Tools Command Prompt for VS 2022“, iš „Joringis-no AI“ katalogo
@@ -34,9 +31,9 @@ build\experiments.exe guess                   > results\raw\guess.csv
 python -X utf8 "..\Rokas - AI\experiments\report.py" results\raw results
 ```
 
-`results/raw/cli.csv` sugeneruojamas atskirai (`run_all.py`) – jame tikrinama, ar
-abu komandinės eilutės režimai (argumentas ir meniu) duoda tą pačią maišą kaip ir
-vidinis skaičiavimas.
+`results/raw/cli.csv` sugeneruojamas atskirai – jame tikrinama, ar abu komandinės
+eilutės režimai (argumentas ir meniu) duoda tą pačią maišą kaip ir vidinis
+skaičiavimas.
 
 ## Svarbu dėl duomenų
 
