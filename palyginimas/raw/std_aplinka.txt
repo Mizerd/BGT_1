@@ -1,0 +1,1 @@
+Intel(R) Core(TM) i9-10900K CPU @ 3.70GHz, Linux 6.18.41, g++ (GCC) 15.2.0 -O3, OpenSSL 3.6.3; CPU apkrova matuojant ≤ 12 %, sklaida ≤ 10 %, dėl kitų procesų pakartotų paleidimų: 22

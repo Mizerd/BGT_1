@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="440" viewBox="0 0 760 440" role="img" aria-label="Vienos maišos laikas: abi poros maišos ir standartinės (tas pats kompiuteris)">
+<style>text{font-family:system-ui,-apple-system,'Segoe UI',sans-serif} .bg{fill:#fcfcfb} .t{fill:#0b0b0b} .t2{fill:#52514e} .grid{stroke:#e4e3de} .f-beDI{fill:#eb6834} .s-beDI{stroke:#eb6834} .f-di{fill:#2a78d6} .s-di{stroke:#2a78d6} .f-md5{fill:#1baf7a} .s-md5{stroke:#1baf7a} .f-sha1{fill:#8a63d2} .s-sha1{stroke:#8a63d2} .f-sha256{fill:#c43d7a} .s-sha256{stroke:#c43d7a} .ring{stroke:#fcfcfb} @media (prefers-color-scheme: dark){.bg{fill:#1a1a19} .t{fill:#ffffff} .t2{fill:#c3c2b7} .grid{stroke:#353533} .f-beDI{fill:#d95926} .s-beDI{stroke:#d95926} .f-di{fill:#3987e5} .s-di{stroke:#3987e5} .f-md5{fill:#2fc48d} .s-md5{stroke:#2fc48d} .f-sha1{fill:#a585e6} .s-sha1{stroke:#a585e6} .f-sha256{fill:#e0619a} .s-sha256{stroke:#e0619a} .ring{stroke:#1a1a19}}</style>
+<rect class="bg" fill="#fcfcfb" width="760" height="440"/>
+<text class="t" x="78" y="26" font-size="16" font-weight="600">Vienos maišos laikas: abi poros maišos ir standartinės (tas pats kompiuteris)</text>
+<line class="s-beDI" stroke="#eb6834" stroke-width="2.5" x1="78" y1="46" x2="96" y2="46"/><text class="t2" x="101" y="50" font-size="12">Ratas-256</text>
+<line class="s-di" stroke="#2a78d6" stroke-width="2.5" x1="203" y1="46" x2="221" y2="46"/><text class="t2" x="226" y="50" font-size="12">DI maiša</text>
+<line class="s-md5" stroke="#1baf7a" stroke-width="2.5" stroke-dasharray="5 3" x1="328" y1="46" x2="346" y2="46"/><text class="t2" x="351" y="50" font-size="12">MD5</text>
+<line class="s-sha1" stroke="#8a63d2" stroke-width="2.5" stroke-dasharray="5 3" x1="453" y1="46" x2="471" y2="46"/><text class="t2" x="476" y="50" font-size="12">SHA-1</text>
+<line class="s-sha256" stroke="#c43d7a" stroke-width="2.5" stroke-dasharray="5 3" x1="578" y1="46" x2="596" y2="46"/><text class="t2" x="601" y="50" font-size="12">SHA-256</text>
+<text class="t2" x="78" y="66" font-size="11">punktyras – standartinės realizacijos (OpenSSL)</text>
+<line class="grid" stroke="#e4e3de" x1="78.0" y1="74" x2="78.0" y2="378"/><text class="t2" x="78.0" y="396" font-size="12" text-anchor="middle">10</text>
+<line class="grid" stroke="#e4e3de" x1="221.0" y1="74" x2="221.0" y2="378"/><text class="t2" x="221.0" y="396" font-size="12" text-anchor="middle">100</text>
+<line class="grid" stroke="#e4e3de" x1="364.0" y1="74" x2="364.0" y2="378"/><text class="t2" x="364.0" y="396" font-size="12" text-anchor="middle">1 000</text>
+<line class="grid" stroke="#e4e3de" x1="507.0" y1="74" x2="507.0" y2="378"/><text class="t2" x="507.0" y="396" font-size="12" text-anchor="middle">10 000</text>
+<line class="grid" stroke="#e4e3de" x1="650.0" y1="74" x2="650.0" y2="378"/><text class="t2" x="650.0" y="396" font-size="12" text-anchor="middle">100 000</text>
+<line class="grid" stroke="#e4e3de" x1="78" y1="378.0" x2="650" y2="378.0"/><text class="t2" x="70" y="382.0" font-size="12" text-anchor="end">0,1</text>
+<line class="grid" stroke="#e4e3de" x1="78" y1="302.0" x2="650" y2="302.0"/><text class="t2" x="70" y="306.0" font-size="12" text-anchor="end">1</text>
+<line class="grid" stroke="#e4e3de" x1="78" y1="226.0" x2="650" y2="226.0"/><text class="t2" x="70" y="230.0" font-size="12" text-anchor="end">10</text>
+<line class="grid" stroke="#e4e3de" x1="78" y1="150.0" x2="650" y2="150.0"/><text class="t2" x="70" y="154.0" font-size="12" text-anchor="end">100</text>
+<line class="grid" stroke="#e4e3de" x1="78" y1="74.0" x2="650" y2="74.0"/><text class="t2" x="70" y="78.0" font-size="12" text-anchor="end">1 000</text>
+<text class="t2" x="364.0" y="424" font-size="13" text-anchor="middle">Įvesties dydis, baitai (log. skalė)</text>
+<text class="t2" transform="translate(20 226.0) rotate(-90)" font-size="13" text-anchor="middle">Laikas vienai maišai, µs (log. skalė)</text>
+<path class="s-beDI" stroke="#eb6834" fill="none" stroke-width="2" stroke-linejoin="round" d="M198.8,368.0 L233.9,358.3 L265.6,346.7 L300.9,331.5 L363.8,301.6 L401.9,281.4 L445.5,259.4 L501.5,230.2 L551.3,204.0 L603.7,176.2 L632.6,160.8"/>
+<circle class="f-beDI ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="1.5" cx="198.8" cy="368.0" r="3.5"><title>Ratas-256: 70 B – 0,135 µs</title></circle>
+<circle class="f-beDI ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="1.5" cx="233.9" cy="358.3" r="3.5"><title>Ratas-256: 123 B – 0,182 µs</title></circle>
+<circle class="f-beDI ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="1.5" cx="265.6" cy="346.7" r="3.5"><title>Ratas-256: 205 B – 0,258 µs</title></circle>
+<circle class="f-beDI ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="1.5" cx="300.9" cy="331.5" r="3.5"><title>Ratas-256: 362 B – 0,409 µs</title></circle>
+<circle class="f-beDI ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="1.5" cx="363.8" cy="301.6" r="3.5"><title>Ratas-256: 996 B – 1,012 µs</title></circle>
+<circle class="f-beDI ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="1.5" cx="401.9" cy="281.4" r="3.5"><title>Ratas-256: 1 841 B – 1,864 µs</title></circle>
+<circle class="f-beDI ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="1.5" cx="445.5" cy="259.4" r="3.5"><title>Ratas-256: 3 712 B – 3,637 µs</title></circle>
+<circle class="f-beDI ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="1.5" cx="501.5" cy="230.2" r="3.5"><title>Ratas-256: 9 155 B – 8,798 µs</title></circle>
+<circle class="f-beDI ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="1.5" cx="551.3" cy="204.0" r="3.5"><title>Ratas-256: 20 409 B – 19,468 µs</title></circle>
+<circle class="f-beDI ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="1.5" cx="603.7" cy="176.2" r="3.5"><title>Ratas-256: 47 434 B – 45,249 µs</title></circle>
+<circle class="f-beDI ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="1.5" cx="632.6" cy="160.8" r="3.5"><title>Ratas-256: 75 595 B – 72,183 µs</title></circle>
+<path class="s-di" stroke="#2a78d6" fill="none" stroke-width="2" stroke-linejoin="round" d="M198.8,377.1 L233.9,372.8 L265.6,362.2 L300.9,349.9 L363.8,323.3 L401.9,305.3 L445.5,283.3 L501.5,254.4 L551.3,228.2 L603.7,200.5 L632.6,185.2"/>
+<circle class="f-di ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="1.5" cx="198.8" cy="377.1" r="3.5"><title>DI maiša: 70 B – 0,103 µs</title></circle>
+<circle class="f-di ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="1.5" cx="233.9" cy="372.8" r="3.5"><title>DI maiša: 123 B – 0,117 µs</title></circle>
+<circle class="f-di ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="1.5" cx="265.6" cy="362.2" r="3.5"><title>DI maiša: 205 B – 0,161 µs</title></circle>
+<circle class="f-di ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="1.5" cx="300.9" cy="349.9" r="3.5"><title>DI maiša: 362 B – 0,234 µs</title></circle>
+<circle class="f-di ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="1.5" cx="363.8" cy="323.3" r="3.5"><title>DI maiša: 996 B – 0,525 µs</title></circle>
+<circle class="f-di ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="1.5" cx="401.9" cy="305.3" r="3.5"><title>DI maiša: 1 841 B – 0,905 µs</title></circle>
+<circle class="f-di ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="1.5" cx="445.5" cy="283.3" r="3.5"><title>DI maiša: 3 712 B – 1,760 µs</title></circle>
+<circle class="f-di ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="1.5" cx="501.5" cy="254.4" r="3.5"><title>DI maiša: 9 155 B – 4,230 µs</title></circle>
+<circle class="f-di ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="1.5" cx="551.3" cy="228.2" r="3.5"><title>DI maiša: 20 409 B – 9,345 µs</title></circle>
+<circle class="f-di ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="1.5" cx="603.7" cy="200.5" r="3.5"><title>DI maiša: 47 434 B – 21,632 µs</title></circle>
+<circle class="f-di ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="1.5" cx="632.6" cy="185.2" r="3.5"><title>DI maiša: 75 595 B – 34,440 µs</title></circle>
+<path class="s-md5" stroke="#1baf7a" fill="none" stroke-width="2" stroke-dasharray="5 3" stroke-linejoin="round" d="M198.8,362.5 L233.9,352.1 L265.6,343.6 L300.9,331.6 L363.8,300.7 L401.9,281.0 L445.5,258.7 L501.5,229.3 L551.3,202.9 L603.7,175.3 L632.6,159.9"/>
+<circle class="f-md5 ring" fill="#1baf7a" stroke="#fcfcfb" stroke-width="1.5" cx="198.8" cy="362.5" r="3.5"><title>MD5: 70 B – 0,160 µs</title></circle>
+<circle class="f-md5 ring" fill="#1baf7a" stroke="#fcfcfb" stroke-width="1.5" cx="233.9" cy="352.1" r="3.5"><title>MD5: 123 B – 0,219 µs</title></circle>
+<circle class="f-md5 ring" fill="#1baf7a" stroke="#fcfcfb" stroke-width="1.5" cx="265.6" cy="343.6" r="3.5"><title>MD5: 205 B – 0,284 µs</title></circle>
+<circle class="f-md5 ring" fill="#1baf7a" stroke="#fcfcfb" stroke-width="1.5" cx="300.9" cy="331.6" r="3.5"><title>MD5: 362 B – 0,408 µs</title></circle>
+<circle class="f-md5 ring" fill="#1baf7a" stroke="#fcfcfb" stroke-width="1.5" cx="363.8" cy="300.7" r="3.5"><title>MD5: 996 B – 1,041 µs</title></circle>
+<circle class="f-md5 ring" fill="#1baf7a" stroke="#fcfcfb" stroke-width="1.5" cx="401.9" cy="281.0" r="3.5"><title>MD5: 1 841 B – 1,889 µs</title></circle>
+<circle class="f-md5 ring" fill="#1baf7a" stroke="#fcfcfb" stroke-width="1.5" cx="445.5" cy="258.7" r="3.5"><title>MD5: 3 712 B – 3,719 µs</title></circle>
+<circle class="f-md5 ring" fill="#1baf7a" stroke="#fcfcfb" stroke-width="1.5" cx="501.5" cy="229.3" r="3.5"><title>MD5: 9 155 B – 9,043 µs</title></circle>
+<circle class="f-md5 ring" fill="#1baf7a" stroke="#fcfcfb" stroke-width="1.5" cx="551.3" cy="202.9" r="3.5"><title>MD5: 20 409 B – 20,156 µs</title></circle>
+<circle class="f-md5 ring" fill="#1baf7a" stroke="#fcfcfb" stroke-width="1.5" cx="603.7" cy="175.3" r="3.5"><title>MD5: 47 434 B – 46,505 µs</title></circle>
+<circle class="f-md5 ring" fill="#1baf7a" stroke="#fcfcfb" stroke-width="1.5" cx="632.6" cy="159.9" r="3.5"><title>MD5: 75 595 B – 74,032 µs</title></circle>
+<path class="s-sha1" stroke="#8a63d2" fill="none" stroke-width="2" stroke-dasharray="5 3" stroke-linejoin="round" d="M198.8,363.9 L233.9,352.7 L265.6,347.8 L300.9,336.9 L363.8,308.9 L401.9,290.4 L445.5,268.0 L501.5,239.0 L551.3,212.9 L603.7,185.3 L632.6,170.1"/>
+<circle class="f-sha1 ring" fill="#8a63d2" stroke="#fcfcfb" stroke-width="1.5" cx="198.8" cy="363.9" r="3.5"><title>SHA-1: 70 B – 0,153 µs</title></circle>
+<circle class="f-sha1 ring" fill="#8a63d2" stroke="#fcfcfb" stroke-width="1.5" cx="233.9" cy="352.7" r="3.5"><title>SHA-1: 123 B – 0,215 µs</title></circle>
+<circle class="f-sha1 ring" fill="#8a63d2" stroke="#fcfcfb" stroke-width="1.5" cx="265.6" cy="347.8" r="3.5"><title>SHA-1: 205 B – 0,250 µs</title></circle>
+<circle class="f-sha1 ring" fill="#8a63d2" stroke="#fcfcfb" stroke-width="1.5" cx="300.9" cy="336.9" r="3.5"><title>SHA-1: 362 B – 0,347 µs</title></circle>
+<circle class="f-sha1 ring" fill="#8a63d2" stroke="#fcfcfb" stroke-width="1.5" cx="363.8" cy="308.9" r="3.5"><title>SHA-1: 996 B – 0,812 µs</title></circle>
+<circle class="f-sha1 ring" fill="#8a63d2" stroke="#fcfcfb" stroke-width="1.5" cx="401.9" cy="290.4" r="3.5"><title>SHA-1: 1 841 B – 1,423 µs</title></circle>
+<circle class="f-sha1 ring" fill="#8a63d2" stroke="#fcfcfb" stroke-width="1.5" cx="445.5" cy="268.0" r="3.5"><title>SHA-1: 3 712 B – 2,797 µs</title></circle>
+<circle class="f-sha1 ring" fill="#8a63d2" stroke="#fcfcfb" stroke-width="1.5" cx="501.5" cy="239.0" r="3.5"><title>SHA-1: 9 155 B – 6,750 µs</title></circle>
+<circle class="f-sha1 ring" fill="#8a63d2" stroke="#fcfcfb" stroke-width="1.5" cx="551.3" cy="212.9" r="3.5"><title>SHA-1: 20 409 B – 14,867 µs</title></circle>
+<circle class="f-sha1 ring" fill="#8a63d2" stroke="#fcfcfb" stroke-width="1.5" cx="603.7" cy="185.3" r="3.5"><title>SHA-1: 47 434 B – 34,322 µs</title></circle>
+<circle class="f-sha1 ring" fill="#8a63d2" stroke="#fcfcfb" stroke-width="1.5" cx="632.6" cy="170.1" r="3.5"><title>SHA-1: 75 595 B – 54,372 µs</title></circle>
+<path class="s-sha256" stroke="#c43d7a" fill="none" stroke-width="2" stroke-dasharray="5 3" stroke-linejoin="round" d="M198.8,344.1 L233.9,332.8 L265.6,325.9 L300.9,314.5 L363.8,284.7 L401.9,265.7 L445.5,242.9 L501.5,213.6 L551.3,186.9 L603.7,159.4 L632.6,144.1"/>
+<circle class="f-sha256 ring" fill="#c43d7a" stroke="#fcfcfb" stroke-width="1.5" cx="198.8" cy="344.1" r="3.5"><title>SHA-256: 70 B – 0,280 µs</title></circle>
+<circle class="f-sha256 ring" fill="#c43d7a" stroke="#fcfcfb" stroke-width="1.5" cx="233.9" cy="332.8" r="3.5"><title>SHA-256: 123 B – 0,394 µs</title></circle>
+<circle class="f-sha256 ring" fill="#c43d7a" stroke="#fcfcfb" stroke-width="1.5" cx="265.6" cy="325.9" r="3.5"><title>SHA-256: 205 B – 0,485 µs</title></circle>
+<circle class="f-sha256 ring" fill="#c43d7a" stroke="#fcfcfb" stroke-width="1.5" cx="300.9" cy="314.5" r="3.5"><title>SHA-256: 362 B – 0,686 µs</title></circle>
+<circle class="f-sha256 ring" fill="#c43d7a" stroke="#fcfcfb" stroke-width="1.5" cx="363.8" cy="284.7" r="3.5"><title>SHA-256: 996 B – 1,688 µs</title></circle>
+<circle class="f-sha256 ring" fill="#c43d7a" stroke="#fcfcfb" stroke-width="1.5" cx="401.9" cy="265.7" r="3.5"><title>SHA-256: 1 841 B – 3,002 µs</title></circle>
+<circle class="f-sha256 ring" fill="#c43d7a" stroke="#fcfcfb" stroke-width="1.5" cx="445.5" cy="242.9" r="3.5"><title>SHA-256: 3 712 B – 5,992 µs</title></circle>
+<circle class="f-sha256 ring" fill="#c43d7a" stroke="#fcfcfb" stroke-width="1.5" cx="501.5" cy="213.6" r="3.5"><title>SHA-256: 9 155 B – 14,579 µs</title></circle>
+<circle class="f-sha256 ring" fill="#c43d7a" stroke="#fcfcfb" stroke-width="1.5" cx="551.3" cy="186.9" r="3.5"><title>SHA-256: 20 409 B – 32,706 µs</title></circle>
+<circle class="f-sha256 ring" fill="#c43d7a" stroke="#fcfcfb" stroke-width="1.5" cx="603.7" cy="159.4" r="3.5"><title>SHA-256: 47 434 B – 75,197 µs</title></circle>
+<circle class="f-sha256 ring" fill="#c43d7a" stroke="#fcfcfb" stroke-width="1.5" cx="632.6" cy="144.1" r="3.5"><title>SHA-256: 75 595 B – 119,561 µs</title></circle>
+<text class="t" x="642.6" y="138.0" font-size="12">SHA-256</text>
+<text class="t" x="642.6" y="153.0" font-size="12">MD5</text>
+<text class="t" x="642.6" y="168.0" font-size="12">Ratas-256</text>
+<text class="t" x="642.6" y="183.0" font-size="12">SHA-1</text>
+<text class="t" x="642.6" y="198.0" font-size="12">DI maiša</text>
+</svg>
