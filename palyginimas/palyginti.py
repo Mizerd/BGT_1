@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Spartos lentelės (Windows ir Linux) ir grafikas (Windows) abiem realizacijoms."""
+"""Spartos lentelės (Windows ir Linux) ir grafikas abiem realizacijoms."""
 
 import csv
 import math
@@ -9,7 +9,7 @@ from collections import defaultdict
 
 RAW, OUT = sys.argv[1], sys.argv[2]
 IMPLS = ["beDI", "di"]
-NAMES = {"beDI": "Ratas-256 (be DI)", "di": "DI maiša"}
+NAMES = {"beDI": "Ratas-256", "di": "DI maiša"}
 LIGHT = {"bg": "#fcfcfb", "text": "#0b0b0b", "text2": "#52514e", "grid": "#e4e3de", "di": "#2a78d6", "beDI": "#eb6834"}
 DARK = {"bg": "#1a1a19", "text": "#ffffff", "text2": "#c3c2b7", "grid": "#353533", "di": "#3987e5", "beDI": "#d95926"}
 
@@ -39,17 +39,20 @@ def table(times, size):
     return rows
 
 
-times, size = load("speed.csv")
-order = sorted(size)
-mean = {k: sum(v) / len(v) for k, v in times.items()}
-rows = table(times, size)
-text = ["Laikas vienai maišai, µs: vidurkis (min–max), 10 matavimų.", "", f"**Windows:** {WINDOWS} (grafikas `sparta.svg`)", ""] + rows
-if os.path.exists(os.path.join(RAW, "speed_linux.csv")):
+# The chart shows the newest same-machine run: Linux if present, else the Windows (V0.1) one.
+has_linux = os.path.exists(os.path.join(RAW, "speed_linux.csv"))
+rows = table(*load("speed.csv"))
+text = ["Laikas vienai maišai, µs: vidurkis (min–max), 10 matavimų.", "",
+        f"**Windows:** {WINDOWS}, V0.1 kodas{'' if has_linux else ' (grafikas `sparta.svg`)'}", ""] + rows
+if has_linux:
     with open(os.path.join(RAW, "speed_linux.txt")) as f:
         linux = f.read().strip()
     rows_linux = table(*load("speed_linux.csv"))
-    text += ["", f"**Linux:** {linux}", ""] + rows_linux
+    text += ["", f"**Linux** (grafikas `sparta.svg`): {linux}", ""] + rows_linux
     rows = rows + [""] + rows_linux
+times, size = load("speed_linux.csv" if has_linux else "speed.csv")
+order = sorted(size)
+mean = {k: sum(v) / len(v) for k, v in times.items()}
 with open(os.path.join(OUT, "sparta.md"), "w") as f:
     f.write("\n".join(text) + "\n")
 

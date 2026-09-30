@@ -15,10 +15,11 @@ mkdir -p "$build" "$raw"
 
 ssl="$(pkg-config --cflags --libs libcrypto)" || { echo "nerastas OpenSSL (pkg-config libcrypto)" >&2; exit 1; }
 read -r -a ssl <<< "$ssl"
-commits() {
+commits() {  # last commits of each implementation's code (results files don't count)
+  local noai=("Joringis-no AI/ratas.cpp" "Joringis-no AI/experiments") ai=("Rokas - AI/src" "Rokas - AI/include" "Rokas - AI/experiments")
   local dirty=""
-  git -C "$root" status --porcelain -- "Rokas - AI" "Joringis-no AI" | grep -q . && dirty=" (+ neįrašyti pakeitimai)"
-  echo "Ratas-256 commit $(git -C "$root" log -1 --format=%h -- "Joringis-no AI"), DI maiša commit $(git -C "$root" log -1 --format=%h -- "Rokas - AI")$dirty"
+  git -C "$root" status --porcelain -- "${noai[@]}" "${ai[@]}" | grep -q . && dirty=" (+ neįrašyti pakeitimai)"
+  echo "Ratas-256 commit $(git -C "$root" log -1 --format=%h -- "${noai[@]}"), DI maiša commit $(git -C "$root" log -1 --format=%h -- "${ai[@]}")$dirty"
 }
 
 flags=(-std=c++20 -O3 -DNDEBUG -I"$ai/experiments")
