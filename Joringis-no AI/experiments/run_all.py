@@ -31,6 +31,18 @@ def main():
     cl(f'/I"experiments" /I"{SHARED}" /Fo:build\\ experiments\\impl_ratas.cpp '
        f'"{SHARED}\\experiments.cpp" /Fe:build\\experiments.exe')
     cl("/Fo:build\\ ratas.cpp /Fe:build\\ratas.exe")
+    cl("/Fo:build\\ tests\\stream_test.cpp /Fe:build\\stream_test.exe")
+
+    check = subprocess.run([sys.executable, "-X", "utf8", str(HERE / "tests" / "check.py")],
+                           capture_output=True, text=True, encoding="utf-8")
+    print(check.stdout, end="", flush=True)
+    (RAW / "check.txt").write_text(check.stdout, encoding="utf-8")
+    if check.returncode != 0:
+        sys.exit("patikra nepavyko")
+
+    cl("/DNOMINMAX /Fo:build\\ tests\\sac.cpp /Fe:build\\sac.exe")
+    with open(RAW / "sac.csv", "wb") as f:
+        subprocess.run([str(BUILD / "sac.exe")], stdout=f, check=True)
 
     exp = str(BUILD / "experiments.exe")
     for name, args in [("inputs", ["inputs", str(DATA / "exp1")]),

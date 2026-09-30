@@ -1,0 +1,3 @@
+programa ir Python realizacija, failai: 36/36
+C++ ir Python realizacija, ilgiai 0-600 ir dideli: 608/608
+dalimis skaiciuota maisa nesutapo: 0 kartu is 3040

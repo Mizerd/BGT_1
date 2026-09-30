@@ -1,10 +1,14 @@
-# Ratas-256 v0.12
+# Ratas-256 v0.2
 
 Mokomoji 256 bitų maišos funkcija (BGT 1 užduotis, porinio darbo pusė be DI pagalbos).
 
-> **DI naudojimas.** v0.1-0.11 sukurta be DI pagalbos.
-Visas kodas yra viename faile `ratas.cpp`. Nuo v0.12 kode komentarų nėra –
-visi paaiškinimai yra šiame README.
+> **DI naudojimas.** v0.1-0.11 sukurta be DI pagalbos. v0.2 sukurta su DI
+> (Claude Code, modelis Claude Opus 5.5) – pasiūlymai, sprendimai ir jų patikra
+> aprašyti skyriuje „v0.2“. Geriausia be DI versija – v0.12 (commit `9b3a3ca`).
+
+Maišos funkcija ir programa yra viename faile `ratas.cpp`. Kode komentarų nėra –
+visi paaiškinimai yra šiame README. Algoritmo schemos: `docs/algoritmo-schema-v0.12.*`
+ir `docs/algoritmo-schema-v0.2.*` (`.drawio` atidaromas diagrams.net / draw.io).
 
 Funkcija nėra kriptografiškai analizuota ir netinka slaptažodžiams, pinigams
 ar realioms sistemoms, tik mokymuisi.
@@ -71,7 +75,7 @@ Bandymams kataloge yra `pavyzdys.txt`:
 $ ratas pavyzdys.txt
 Rezimas: failas: pavyzdys.txt
 Ivesties baitu: 38
-Ratas-256: 845e28147df7cde265fde49c6375aaed6375d8072ac93a18deea6d41028ffd0e
+Ratas-256: 47bce48a13ee6869699f2727d91df5244aca7dc0c03b4e7424d2482b42d84823
 ```
 
 Jame yra `Labas, Lietuva! Ąžuolas prie ežero.`: 35 simbolių, bet 38 baitai, nes
@@ -95,10 +99,12 @@ klaida, o ne tuščia įvestis.
   forma nekeičiami.
 - **Išvestis.** 256 bitai = 32 baitai = 64 hex skaitmenys, mažosiomis raidėmis,
   su visais pradiniais nuliais.
-- **Dydžio riba.** Visa įvestis sudedama į atmintį, todėl praktinė riba yra
-  laisva operatyvioji atmintis. Ilgis maišomas kaip 64 bitų skaičius.
+- **Dydžio riba.** Nuo v0.2 failas skaitomas ir maišomas 64 KiB dalimis, todėl
+  atmintis nuo failo dydžio nepriklauso (1 GiB failas – ≈ 6 MB). Ilgis ir bloko
+  numeris maišomi kaip 64 bitų skaičiai, todėl teorinė riba – 2⁶⁴ − 1 baitas.
+  Ranka įvedama viena eilutė.
 
-Tuščia įvestis leidžiama: 0 baitų → `5c39cf532414769f66f73b799efcb7b3ac4f5dac1cb87914d96a62b4dce77449`.
+Tuščia įvestis leidžiama: 0 baitų → `dc978b5d0c615428b6647100b74330e6f27aad48bd15aff768e5c6308f2a4a64`.
 
 ## Algoritmo idėja
 
@@ -115,7 +121,7 @@ kiekvienam pilnam 16 baitų blokui (numeris 1, 2, …, 64 bitų):
     būsena[0..3] ^= bloko žodžiai
     būsena[6]    += bloko numeris (aukštieji 32 bitai)
     būsena[7]    += bloko numeris (žemieji 32 bitai)
-    sukti 2 kartus
+    sukti 3 kartus               // v0.2: buvo 2
     būsena[0..7] += h[0..7]      // v0.12: feed-forward
 
 paskutinis blokas užpildomas PKCS#7 būdu ir absorbuojamas taip pat
@@ -123,7 +129,9 @@ paskutinis blokas užpildomas PKCS#7 būdu ir absorbuojamas taip pat
 būsena[4] ^= ilgis (žemieji 32 bitai)
 būsena[5] ^= ilgis (aukštieji 32 bitai)
 būsena[6] ^= 0xFFFFFFFF
+f = būsena
 sukti 4 kartus
+būsena[0..7] += f[0..7]          // v0.2: feed-forward ir pabaigoje
 
 santrauka = būsena[0..3];  sukti 2 kartus;  santrauka += būsena[0..3]
 ```
@@ -147,7 +155,9 @@ Sprendimų pagrindimas:
 - **Naujas stipinas iškart perduodamas kitam**, todėl vieno bito pokytis per
   vieną pasukimą apeina visą ratą.
 - **Feed-forward** (`būsena += h` po kiekvieno bloko): nuo v0.12 bloko
-  apdorojimas nebėra apgręžiamas (žr. „v0.12“).
+  apdorojimas nebėra apgręžiamas (žr. „v0.12“). Nuo v0.2 – ir pabaigoje.
+- **3 pasukimai bloke** (nuo v0.2): 1 pasukimo neužtenka, 2 – tik minimumas,
+  3 palieka atsargą (žr. „v0.2“).
 - **64 bitų bloko numeris**: nuo v0.12 numeris nepersisuka net labai
   dideliems failams.
 - **Užpildymas ir ilgio įmaišymas**, kad skirtingo ilgio įvestys nesutaptų.
@@ -261,3 +271,91 @@ Išvados:
 - 4 problemos pataisa testais nepatikrinama: tam reikėtų didesnio nei 64 GiB
   failo. Mažesniems failams maiša skiriasi tik dėl feed-forward.
 - Geri statistiniai rezultatai vis dar nėra saugumo įrodymas.
+
+## v0.2 (su DI)
+
+**Įrankis:** Claude Code (Anthropic), modelis Claude Opus 5.5. Užklausa: „patobulink
+v0.12 pagal užduotį (v0.2), kode be komentarų, paaiškinimai tik README“. DI pirmiausia
+išmatavo v0.12 silpnąsias vietas, tada pasiūlė pakeitimus; kiekvienas pasiūlymas
+priimtas arba atmestas pagal matavimą.
+
+Algoritmo schema: `docs/algoritmo-schema-v0.2.drawio` (`.png` – ta pati schema paveikslu).
+
+### DI pasiūlymai ir sprendimai
+
+| Pasiūlymas | Sprendimas ir priežastis | Patikra |
+|---|---|---|
+| 3 pasukimai bloke vietoj 2 | **Priimta.** Bloko žingsnio SAC matavimas (žemiau): su 1 pasukimu 15 752 iš 32 768 langelių aiškiai šališki, su 2 – nė vieno. Vadinasi, 2 pasukimai yra tik minimumas, be jokios atsargos. 3 pasukimai – 1,5 karto daugiau nei minimumas | `tests/sac.cpp` → `results/raw/sac.csv`; sparta – žemiau |
+| 4 pasukimai bloke | **Atmesta.** Statistiškai niekuo nesiskiria nuo 3, o sparta krenta proporcingai pasukimų skaičiui (2 → 3 jau kainavo ≈ 29 %) | `results/raw/sac.csv` |
+| Feed-forward ir pabaigoje: `f = s; 4 pasukimai; s += f` | **Priimta.** Be jo pabaigos 4 pasukimai yra apgręžiami: kas sužinotų galutinę būseną, galėtų juos atsukti, gauti būseną prieš ilgio įmaišymą ir tęsti maišą (ilgio pratęsimo idėja). Išvestis – 256 bitai iš 256 bitų būsenos, todėl informacijos prasme būseną ji nusako; ar ją galima praktiškai atkurti – netirta. Su feed-forward net atkūrus galutinę būseną ankstesnės nebegalima gauti. Kaina – 16 operacijų vienai maišai | Python realizacija (žemiau) |
+| Srautinis maišymas: `Ratas256` su `update` / `finish`, failas skaitomas 64 KiB dalimis | **Priimta.** v0.12 visą failą sudėdavo į atmintį. 1 GiB atsitiktinių baitų failas: v0.12 – 2,61 s ir 1 879 MB atminties, v0.2 – 2,38 s ir 6 MB | `tests/stream_test.cpp`: 608 ilgiai po 5 atsitiktinius skaidymus (dalys 0–40 B) – 0 nesutapimų iš 3 040 |
+| Nepriklausoma Python realizacija `tests/ratas_ref.py` | **Priimta** kaip patikra. Parašyta pagal šio README pseudokodą, ne verčiant C++ eilutė po eilutės | `tests/check.py`: programa = Python 36/36 failų (`data/exp1`, `pavyzdys.txt`, `konstitucija.txt`), C++ = Python 608/608 ilgių (0–600 B, 4 KiB, 64 KiB, ≈ 1 MB) |
+| Posūkis `(d · 31 >> 32) + 1` – tolygiai 1..31 be dalybos (vietoj v0.11 „0 → 1“) | **Atmesta.** SAC ir lavinos rezultatai nepasikeitė, o sparta sumažėjo ≈ 4 % (829 → 796 MB/s, 1 MiB įvestis) | tas pats SAC matavimas |
+| 32 baitų blokai (įvestis į visus 8 stipinus, ≈ 2 kartus greičiau) | **Atmesta.** Tada įvestis valdo visą būseną prieš pasukimus: norimam bloko rezultatui t pakanka x = T⁻¹(t − s), m = x ⊕ s – suspaudimo funkcijos pirmavaizdis be jokios paieškos. Su 16 baitų blokais stipinai 4–7 lieka nevaldomi | analizė |
+| 512 bitų būsena (kaip poros partnerio algoritme) | **Atmesta.** Tai partnerio sprendimas; poros realizacijos turi likti atskiros, be to reikėtų perrašyti visą funkciją | – |
+
+### Bloko žingsnio SAC
+
+Vienas bloko žingsnis (įterpimas, pasukimai, feed-forward) iš atsitiktinės būsenos ir
+atsitiktinio bloko. Kiekvienam iš 128 bloko bitų – 4 000 porų, kuriose apverstas tas
+bitas; kiekvienam iš 256 būsenos bitų skaičiuojama, kaip dažnai jis pasikeitė.
+Idealiai – 0,5; „šališkas“ langelis nukrypsta daugiau nei 5σ (0,0395). `turn` funkcija
+ta pati kaip programoje, keičiamas tik pasukimų skaičius.
+
+| Pasukimai bloke | Vid. pasikeitusių būsenos bitų (iš 256) | Mažiausiai | Šališki langeliai (iš 32 768) | Didžiausias nuokrypis |
+|---|---|---|---|---|
+| 1 | 98,84 | 12 | 15 752 | 0,4728 |
+| 2 (v0.12) | 128,01 | 90 | 0 | 0,0330 |
+| 3 (v0.2) | 128,00 | 90 | 0 | 0,0325 |
+| 4 | 128,00 | 90 | 0 | 0,0300 |
+
+### v0.12 ir v0.2 palyginimas
+
+Tie patys duomenys, seed'ai ir kompiuteris. v0.12 rezultatai išsaugoti
+`results/v0.12/`, v0.2 – `results/`.
+
+| Rodiklis | v0.12 (be DI) | v0.2 (su DI) |
+|---|---|---|
+| Teisingumo palyginimai poromis (1–3 eksp.) | 21/21 ✓ | 21/21 ✓ |
+| Formatas, determinizmas, A-B-A | 34/34, taip | 34/34, taip |
+| Komandinė eilutė (argumentas, ranka, meniu 2) | 34/34, 31/31, 31/31 | 34/34, 31/31, 31/31 |
+| Maišos, prasidedančios `0` / `00` (≈ 625 / 39) | 616 / 48 | 637 / 42 |
+| Sparta, visas `konstitucija.txt` (75 595 B), `run_all.py` | 98,7 µs, 765 MB/s | 134,0 µs, 564 MB/s |
+| Sparta, abi versijos paleistos paeiliui, 3 kartus | ≈ 97 µs | ≈ 137 µs |
+| 1 GiB failas per programą: laikas, atmintis | 2,61 s, 1 879 MB | 2,38 s, 6 MB |
+| Kolizijos: 4 × 100 000 porų ir visas rinkinys | 0 | 0 |
+| Kolizijos sutrumpinus iki 24 / 32 bitų (≈ 4 768 / 18,6) | 4 776 / 25 | 4 771 / 14 |
+| Struktūruotos įvestys (119 374 skirtingos) | 0 kolizijų | 0 kolizijų |
+| Lavina, simbolio pakeitimas: bitai vid. (min–max) | 49,99 % (36,33–64,06) | 50,01 % (37,50–63,28) |
+| Lavina: hex vid. (min–max) | 93,74 % (76,56–100) | 93,75 % (76,56–100) |
+| Lavina, vieno bito apvertimas: bitai vid. | 50,00 % | 49,99 % |
+| Spėjimas be druskos: `0000`–`9999` perrinkimas | 1,07 ms, 1 sutapimas | 1,12 ms, 1 sutapimas |
+| Pasukimai bloke / reikalingas minimumas (SAC) | 2 / 2 (be atsargos) | 3 / 2 (atsarga 1,5×) |
+| Pabaiga apgręžiama | taip | ne |
+| Patikra su nepriklausoma realizacija | nebuvo | 36/36 failų, 608/608 ilgių |
+
+### Išvados
+
+- **Pagerėjo:** bloko žingsnis turi atsargą (3 pasukimai, kai reikia 2);
+  pabaigos nebegalima atsukti; failai maišomi nepriklausomai nuo jų dydžio
+  (1 GiB – 6 MB atminties vietoj 1,9 GB); atsirado nepriklausoma patikra.
+- **Pablogėjo:** sparta sumažėjo ≈ 26–29 % (laikas × 1,36–1,41), nes kiekvienam
+  blokui daromas vienas pasukimas daugiau. Dideliems failams per programą v0.2
+  vis tiek greitesnė, nes nebereikia visko sudėti į atmintį.
+- **Nepasikeitė:** visi užduoties statistiniai rodikliai (lavina, kolizijos,
+  pradiniai nuliai) abiem versijoms atitinka atsitiktinės funkcijos lūkesčius.
+  Kaip ir v0.11 bei v0.12, šie pakeitimai šalina struktūrinius trūkumus, kurių
+  tokie testai neaptinka – todėl jiems įvertinti prireikė atskiro SAC matavimo.
+- **Ko negalima teigti:** kad v0.2 saugi. SAC matuoja tik pavienių bitų
+  pasikeitimus – jis neaptiktų didelės tikimybės diferencialų per kelis
+  pasukimus; nebandyta atkurti būsenos iš maišos; Python realizaciją parašė tas
+  pats DI, todėl ji patvirtina, kad kodas atitinka aprašą, bet ne tai, kad
+  aprašas geras.
+
+### Testai
+
+`python -X utf8 experiments\run_all.py` sukompiliuoja programą, eksperimentus ir
+testus, paleidžia `tests/check.py` (rezultatas `results/raw/check.txt`; nepavykus
+scenarijus sustoja), SAC matavimą (`results/raw/sac.csv`) ir visus 1–7 eksperimentus.
+`experiments/impl_ratas.cpp` ir `tests/*.cpp` įtraukia `ratas.cpp` tiesiogiai (jo `main`
+laikinai pervadinamas), todėl visur tikrinama ta pati algoritmo kopija kaip programoje.

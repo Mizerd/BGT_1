@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Data | 2026-09-30 (v0.2; v0.12 rezultatai – `results/v0.12/`, v0.11 – `results/v0.11/`, v0.1 – 2026-09-23, `results/v0.1/`) |
+| Data | 2026-09-30 (v0.12; v0.11 rezultatai – `results/v0.11/`, v0.1 – 2026-09-23, `results/v0.1/`) |
 | Procesorius | AMD Ryzen 9 7900X 12-Core, 24 loginiai branduoliai |
 | Atmintis | 31 GB |
 | OS | Windows 11 Pro 10.0.26200 |
@@ -11,7 +11,7 @@
 | Spartos matavimai | be branduolio prisegimo (`taskset` Windows'e nėra) |
 | Generatorius | `std::mt19937_64`, simbolis = `'!' + (x mod 94)`, bazinis seed 20260920 |
 | Duomenys | bendras poros rinkinys `Joringis-no AI/data/` (`exp1/`, `konstitucija.txt`) |
-| Realizacija | `ratas.cpp` v0.2 (v0.12 – commit 9b3a3ca, v0.11 – commit 6b0dd58, v0.1 – commit c6622a9) |
+| Realizacija | `ratas.cpp` v0.12 (v0.11 – commit 6b0dd58, v0.1 – commit c6622a9) |
 | Eksperimentų programa | `Rokas - AI/experiments/experiments.cpp`, nepakeista; adapteris `experiments/impl_ratas.cpp` |
 
 ## Atkūrimas

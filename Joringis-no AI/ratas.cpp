@@ -1,5 +1,6 @@
 #include <cstddef>
 #include <cstdint>
+#include <cstring>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -20,7 +21,7 @@ constexpr size_t kSpokes = 8;
 constexpr size_t kBlockBytes = 16;
 constexpr size_t kDigestBytes = 32;
 
-constexpr int kRoundsPerBlock = 2;
+constexpr int kRoundsPerBlock = 3;
 constexpr int kRoundsFinal = 4;
 constexpr int kRoundsSqueeze = 2;
 
@@ -98,34 +99,67 @@ void absorb_block(State& s, const uint8_t* block, uint64_t block_index,
     for (size_t i = 0; i < kSpokes; ++i) s[i] += h[i];
 }
 
+class Ratas256 {
+public:
+    Ratas256() {
+        for (size_t i = 0; i < kSpokes; ++i) s_[i] = kIV[i];
+    }
+
+    void update(const uint8_t* data, size_t size) {
+        if (size == 0) return;
+        total_ += size;
+        if (buffered_ > 0) {
+            const size_t room = kBlockBytes - buffered_;
+            const size_t take = size < room ? size : room;
+            memcpy(buf_ + buffered_, data, take);
+            buffered_ += take;
+            data += take;
+            size -= take;
+            if (buffered_ < kBlockBytes) return;
+            absorb_block(s_, buf_, index_++, counter_);
+            buffered_ = 0;
+        }
+        for (; size >= kBlockBytes; data += kBlockBytes, size -= kBlockBytes)
+            absorb_block(s_, data, index_++, counter_);
+        if (size > 0) memcpy(buf_, data, size);
+        buffered_ = size;
+    }
+
+    vector<uint8_t> finish() {
+        const uint8_t pad = static_cast<uint8_t>(kBlockBytes - buffered_);
+        for (size_t i = buffered_; i < kBlockBytes; ++i) buf_[i] = pad;
+        absorb_block(s_, buf_, index_, counter_);
+
+        s_[4] ^= static_cast<uint32_t>(total_);
+        s_[5] ^= static_cast<uint32_t>(total_ >> 32);
+        s_[6] ^= 0xFFFFFFFFu;
+        State f;
+        for (size_t i = 0; i < kSpokes; ++i) f[i] = s_[i];
+        turns(s_, kRoundsFinal, counter_);
+        for (size_t i = 0; i < kSpokes; ++i) s_[i] += f[i];
+
+        vector<uint8_t> out(kDigestBytes);
+        for (size_t i = 0; i < 4; ++i) store_le32(s_[i], &out[4 * i]);
+        turns(s_, kRoundsSqueeze, counter_);
+        for (size_t i = 0; i < 4; ++i) store_le32(s_[i], &out[16 + 4 * i]);
+        return out;
+    }
+
+    uint64_t total() const { return total_; }
+
+private:
+    State s_;
+    uint8_t buf_[kBlockBytes];
+    size_t buffered_ = 0;
+    uint64_t index_ = 1;
+    uint64_t total_ = 0;
+    unsigned counter_ = 0;
+};
+
 vector<uint8_t> ratas256(const uint8_t* data, size_t size) {
-    State s;
-    for (size_t i = 0; i < kSpokes; ++i) s[i] = kIV[i];
-    unsigned counter = 0;
-
-    const size_t full_blocks = size / kBlockBytes;
-    uint64_t index = 1;
-    for (size_t i = 0; i < full_blocks; ++i, ++index)
-        absorb_block(s, data + i * kBlockBytes, index, counter);
-
-    uint8_t last[kBlockBytes];
-    const size_t rest = size - full_blocks * kBlockBytes;
-    const uint8_t pad = static_cast<uint8_t>(kBlockBytes - rest);
-    for (size_t i = 0; i < kBlockBytes; ++i)
-        last[i] = (i < rest) ? data[full_blocks * kBlockBytes + i] : pad;
-    absorb_block(s, last, index, counter);
-
-    const uint64_t len = static_cast<uint64_t>(size);
-    s[4] ^= static_cast<uint32_t>(len);
-    s[5] ^= static_cast<uint32_t>(len >> 32);
-    s[6] ^= 0xFFFFFFFFu;
-    turns(s, kRoundsFinal, counter);
-
-    vector<uint8_t> out(kDigestBytes);
-    for (size_t i = 0; i < 4; ++i) store_le32(s[i], &out[4 * i]);
-    turns(s, kRoundsSqueeze, counter);
-    for (size_t i = 0; i < 4; ++i) store_le32(s[i], &out[16 + 4 * i]);
-    return out;
+    Ratas256 h;
+    h.update(data, size);
+    return h.finish();
 }
 
 string to_hex(const vector<uint8_t>& d) {
@@ -168,12 +202,12 @@ filesystem::path to_path(const string& utf8) {
 #endif
 }
 
-bool read_file(const string& path, vector<uint8_t>& bytes) {
+bool hash_file(const string& path, Ratas256& h) {
     ifstream f(to_path(path), ios::binary);
     if (!f) return false;
-    char buf[1 << 16];
-    while (f.read(buf, sizeof(buf)) || f.gcount() > 0)
-        bytes.insert(bytes.end(), buf, buf + f.gcount());
+    vector<char> buf(1 << 16);
+    while (f.read(buf.data(), static_cast<streamsize>(buf.size())) || f.gcount() > 0)
+        h.update(reinterpret_cast<const uint8_t*>(buf.data()), static_cast<size_t>(f.gcount()));
     return !f.bad();
 }
 
@@ -209,7 +243,7 @@ void hold_console() {
 }
 
 int run(int argc, char** argv) {
-    vector<uint8_t> bytes;
+    Ratas256 h;
     string mode;
 
     if (argc == 2) {
@@ -222,7 +256,7 @@ int run(int argc, char** argv) {
         }
 #endif
         mode = "failas: " + path;
-        if (!read_file(path, bytes)) {
+        if (!hash_file(path, h)) {
             cerr << "Klaida: nepavyko perskaityti failo: " << path << '\n';
             return 2;
         }
@@ -237,14 +271,14 @@ int run(int argc, char** argv) {
             mode = "rankinis ivedimas";
             cout << "Iveskite teksta ir spauskite Enter (Enter neitraukiamas):\n";
             const string line = read_line();
-            bytes.assign(line.begin(), line.end());
+            h.update(reinterpret_cast<const uint8_t*>(line.data()), line.size());
         } else if (choice == "2") {
             cout << "Failo kelias: ";
             string path = read_line();
             if (path.size() >= 2 && path.front() == '"' && path.back() == '"')
                 path = path.substr(1, path.size() - 2);
             mode = "failas: " + path;
-            if (!read_file(path, bytes)) {
+            if (!hash_file(path, h)) {
                 cerr << "Klaida: nepavyko perskaityti failo: " << path << '\n';
                 return 2;
             }
@@ -258,8 +292,8 @@ int run(int argc, char** argv) {
     }
 
     cout << "Rezimas: " << mode << '\n'
-         << "Ivesties baitu: " << bytes.size() << '\n'
-         << "Ratas-256: " << to_hex(ratas256(bytes.data(), bytes.size())) << '\n';
+         << "Ivesties baitu: " << h.total() << '\n'
+         << "Ratas-256: " << to_hex(h.finish()) << '\n';
     return 0;
 }
 
