@@ -146,10 +146,10 @@ UTF-8: `utf8_lt.txt` – 15 simbolių, 26 baitai. → [exp1_3_teisingumas.md](re
 
 | Baitai | µs vienai maišai | min–max |
 |---|---|---|
-| 70 | 0,235 | 0,235–0,236 |
-| 996 | 1,116 | 1,115–1,118 |
-| 20 409 | 19,669 | 19,628–19,697 |
-| 75 595 | 72,098 | 71,847–72,254 |
+| 70 | 0,236 | 0,234–0,244 |
+| 996 | 1,116 | 1,114–1,120 |
+| 20 409 | 19,708 | 19,639–19,816 |
+| 75 595 | 72,014 | 71,732–72,383 |
 
 * Laikas auga **tiesiškai**, ≈ **1,05 GB/s**; mažoms įvestims – pastovios 5 žingsnių išlaidos.
 * 3 apšilimai + 10 matavimų, be I/O; trukdžių paveikti matavimai kartojami. → [exp4_sparta.md](results/exp4_sparta.md)
@@ -159,7 +159,7 @@ UTF-8: `utf8_lt.txt` – 15 simbolių, 26 baitai. → [exp1_3_teisingumas.md](re
 |---|---|---|
 | V0.1–V0.11 | 35,19 | |
 | V0.12 | 34,19 | GCC optimizavimas; failas skaitomas dalimis, o ne visas į atmintį |
-| V0.13–V0.2 | 72,10 | 2 raundai – ≈ 2 kartus lėčiau, bet V0.12 atakos nebeveikia |
+| V0.13–V0.2 | 72,01 | 2 raundai – ≈ 2 kartus lėčiau, bet V0.12 atakos nebeveikia |
 
 Skaičiai – `results/raw/speed.csv` atitinkamoje versijoje. Visa programa su failo skaitymu matuojama atskirai:
 1 GiB per `--file` – 1,13 s, 3,7 MB atminties (`results/raw/file.csv`).
@@ -207,7 +207,7 @@ Skaičiai – `results/raw/speed.csv` atitinkamoje versijoje. Visa programa su f
 
 | Atvejis | Maišų | Rezultatas |
 |---|---|---|
-| be druskos, `0000`–`9999` | 3 984 (1,80 ms) | rasta `3983` |
+| be druskos, `0000`–`9999` | 3 984 (1,79 ms) | rasta `3983` |
 | viena lentelė 5 taikiniams | 10 000 | 5/5 |
 | vieša druska, atskira kiekvienam | 5 × 10 000 | 5/5 |
 | slaptas `r` (16 B) | 10 000 · 2^128, jei `r` nežinomas | čia `r` iš viešo seed – tik demonstracija |

@@ -9,7 +9,7 @@ Porinis darbas: dvi atskiros realizacijos – Ratas-256 ir DI maiša – palygin
 | | Ratas-256 | DI maiša |
 |---|---|---|
 | Katalogas | [`Joringis-no AI/`](Joringis-no%20AI/README.md) | [`Rokas - AI/`](Rokas%20-%20AI/README.md) |
-| Kalba | C++17, vienas failas `ratas.cpp` | C++20, CMake |
+| Kalba | C++20, vienas failas `ratas.cpp` | C++20, CMake |
 | Indėlis į bendrą dalį | duomenų rinkinys: `data/exp1`, `konstitucija.txt` | eksperimentų programa: `experiments.cpp`, `report.py`, palyginimai |
 
 Paleidimas, pseudokodas ir sprendimų pagrindimas – kiekvieno kataloge README; palyginimo atkartojimas – [palyginimas/README.md](palyginimas/README.md).
@@ -50,12 +50,12 @@ Abi realizacijos tame pačiame kompiuteryje; 3 apšilimai + 10 matavimų, be I/O
 
 | Kompiuteris | Versijos: Ratas-256 / DI | 70 B | 75 595 B |
 |---|---|---|---|
-| i9-10900K, Linux, g++ 15.2 `-O3` (grafikas) | v0.2 / V0.2 | 0,246 / 0,234 | 165,96 / 71,29 |
+| i9-10900K, Linux, g++ 15.2 `-O3` (grafikas) | v0.2 / V0.2 | 0,248 / 0,235 | 166,80 / 71,68 |
 | Ryzen 9 7900X, Windows 11, MSVC `/O2` | v0.1 / V0.1 | 0,155 / 0,112 | 74,08 / 32,27 |
 
 * Abiejų laikas auga tiesiškai. Ilgiems failams DI maiša ≈ 2,3 karto greitesnė, trumpoms įvestims – panašios.
 * Lyginti galima tik eilutės viduje (skirtingi kompiuteriai). Versijų sulėtėjimas – kiekvienos kompiuteryje: DI maiša
-  35,19 → 72,10 µs (Linux), Ratas-256 74,7 → 134,0 µs (Windows, jo rezultatai) – daugiau maišymo bloke.
+  35,19 → 72,01 µs (Linux), Ratas-256 74,7 → 134,0 µs (Windows, jo rezultatai) – daugiau maišymo bloke.
 * Visa programa su failo skaitymu matuojama atskirai (DI maiša: 1 GiB – 1,13 s, 3,7 MB atminties). → [visos lentelės](palyginimas/sparta.md)
 
 ## 6. Kolizijos (5)
@@ -124,9 +124,9 @@ Standartinės maišos – OpenSSL 3.6 realizacijos, patikrintos su Python `hashl
 | | Ratas-256 | DI maiša | MD5 | SHA-1 | SHA-256 |
 |---|---|---|---|---|---|
 | Ilgis, bitai | 256 | 256 | 128 | 160 | 256 |
-| 70 B, µs | 0,247 | 0,233 | 0,160 | 0,155 | 0,278 |
-| 75 595 B, µs | 161,70 | 70,80 | 73,80 | 53,90 | 119,22 |
-| MB/s | 468 | 1 068 | 1 024 | 1 402 | 634 |
+| 70 B, µs | 0,247 | 0,234 | 0,159 | 0,155 | 0,285 |
+| 75 595 B, µs | 162,96 | 71,27 | 74,19 | 55,29 | 121,12 |
+| MB/s | 464 | 1 061 | 1 019 | 1 367 | 624 |
 | Bitų skirtumas, % | 50,01 | 50,00 | 49,99 | 49,98 | 50,00 |
 | Std. nuokrypis (idealus), % | 3,13 (3,12) | 3,11 (3,12) | 4,43 (4,42) | 3,95 (3,95) | 3,12 (3,12) |
 | Hex skirtumas, % | 93,75 | 93,76 | 93,74 | 93,75 | 93,74 |
