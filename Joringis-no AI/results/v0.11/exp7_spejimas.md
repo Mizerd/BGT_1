@@ -10,8 +10,8 @@ Kandidatai – visos keturių skaitmenų eilutės `0000`–`9999` (10 000, po 4 
 | Bandymų iki radimo | 3 984 |
 | Patikrinta iš viso (visi sutapimai) | 10 000 |
 | Sutampantys kandidatai | `3983` |
-| Viso perrinkimo laikas | 1,07 ms |
-| Viena iš anksto apskaičiuota lentelė 5 taikiniams | 10 000 maišų, 2,55 ms, atspėta 5/5 |
+| Viso perrinkimo laikas | 0,97 ms |
+| Viena iš anksto apskaičiuota lentelė 5 taikiniams | 10 000 maišų, 2,39 ms, atspėta 5/5 |
 
 Kandidatų rinkinyje rastas tiksliai vienas sutapimas, todėl čia jis identifikuoja įvestį. Bendru atveju sutapimas to neįrodo: kolizijos neišvengiamai egzistuoja, o tikroji įvestis gali būti ir už rinkinio ribų.
 
@@ -21,11 +21,11 @@ Kiekvienam taikiniui – atskira atsitiktinė 16 baitų druska, pridedama po įv
 
 | # | Taikinys | Druska | Bandymų | Sutapimų | Laikas, ms |
 |---|---|---|---|---|---|
-| 1 | `9481` | `b0e0c4a2c1eea1651ebe9ce87bd61c92` | 9 482 | 1 | 1,76 |
-| 2 | `8119` | `0d4f0979aa126e6c43a91b65cd891d62` | 8 120 | 1 | 1,78 |
-| 3 | `0203` | `bd680432b6f02372d7621b6231c0888f` | 204 | 1 | 1,90 |
-| 4 | `0580` | `c9e1e94e879b373a4e6dc27b2fd0914c` | 581 | 1 | 1,80 |
-| 5 | `3980` | `ca200add4692169a0b1e2a14703bcffb` | 3 981 | 1 | 1,84 |
+| 1 | `9481` | `b0e0c4a2c1eea1651ebe9ce87bd61c92` | 9 482 | 1 | 1,63 |
+| 2 | `8119` | `0d4f0979aa126e6c43a91b65cd891d62` | 8 120 | 1 | 1,63 |
+| 3 | `0203` | `bd680432b6f02372d7621b6231c0888f` | 204 | 1 | 1,61 |
+| 4 | `0580` | `c9e1e94e879b373a4e6dc27b2fd0914c` | 581 | 1 | 1,57 |
+| 5 | `3980` | `ca200add4692169a0b1e2a14703bcffb` | 3 981 | 1 | 1,58 |
 
 Su druska kiekvienam taikiniui reikia atskiro perrinkimo: 5 taikiniams – 50 000 maišų vietoj 10 000. Vienam taikiniui druska darbo nepadidina, bet iš anksto apskaičiuotos lentelės nebegalima panaudoti kitiems taikiniams.
 

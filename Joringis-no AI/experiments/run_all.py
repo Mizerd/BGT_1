@@ -1,14 +1,10 @@
-"""Perkompiliuoja Ratas-256 ir iš naujo sugeneruoja visus results/ failus (Windows, MSVC).
-
-Paleidimas iš bet kurio katalogo:  python -X utf8 "Joringis-no AI/experiments/run_all.py"
-"""
 import subprocess
 import sys
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parent.parent          # Joringis-no AI
+HERE = Path(__file__).resolve().parent.parent
 REPO = HERE.parent
-SHARED = REPO / "Rokas - AI" / "experiments"            # bendra eksperimentų programa, nekeičiama
+SHARED = REPO / "Rokas - AI" / "experiments"
 VCVARS = r"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
 BUILD = HERE / "build"
 RAW = HERE / "results" / "raw"
@@ -45,9 +41,6 @@ def main():
         with open(RAW / f"{name}.csv", "wb") as f:
             subprocess.run([exp, *args], stdout=f, check=True)
 
-    # cli.csv: runs  - du atskiri paleidimai su failo argumentu;
-    #          typed - meniu 1, tekstas + Enter per stdin;
-    #          text  - meniu 2, failo kelias įvedamas ranka.
     rows = []
     for f in sorted((DATA / "exp1").iterdir()):
         rel = f"data/exp1/{f.name}"
@@ -62,7 +55,6 @@ def main():
     subprocess.run([sys.executable, "-X", "utf8", str(SHARED / "report.py"), str(RAW),
                     str(HERE / "results")], check=True)
 
-    # Bendra ataskaita rašo Rokas programos parinktis; Ratas jų neturi.
     md = HERE / "results" / "exp1_3_teisingumas.md"
     text = md.read_text(encoding="utf-8")
     text = (text.replace("su `--file`", "su failo argumentu")
