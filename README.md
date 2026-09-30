@@ -9,8 +9,6 @@ Porinis darbas: dvi atskiros realizacijos – Ratas-256 ir DI maiša – palygin
 | | Ratas-256 | DI maiša |
 |---|---|---|
 | Katalogas | [`Joringis-no AI/`](Joringis-no%20AI/README.md) | [`Rokas - AI/`](Rokas%20-%20AI/README.md) |
-| DI | v0.1–v0.12 be DI, v0.2 su DI (13 sk.) | naudotas nuo pradžių |
-| Geriausia be DI versija | v0.12 (`9b3a3ca`, leidime `V0.12`) | – |
 | Kalba | C++17, vienas failas `ratas.cpp` | C++20, CMake |
 | Indėlis į bendrą dalį | duomenų rinkinys: `data/exp1`, `konstitucija.txt` | eksperimentų programa: `experiments.cpp`, `report.py`, palyginimai |
 
@@ -140,18 +138,17 @@ Standartinės maišos – OpenSSL 3.6 realizacijos, patikrintos su Python `hashl
 
 | Versija | DI maiša | Ratas-256 |
 |---|---|---|
-| `V0.1` | 512 b būsena, 1 raundas bloke | 256 b „ratas“, 2 pasukimai bloke (be DI) |
+| `V0.1` | 512 b būsena, 1 raundas bloke | 256 b „ratas“, 2 pasukimai bloke |
 | `V0.11` | nauji testai, pataisytas CRLF testinis failas; maišos reikšmės tos pačios | posūkis 0 → 1, ne ASCII failų vardai |
-| `V0.12` | failas skaitomas dalimis, GCC optimizavimas; reikšmės tos pačios | feed-forward, 64 b bloko numeris – geriausia be DI |
+| `V0.12` | failas skaitomas dalimis, GCC optimizavimas; reikšmės tos pačios | feed-forward, 64 b bloko numeris |
 | `V0.13` | 2 raundai ir grįžtamasis ryšys – V0.12 ataka nebeveikia | kaip v0.12 |
-| `V0.2` | kodo tvarkymas; algoritmas kaip V0.13 | su DI: 3 pasukimai, feed-forward ir pabaigoje, failas dalimis |
+| `V0.2` | kodo tvarkymas; algoritmas kaip V0.13 | 3 pasukimai, feed-forward ir pabaigoje, failas dalimis |
 
 * Leidimai `V0.1`, `V0.11`, `V0.12`, `V0.13` – abi realizacijos toje pačioje versijoje (šakos `shared-V0.11`…`shared-V0.13`).
 * DI maišos versijos atskirai: šakos `AI-V0.11`, `AI-V0.12`, `AI-V0.13`. `V0.2` – šakos `main` būsena, žymė dar nesukurta.
 
 ## 13. DI naudojimas
 
-* **DI maiša**, bendra eksperimentų programa, bendras README ir palyginimai – Claude Code (Anthropic), Claude Opus modeliai;
-  galutinę būseną papildomai peržiūrėjo Claude Sonnet. Užklausos, priimti ir atmesti pasiūlymai, patikra –
-  [DI maišos README, 18 skyrius](Rokas%20-%20AI/README.md#18-di-naudojimas).
-* **Ratas-256:** pasak [autoriaus README](Joringis-no%20AI/README.md), v0.1–v0.12 sukurtos be DI, v0.2 – su DI (Claude Code).
+DI maiša, bendra eksperimentų programa, bendras README ir palyginimai – Claude Code (Anthropic), Claude Opus modeliai;
+galutinę būseną papildomai peržiūrėjo Claude Sonnet. Užklausos, priimti ir atmesti pasiūlymai, patikra –
+[DI maišos README, 18 skyrius](Rokas%20-%20AI/README.md#18-di-naudojimas).
