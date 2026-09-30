@@ -111,17 +111,17 @@ Abiem: nerecenzuota, nėra rakto ir druskos. Ratas-256 failą įkelia į atmint�
 
 ![Sparta su standartinėmis maišomis](palyginimas/standartai.svg)
 
-Ta pati eksperimentų programa, tos pačios įvestys, tas pats kompiuteris (i9-10900K, Linux, g++ 15.2 `-O3`).
+Ta pati eksperimentų programa, tos pačios įvestys, tas pats kompiuteris (i9-10900K, Linux, g++ 15.2 `-O3`); Ratas-256 – v0.11.
 Standartinės maišos – OpenSSL 3.6 realizacijos, patikrintos su Python `hashlib` (102/102). Procentai – pagal maišos ilgį.
 
 | | Ratas-256 | DI maiša | MD5 | SHA-1 | SHA-256 |
 |---|---|---|---|---|---|
 | Ilgis, bitai | 256 | 256 | 128 | 160 | 256 |
-| 70 B, µs | 0,135 | 0,103 | 0,160 | 0,153 | 0,280 |
-| 75 595 B, µs | 72,18 | 34,44 | 74,03 | 54,37 | 119,56 |
-| MB/s | 1 047 | 2 195 | 1 021 | 1 390 | 632 |
-| Bitų skirtumas, % | 50,01 | 50,00 | 49,99 | 49,98 | 50,00 |
-| Std. nuokrypis (idealus), % | 3,12 (3,12) | 3,12 (3,12) | 4,43 (4,42) | 3,95 (3,95) | 3,12 (3,12) |
+| 70 B, µs | 0,171 | 0,102 | 0,159 | 0,153 | 0,279 |
+| 75 595 B, µs | 69,14 | 34,49 | 73,87 | 54,16 | 119,62 |
+| MB/s | 1 093 | 2 192 | 1 023 | 1 396 | 632 |
+| Bitų skirtumas, % | 49,98 | 50,00 | 49,99 | 49,98 | 50,00 |
+| Std. nuokrypis (idealus), % | 3,11 (3,12) | 3,12 (3,12) | 4,43 (4,42) | 3,95 (3,95) | 3,12 (3,12) |
 | Hex skirtumas, % | 93,75 | 93,75 | 93,74 | 93,75 | 93,74 |
 
 * **Sparta:** DI maiša greičiausia, Ratas-256 ≈ MD5, SHA-256 lėčiausia – šis procesorius neturi SHA instrukcijų (SHA-NI).
