@@ -146,4 +146,6 @@ Ratas-256 sukurta be DI.
   DI maišos testai ir eksperimentų patikros sugriežtinti, maišos reikšmės nepakito. Ratas-256 algoritmas nekeistas.
 * `V0.12` – DI maiša: failai skaitomi dalimis, iki 3 % greitesnė, nauji testai; maišos reikšmės nepakito.
   Spartos palyginimas pakartotas Linux (Windows matavimai palikti). Ratas-256 nekeistas.
-* DI maišos versijos V0.11 ir V0.12 – ir atskiros šakos `AI-V0.11`, `AI-V0.12`.
+* `V0.13` – DI maiša: 2 raundai ir grįžtamasis ryšys, nes V0.12 rastos akimirksniu veikiančios kolizijos ir pirmavaizdžiai;
+  maišos reikšmės pasikeitė, visi palyginimai pakartoti. Ratas-256 šioje versijoje nekeistas.
+* DI maišos versijos V0.11–V0.13 – ir atskiros šakos `AI-V0.11`, `AI-V0.12`, `AI-V0.13`.
