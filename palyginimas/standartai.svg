@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="760" height="440" viewBox="0 0 760 440" role="img" aria-label="Vienos maišos laikas: Ratas-256, DI maiša ir standartinės maišos (tas pats kompiuteris)">
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="440" viewBox="0 0 760 440" role="img" aria-label="Vienos maišos laikas (tas pats kompiuteris, Linux)">
 <style>text{font-family:system-ui,-apple-system,'Segoe UI',sans-serif} .bg{fill:#fcfcfb} .t{fill:#0b0b0b} .t2{fill:#52514e} .grid{stroke:#e4e3de} .f-beDI{fill:#eb6834} .s-beDI{stroke:#eb6834} .f-di{fill:#2a78d6} .s-di{stroke:#2a78d6} .f-md5{fill:#1baf7a} .s-md5{stroke:#1baf7a} .f-sha1{fill:#8a63d2} .s-sha1{stroke:#8a63d2} .f-sha256{fill:#c43d7a} .s-sha256{stroke:#c43d7a} .ring{stroke:#fcfcfb} @media (prefers-color-scheme: dark){.bg{fill:#1a1a19} .t{fill:#ffffff} .t2{fill:#c3c2b7} .grid{stroke:#353533} .f-beDI{fill:#d95926} .s-beDI{stroke:#d95926} .f-di{fill:#3987e5} .s-di{stroke:#3987e5} .f-md5{fill:#2fc48d} .s-md5{stroke:#2fc48d} .f-sha1{fill:#a585e6} .s-sha1{stroke:#a585e6} .f-sha256{fill:#e0619a} .s-sha256{stroke:#e0619a} .ring{stroke:#1a1a19}}</style>
 <rect class="bg" fill="#fcfcfb" width="760" height="440"/>
-<text class="t" x="78" y="26" font-size="16" font-weight="600">Vienos maišos laikas: Ratas-256, DI maiša ir standartinės maišos (tas pats kompiuteris)</text>
+<text class="t" x="78" y="26" font-size="16" font-weight="600">Vienos maišos laikas (tas pats kompiuteris, Linux)</text>
 <line class="s-beDI" stroke="#eb6834" stroke-width="2.5" x1="78" y1="46" x2="96" y2="46"/><text class="t2" x="101" y="50" font-size="12">Ratas-256</text>
 <line class="s-di" stroke="#2a78d6" stroke-width="2.5" x1="203" y1="46" x2="221" y2="46"/><text class="t2" x="226" y="50" font-size="12">DI maiša</text>
 <line class="s-md5" stroke="#1baf7a" stroke-width="2.5" stroke-dasharray="5 3" x1="328" y1="46" x2="346" y2="46"/><text class="t2" x="351" y="50" font-size="12">MD5</text>
