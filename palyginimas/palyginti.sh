@@ -16,7 +16,7 @@ raw="$out/raw"
 mkdir -p "$build" "$raw"
 
 flags=(-std=c++20 -O3 -DNDEBUG -I"$ai/experiments")
-g++ "${flags[@]}" -fno-tree-reassoc -I"$ai/include" "$ai/experiments/impl_eduhash.cpp" "$ai/src/custom_hash.cpp" \
+g++ "${flags[@]}" -fno-tree-reassoc -I"$ai/include" "$ai/experiments/impl_dihash.cpp" "$ai/src/custom_hash.cpp" \
   "$ai/experiments/experiments.cpp" -o "$build/di"
 g++ "${flags[@]}" "$noai/experiments/impl_ratas.cpp" "$ai/experiments/experiments.cpp" -o "$build/bedi"
 

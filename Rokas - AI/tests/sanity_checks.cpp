@@ -29,12 +29,12 @@ void check(bool condition, const std::string& description) {
   }
 }
 
-eduhash::Digest256 hash_of(std::string_view text) {
+dihash::Digest256 hash_of(std::string_view text) {
   const auto* first = reinterpret_cast<const std::uint8_t*>(text.data());
-  return eduhash::custom_hash({first, text.size()});
+  return dihash::custom_hash({first, text.size()});
 }
 
-std::string hex_of(std::string_view text) { return eduhash::to_hex(hash_of(text)); }
+std::string hex_of(std::string_view text) { return dihash::to_hex(hash_of(text)); }
 
 bool is_lowercase_hex(const std::string& text) {
   for (const char c : text) {
@@ -52,8 +52,8 @@ bool is_lowercase_hex(const std::string& text) {
 int main() {
   const std::vector<std::string> inputs = {"", "a", "b", "hello", "Hello", "abc", "cba"};
   for (const std::string& input : inputs) {
-    const eduhash::Digest256 digest = hash_of(input);
-    const std::string hex = eduhash::to_hex(digest);
+    const dihash::Digest256 digest = hash_of(input);
+    const std::string hex = dihash::to_hex(digest);
     const std::string label = input.empty() ? std::string("<empty>") : input;
     check(digest.size() == 32, "digest of \"" + label + "\" is 32 bytes");
     check(hex.size() == 64, "digest of \"" + label + "\" is 64 hex characters");
@@ -94,11 +94,11 @@ int main() {
   for (std::size_t i = 0; i < binary.size(); ++i) {
     binary[i] = static_cast<std::uint8_t>(i);
   }
-  const std::string binary_hex = eduhash::to_hex(eduhash::custom_hash(binary));
+  const std::string binary_hex = dihash::to_hex(dihash::custom_hash(binary));
   check(binary_hex.size() == 64 && is_lowercase_hex(binary_hex), "all 256 byte values hash to 64 hex characters");
   std::vector<std::uint8_t> binary_swapped = binary;
   std::swap(binary_swapped[0], binary_swapped[255]);
-  check(eduhash::to_hex(eduhash::custom_hash(binary_swapped)) != binary_hex,
+  check(dihash::to_hex(dihash::custom_hash(binary_swapped)) != binary_hex,
         "reordering binary bytes changes the digest");
 
   check(hex_of(std::string(16, '\0')) != hex_of(std::string(17, '\0')),
@@ -164,10 +164,10 @@ int main() {
   }
   check(all_known, "10 known-answer vectors match the reference implementation");
 
-  eduhash::Digest256 zeros{};
+  dihash::Digest256 zeros{};
   zeros[1] = 0x0a;
   zeros[31] = 0x01;
-  check(eduhash::to_hex(zeros) == std::string("000a") + std::string(58, '0') + "01",
+  check(dihash::to_hex(zeros) == std::string("000a") + std::string(58, '0') + "01",
         "to_hex keeps leading zero bytes and nibbles");
 
   std::vector<std::string> single;
@@ -177,14 +177,14 @@ int main() {
 
   // Hasher must give the same digest however the input is split.
   auto streamed = [](std::string_view text, const std::vector<std::size_t>& pieces) {
-    eduhash::Hasher hasher;
+    dihash::Hasher hasher;
     std::size_t at = 0;
     for (std::size_t i = 0; at < text.size(); ++i) {
       const std::string_view part = text.substr(at, pieces[i % pieces.size()]);
       hasher.update({reinterpret_cast<const std::uint8_t*>(part.data()), part.size()});
       at += part.size();
     }
-    return eduhash::to_hex(hasher.finish());
+    return dihash::to_hex(hasher.finish());
   };
   bool two_pieces = true;
   for (std::size_t n = 0; n <= 100; ++n) {
@@ -207,15 +207,15 @@ int main() {
     random_pieces.push_back(static_cast<std::size_t>(x >> 33) % 1500);  // includes empty pieces
   }
   check(streamed(big, random_pieces) == hex_of(big), "Hasher: 100 000 bytes in irregular pieces (0-1499 B) match custom_hash");
-  eduhash::Hasher hasher;
+  dihash::Hasher hasher;
   const std::string first_part = "hello, ", second_part = "world";
   hasher.update({reinterpret_cast<const std::uint8_t*>(first_part.data()), first_part.size()});
-  const bool same_twice = eduhash::to_hex(hasher.finish()) == hex_of(first_part) &&
-                          eduhash::to_hex(hasher.finish()) == hex_of(first_part);
+  const bool same_twice = dihash::to_hex(hasher.finish()) == hex_of(first_part) &&
+                          dihash::to_hex(hasher.finish()) == hex_of(first_part);
   hasher.update({reinterpret_cast<const std::uint8_t*>(second_part.data()), second_part.size()});
-  check(same_twice && eduhash::to_hex(hasher.finish()) == hex_of(first_part + second_part),
+  check(same_twice && dihash::to_hex(hasher.finish()) == hex_of(first_part + second_part),
         "Hasher: finish() leaves the hasher unchanged, more input can follow");
-  check(eduhash::to_hex(eduhash::Hasher().finish()) == hex_of(""), "Hasher: no input gives the empty-input digest");
+  check(dihash::to_hex(dihash::Hasher().finish()) == hex_of(""), "Hasher: no input gives the empty-input digest");
 
   // The 512 -> 256 fold is many-to-one: a digest does not pin down the state.
   // (It says nothing about how hard it is to find an input for a digest.)

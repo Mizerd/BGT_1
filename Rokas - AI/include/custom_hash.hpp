@@ -9,7 +9,7 @@
 #include <span>
 #include <string>
 
-namespace eduhash {
+namespace dihash {
 
 using Digest256 = std::array<std::uint8_t, 32>;
 
@@ -35,6 +35,6 @@ class Hasher {
 // 64 lowercase hex digits, leading zeros kept.
 std::string to_hex(const Digest256& digest);
 
-}  // namespace eduhash
+}  // namespace dihash
 
 #endif  // CUSTOM_HASH_HPP

@@ -10,9 +10,9 @@ namespace impl {
 const char* const kName = IMPL_NAME;
 
 Digest hash(const std::uint8_t* data, std::size_t size) {
-  return eduhash::custom_hash({data, size});
+  return dihash::custom_hash({data, size});
 }
 
-std::string to_hex(const Digest& digest) { return eduhash::to_hex(digest); }
+std::string to_hex(const Digest& digest) { return dihash::to_hex(digest); }
 
 }  // namespace impl

@@ -4,7 +4,7 @@
 #include <bit>
 #include <cstddef>
 
-namespace eduhash {
+namespace dihash {
 namespace {
 
 // Constants: decimal digits of n^n (n = 2, 3, ...) cut into 20-digit chunks,
@@ -166,4 +166,4 @@ std::string to_hex(const Digest256& digest) {
   return text;
 }
 
-}  // namespace eduhash
+}  // namespace dihash

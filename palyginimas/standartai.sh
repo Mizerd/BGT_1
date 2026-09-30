@@ -16,7 +16,7 @@ mkdir -p "$build" "$raw"
 ssl="$(pkg-config --cflags --libs libcrypto)" || { echo "nerastas OpenSSL (pkg-config libcrypto)" >&2; exit 1; }
 read -r -a ssl <<< "$ssl"
 flags=(-std=c++20 -O3 -DNDEBUG -I"$ai/experiments")
-g++ "${flags[@]}" -fno-tree-reassoc -I"$ai/include" "$ai/experiments/impl_eduhash.cpp" "$ai/src/custom_hash.cpp" \
+g++ "${flags[@]}" -fno-tree-reassoc -I"$ai/include" "$ai/experiments/impl_dihash.cpp" "$ai/src/custom_hash.cpp" \
   "$ai/experiments/experiments.cpp" -o "$build/di"
 g++ "${flags[@]}" "$noai/experiments/impl_ratas.cpp" "$ai/experiments/experiments.cpp" -o "$build/bedi"
 for spec in md5:MD5:16 sha1:SHA1:20 sha256:SHA256:32; do

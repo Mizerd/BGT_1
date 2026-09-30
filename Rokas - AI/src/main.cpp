@@ -19,12 +19,12 @@ void print_usage(std::ostream& out, const char* program) {
 
 // Reads in 64 KiB pieces, so memory use doesn't grow with the file.
 // Returns false if the file can't be opened or read.
-bool hash_file(const std::string& path, eduhash::Digest256& digest) {
+bool hash_file(const std::string& path, dihash::Digest256& digest) {
   std::ifstream file(path, std::ios::binary);
   if (!file) {
     return false;
   }
-  eduhash::Hasher hasher;
+  dihash::Hasher hasher;
   std::vector<char> buffer(64 * 1024);
   while (file.read(buffer.data(), static_cast<std::streamsize>(buffer.size())) || file.gcount() > 0) {
     hasher.update({reinterpret_cast<const std::uint8_t*>(buffer.data()), static_cast<std::size_t>(file.gcount())});
@@ -40,7 +40,7 @@ bool hash_file(const std::string& path, eduhash::Digest256& digest) {
 }
 
 void print_digest(std::span<const std::uint8_t> bytes) {
-  std::cout << eduhash::to_hex(eduhash::custom_hash(bytes)) << '\n';
+  std::cout << dihash::to_hex(dihash::custom_hash(bytes)) << '\n';
 }
 
 std::span<const std::uint8_t> as_bytes(std::string_view text) {
@@ -87,12 +87,12 @@ int main(int argc, char** argv) {
 
   if (mode == "--file") {
     std::cerr << "Režimas: failo turinys (" << argv[2] << ")\n";
-    eduhash::Digest256 digest;
+    dihash::Digest256 digest;
     if (!hash_file(argv[2], digest)) {
       std::cerr << "klaida: nepavyko perskaityti failo: " << argv[2] << '\n';
       return 2;
     }
-    std::cout << eduhash::to_hex(digest) << '\n';
+    std::cout << dihash::to_hex(digest) << '\n';
     return 0;
   }
 

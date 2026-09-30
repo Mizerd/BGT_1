@@ -39,7 +39,7 @@ enable_testing()
 add_test(NAME sanity COMMAND sanity-checks)
 
 # Run by experiments/run_all.sh.
-add_executable(experiments experiments/experiments.cpp experiments/impl_eduhash.cpp)
+add_executable(experiments experiments/experiments.cpp experiments/impl_dihash.cpp)
 target_include_directories(experiments PRIVATE experiments)
 target_link_libraries(experiments PRIVATE hash_core)
 target_compile_definitions(experiments PRIVATE IMPL_NAME="di")
