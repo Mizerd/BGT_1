@@ -30,7 +30,7 @@ Paleidimas, pseudokodas ir sprendimų pagrindimas – kiekvieno kataloge README.
 * **Ta pati eksperimentų programa** – skiriasi tik adapteris `experiments/impl_*.cpp`.
 * **Tie patys duomenys:** `exp1` (34 failai, turinys tikrinamas `check_fixtures.py`), `konstitucija.txt`, seed 20260920, abėcėlė `!`..`~`.
 * **Atkartojamumas:** 1–3, 5 ir 6 eksperimentų rezultatai paleidus iš naujo sutampa **baitas į baitą** (Ratas-256 – net Windows / MSVC ir Linux / g++).
-* **Sparta** matuojama abiem viename kompiuteryje (`palyginimas/`).
+* **Sparta:** abi realizacijos matuojamos tame pačiame kompiuteryje – atskirai Windows ir Linux (`palyginimas/`).
 
 ## 4. Teisingumas (1–3)
 
@@ -45,17 +45,15 @@ Paleidimas, pseudokodas ir sprendimų pagrindimas – kiekvieno kataloge README.
 
 ![Sparta](palyginimas/sparta.svg)
 
-Tas pats kompiuteris (AMD Ryzen 9 7900X, Windows 11, MSVC 19.44 `/O2`); 3 apšilimai + 10 matavimų, be I/O. Vidurkis (min–max):
+Abi realizacijos tame pačiame kompiuteryje; 3 apšilimai + 10 matavimų, be I/O. Vidurkis, µs:
 
-| Baitai | Ratas-256, µs | DI maiša, µs |
-|---|---|---|
-| 70 | 0,155 (0,153–0,156) | 0,112 (0,112–0,113) |
-| 996 | 1,040 (1,030–1,052) | 0,491 (0,490–0,496) |
-| 9 155 | 9,223 (9,106–9,431) | 3,997 (3,964–4,142) |
-| 75 595 | 74,082 (73,701–75,229) | 32,269 (32,110–32,639) |
+| Kompiuteris | 70 B: Ratas-256 / DI | 75 595 B: Ratas-256 / DI | DI greitesnė |
+|---|---|---|---|
+| Ryzen 9 7900X, Windows 11, MSVC `/O2` (grafikas) | 0,155 / 0,112 | 74,08 / 32,27 | 1,4× / 2,3× |
+| i9-10900K, Linux, g++ 15.2 `-O3` | 0,131 / 0,101 | 70,94 / 34,26 | 1,3× / 2,1× |
 
-Abiejų laikas auga tiesiškai: Ratas-256 ≈ 1 020 MB/s, DI maiša ≈ 2 343 MB/s (visam failui).
-Mažoms įvestims skirtumas mažesnis: 70 B DI maiša greitesnė ≈ 1,4 karto. → [visa lentelė](palyginimas/sparta.md)
+Abiejų laikas auga tiesiškai; santykis abiejuose kompiuteriuose panašus. Windows matavimai – V0.1 kodas
+(maišos reikšmės tos pačios). → [visos lentelės](palyginimas/sparta.md)
 
 ## 6. Kolizijos (5)
 
@@ -95,7 +93,7 @@ Abiejų rezultatai sutampa:
 ## 9. Išvados (8)
 
 * **Statistiškai nesiskiria:** abi praeina 1–3, 0 kolizijų, lavinos efektas ≈ idealus.
-* **Sparta:** DI maiša ilgiems failams ≈ 2,3 karto greitesnė; mažoms įvestims skirtumas mažesnis (≈ 1,4 karto).
+* **Sparta:** DI maiša ilgiems failams ≈ 2,1–2,3 karto greitesnė; mažoms įvestims – ≈ 1,3–1,4 karto.
 * **Testai neįrodo** saugumo, atsparumo kolizijoms ar pirmavaizdžiui; geras lavinos efektas galimas ir silpnai funkcijai.
 * **Pirmavaizdis:** mažą aibę abi perrenka per ≈ 1 ms – sunkumą lemia paieškos erdvė, ne maiša.
 
@@ -106,7 +104,7 @@ Abiejų rezultatai sutampa:
 | būsena lygi išvesties dydžiui (256 b) | vienas maišymo žingsnis 32 B blokui |
 | `rotl(a, d)` nieko nesuka, kai d mod 32 = 0 | tiesinis 512 → 256 sulenkimas |
 
-Abiem: nerecenzuota, nėra rakto ir druskos, failas įkeliamas į atmintį.
+Abiem: nerecenzuota, nėra rakto ir druskos. Ratas-256 failą įkelia į atmintį; DI maiša (nuo V0.12) skaito dalimis.
 
 ## 11. DI naudojimas
 

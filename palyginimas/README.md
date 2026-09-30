@@ -5,17 +5,19 @@ skiriasi tik adapteris `experiments/impl_*.cpp`.
 
 | Failas | Kas tai |
 |---|---|
-| `raw/speed.csv` | spartos matavimai, abi realizacijos tame pačiame kompiuteryje |
-| `sparta.md`, `sparta.svg` | lentelė ir grafikas, sugeneruoti `palyginti.py` iš `raw/speed.csv` |
+| `raw/speed.csv` | spartos matavimai Windows, abi realizacijos tame pačiame kompiuteryje |
+| `raw/speed_linux.csv`, `.txt` | tas pats Linux ir aplinkos aprašas (`palyginti.sh sparta`) |
+| `sparta.md`, `sparta.svg` | lentelės (Windows ir Linux) ir grafikas (Windows), sugeneruoti `palyginti.py` |
 | `raw/atkartojamumas.csv` | ar 1–3, 5, 6 eksperimentų išvestis sutampa su įrašyta `results/raw/` (1 – taip) |
 
-Įrašyti spartos matavimai: AMD Ryzen 9 7900X, Windows 11, MSVC 19.44, `/std:c++20 /O2 /DNDEBUG`, viena gija.
+Windows: AMD Ryzen 9 7900X, Windows 11, MSVC 19.44, `/std:c++20 /O2 /DNDEBUG`, viena gija, V0.1 kodas.
+Linux: Intel i9-10900K, g++ 15.2, `-O3` (DI maišai ir `-fno-tree-reassoc`, kaip CMake), viena gija, V0.12 kodas.
 
 ## Linux
 
 ```bash
 ./palyginimas/palyginti.sh atkartojamumas   # nekeičia spartos duomenų
-./palyginimas/palyginti.sh sparta           # tik neapkrautame kompiuteryje
+./palyginimas/palyginti.sh sparta           # perrašo raw/speed_linux.csv; tik neapkrautame kompiuteryje
 ```
 
 ## Windows („x64 Native Tools Command Prompt for VS 2022“, iš repozitorijos šaknies)

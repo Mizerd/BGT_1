@@ -8,6 +8,7 @@
 | 512 bitų būsena (09-20) | Pašalinti silpnybę: maiša atskleisdavo visą būseną, o žingsniai apverčiami | 8 × 64 b būsena, perėjimas pirmyn ir atgal, 512 → 256 sulenkimas | Priimta. Atmesta: dvi atskiros 4 dalių pusės, kurias jungia tik keli ryšiai – pokytis per lėtai pereitų tarp pusių | Pirmojoje versijoje 10 000 / 10 000 iki 15 B žinučių atkurta iš maišos; naujoje tas kelias nebeegzistuoja; lavinos efektas ≈ 50 % |
 | Eksperimentai (09-23) | Atlikti 1–8 eksperimentus su tais pačiais duomenimis kaip poros realizacija; pridėti rankinį įvedimą | Bendra eksperimentų programa su adapteriais; `std::mt19937_64`, seed 20260920; sutrumpintų maišų kolizijų patikra | Priimta. Atmesta: pirmosios versijos palyginimas README – palikta tik dabartinė realizacija | Ratas-256 rezultatai Windows (MSVC) ir Linux (g++) sutapo baitas į baitą; sutrumpintų maišų kolizijos atitinka gimtadienio įvertį |
 | V0.11 patikra (09-29) | Išsamiai patikrinti realizaciją, pataisyti tikras problemas, nekeičiant algoritmo | Pataisyti CRLF testinį failą; pridėti žinomų atsakymų testus; griežtesnės lavinos patikros; duomenų kontrolinės sumos | Priimta. Atmesta: algoritmo pakeitimai – atidėta V0.12 | Maišos reikšmės nepakito (10 žinomų atsakymų, nepriklausoma Python realizacija); 57 + 32 patikros; rezultatai sugeneruoti iš naujo |
+| V0.12 optimizavimas ir testai (09-30) | Išmatuoti spartą neapkrautame kompiuteryje, optimizuoti ir daugiau testuoti, nekeičiant maišos reikšmių | Išmatuoti ciklus žingsniui ir palyginti su teorine riba (14 nuoseklių daugybų ≈ 71 ciklas); `Hasher` failams skaityti dalimis; GCC `-fno-tree-reassoc`; CMake numatytai `Release` | Priimta. Atmesta: greitesnis algoritmas (didesni blokai) – keistų visas maišas ir silpnintų maišymą; `always_inline` – nestandartinis, standartinio `inline` pakako | 62 + 33 patikros, 312 įvesčių su Python realizacija, mutacijų testai; ASan / UBSan, clang++, `-O0` / `-O2` / `-march=native` – 1, 5, 6 eksperimentų rezultatai sutapo baitas į baitą; 5 GiB srautu = visa atmintyje |
 
 ## V0.11 rastos ir pataisytos problemos
 
@@ -16,3 +17,10 @@
 * Lavinos eksperimentas ignoravo hex dekodavimo klaidas ir netikrino, ar pakeistas tiksliai vienas simbolis ar bitas. Pridėtos patikros (visos 200 000 porų buvo teisingos).
 * Grafikų ašys buvo įrašytos ranka – dabar skaičiuojamos iš duomenų; bendrame README spartos grafikas nebuvo įdėtas.
 * `palyginimas/palyginti.sh` kiekvieną kartą perrašydavo įrašytus Windows spartos matavimus – atskirti režimai.
+
+## V0.12 rastos ir pataisytos problemos
+
+* Be `CMAKE_BUILD_TYPE` CMake kompiliuodavo be optimizacijų – ≈ 7 kartus lėčiau. Dabar numatytai `Release`.
+* GCC pergrupuodavo XOR taip, kad dvi operacijos atsidurdavo daugybų grandinėje: 73,5 ciklo žingsniui vietoj ≈ 71.
+* `--file` įkeldavo visą failą į atmintį: 2 GiB – 2 GB RAM ir 2,4 s. Dabar 64 KiB dalimis: 4 MB, 1,1 s.
+* Pirmasis `Hasher` variantas trumpoms įvestims buvo iki 15 % lėtesnis (būsena ėjo per atmintį) – pataisyta prieš įrašant.

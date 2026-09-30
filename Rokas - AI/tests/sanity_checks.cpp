@@ -3,7 +3,7 @@
 // These are deliberately small: they establish that the implementation runs,
 // is deterministic, produces the right shape of output and reacts to input
 // changes.  The statistical experiments (collisions, avalanche, benchmarks)
-// belong to a later stage of the assignment and are not implemented here.
+// are in experiments/.
 
 #include <algorithm>
 #include <array>

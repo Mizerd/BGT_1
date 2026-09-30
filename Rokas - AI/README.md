@@ -13,8 +13,9 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build
 ./build/hash-generator --text "hello"   # 2607ba4e…43936c54
 ./build/hash-generator --file failas.txt
 
-./build/sanity-checks                   # 57 patikros, iš jų 10 žinomų atsakymų
-./tests/run_sanity.sh build             # 32 patikros
+./build/sanity-checks                   # 62 patikros, iš jų 10 žinomų atsakymų
+./tests/run_sanity.sh build             # 33 patikros
+python3 tests/reference_check.py build  # 312 įvesčių lyginama su Python realizacija
 python3 tests/check_fixtures.py "../Joringis-no AI/data"   # bendri testiniai failai
 ./experiments/run_all.sh                # visi eksperimentai → results/
 ```
@@ -106,7 +107,7 @@ HASH(input):
 | `--file` | tikslūs failo baitai; neperskaitomas failas – klaida |
 
 * Režimas parašomas `stderr`, maiša – `stdout`; rezultatas visada 64 mažosios hex raidės.
-* Riba: failas įkeliamas į RAM; ilgis – `uint64_t`.
+* `--file` skaito 64 KiB dalimis – atmintis nepriklauso nuo failo dydžio; ilgis – `uint64_t`.
 
 ## 10. Eksperimentų sąlygos
 
@@ -134,13 +135,20 @@ UTF-8: `utf8_lt.txt` – 15 simbolių, 26 baitai. → [exp1_3_teisingumas.md](re
 
 | Baitai | µs vienai maišai | min–max |
 |---|---|---|
-| 70 | 0,100 | 0,098–0,101 |
-| 996 | 0,532 | 0,529–0,533 |
-| 20 409 | 9,571 | 9,491–9,584 |
-| 75 595 | 35,191 | 34,864–35,362 |
+| 70 | 0,101 | 0,099–0,103 |
+| 996 | 0,522 | 0,512–0,528 |
+| 20 409 | 9,289 | 9,129–9,516 |
+| 75 595 | 34,186 | 33,675–34,941 |
 
-* Laikas auga **tiesiškai**, ≈ **2,1 GB/s**; mažoms įvestims – pastovios 5 žingsnių išlaidos.
+* Laikas auga **tiesiškai**, ≈ **2,2 GB/s**; mažoms įvestims – pastovios 5 žingsnių išlaidos.
 * 3 apšilimai + 10 matavimų, be I/O. → [exp4_sparta.md](results/exp4_sparta.md)
+* Riba – **14 nuoseklių daugybų** bloke: 14 × (pasukimas + XOR + daugyba) ≈ 71 ciklas 32 B blokui; išmatuota – 70,6.
+  Greičiau – tik keičiant algoritmą (ir visas maišos reikšmes).
+
+| V0.12 optimizavimas | V0.11 | V0.12 |
+|---|---|---|
+| 75 595 B, µs | 35,09 | 34,23 |
+| `--file`, 2 GiB failas | 2,41 s, 2 GB RAM | 1,13 s, 4 MB RAM |
 
 ## 13. Kolizijos (5)
 
@@ -183,7 +191,7 @@ UTF-8: `utf8_lt.txt` – 15 simbolių, 26 baitai. → [exp1_3_teisingumas.md](re
 
 ## 16. Išvados (8)
 
-* **Veikia:** determinizmas, formatas, 0 kolizijų, ≈ 50 % lavinos efektas, ≈ 2,1 GB/s.
+* **Veikia:** determinizmas, formatas, 0 kolizijų, ≈ 50 % lavinos efektas, ≈ 2,2 GB/s.
 * **Neįrodo:** saugumo, atsparumo kolizijoms ar pirmavaizdžiui.
 * **Pirmavaizdis** – mažą aibę perrenkame per < 1 ms; **kolizijos** egzistuoja visada (gimtadienio paradoksas).
 
@@ -191,14 +199,14 @@ UTF-8: `utf8_lt.txt` – 15 simbolių, 26 baitai. → [exp1_3_teisingumas.md](re
 
 * nerecenzuota, be saugumo garantijų;
 * vienas maišymo žingsnis blokui; paprastas tiesinis sulenkimas;
-* nėra rakto ir druskos; failas įkeliamas į atmintį; išbandyta tik Linux.
+* nėra rakto ir druskos; testai paleisti tik Linux (g++, clang++).
 
 ## 18. DI naudojimas
 
 * **Įrankis:** Claude Code (Anthropic), Claude Opus modeliai.
 * **Užklausos:** sukurti savą 256 bitų maišą, neatkartojant žinomų; pašalinti silpnybes; atlikti 1–8 eksperimentus.
 * **Atmesta:** pradinė 256 bitų būsena (maiša atskleisdavo visą būseną); xor-shift finalizatorius (per daug panašus į MurmurHash).
-* **Patikrinta:** nepriklausoma Python realizacija, ASan / UBSan, 89 patikros, konstantos palygintos su žinomomis.
+* **Patikrinta:** nepriklausoma Python realizacija (`tests/reference_check.py`), ASan / UBSan, 62 + 33 patikros, konstantos palygintos su žinomomis.
 * Išsamiau – [DI sąveikos žurnalas](docs/DI_zurnalas.md).
 
 Peržiūrėtos SHA-2, SHA-3, BLAKE2/3, SipHash, MurmurHash3, xxHash, CityHash, FNV – jų konstantos ir funkcijos nenaudojamos.
