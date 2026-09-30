@@ -21,11 +21,27 @@ g++ "${flags[@]}" -fno-tree-reassoc -I"$ai/include" "$ai/experiments/impl_eduhas
 g++ "${flags[@]}" "$noai/experiments/impl_ratas.cpp" "$ai/experiments/experiments.cpp" -o "$build/bedi"
 
 if [[ "$mode" == sparta || "$mode" == viskas ]]; then
+  # Kaip standartai.sh: paleidimas kartojamas, jei CPU apkrova > 12 % arba sklaida > 10 %.
   pin=()
   command -v taskset > /dev/null && pin=(taskset -c 2)
+  cpu() { read -r _ a b c d e f g h _ < /proc/stat; echo "$((a + b + c + f + g + h)) $((a + b + c + d + e + f + g + h))"; }
+  spread() {
+    awk -F, '{ s[$3] += $8; n[$3]++; if (!($3 in lo) || $8 < lo[$3]) lo[$3] = $8; if ($8 > hi[$3]) hi[$3] = $8 }
+             END { w = 0; for (k in s) { v = 100 * (hi[k] - lo[k]) / (s[k] / n[k]); if (v > w) w = v }; printf "%d", w }' "$1"
+  }
   : > "$raw/speed_linux.csv"
   for b in bedi di; do
-    "${pin[@]}" "$build/$b" speed "$noai/data/konstitucija.txt" >> "$raw/speed_linux.csv"
+    for try in $(seq 20); do
+      read -r busy1 total1 <<< "$(cpu)"
+      "${pin[@]}" "$build/$b" speed "$noai/data/konstitucija.txt" > "$build/$b.speed"
+      read -r busy2 total2 <<< "$(cpu)"
+      load=$(( 100 * (busy2 - busy1) / (total2 - total1) ))
+      (( load <= 12 && $(spread "$build/$b.speed") <= 10 )) && break
+      (( try == 20 )) && { echo "$b: CPU nuolat apkrautas, sparta nematuota" >&2; exit 1; }
+      echo "$b: CPU apkrova ${load} % – kartojama po 20 s" >&2
+      sleep 20
+    done
+    cat "$build/$b.speed" >> "$raw/speed_linux.csv"
   done
   echo "$(grep -m1 'model name' /proc/cpuinfo | cut -d: -f2 | sed 's/^ *//'), $(uname -sr), $(g++ --version | head -1), -O3" \
     > "$raw/speed_linux.txt"
