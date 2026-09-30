@@ -9,6 +9,8 @@ skiriasi tik adapteris `experiments/impl_*.cpp`.
 | `raw/speed_linux.csv`, `.txt` | tas pats Linux ir aplinkos aprašas (`palyginti.sh sparta`) |
 | `sparta.md`, `sparta.svg` | lentelės (Windows ir Linux) ir grafikas (Windows), sugeneruoti `palyginti.py` |
 | `raw/atkartojamumas.csv` | ar 1–3, 5, 6 eksperimentų išvestis sutampa su įrašyta `results/raw/` (1 – taip) |
+| `standartai.sh`, `standartai.py`, `impl_openssl.cpp` | papildoma užduotis: abi maišos ir MD5, SHA-1, SHA-256 (OpenSSL) |
+| `raw/std_*.csv`, `standartai.md`, `standartai.svg` | jos duomenys, lentelės ir spartos grafikas |
 
 Windows: AMD Ryzen 9 7900X, Windows 11, MSVC 19.44, `/std:c++20 /O2 /DNDEBUG`, viena gija, V0.1 kodas.
 Linux: Intel i9-10900K, g++ 15.2, `-O3` (DI maišai ir `-fno-tree-reassoc`, kaip CMake), viena gija, V0.12 kodas.
@@ -18,6 +20,7 @@ Linux: Intel i9-10900K, g++ 15.2, `-O3` (DI maišai ir `-fno-tree-reassoc`, kaip
 ```bash
 ./palyginimas/palyginti.sh atkartojamumas   # nekeičia spartos duomenų
 ./palyginimas/palyginti.sh sparta           # perrašo raw/speed_linux.csv; tik neapkrautame kompiuteryje
+nix-shell -p openssl pkg-config --run ./palyginimas/standartai.sh   # reikia OpenSSL 3; be NixOS – tiesiog ./palyginimas/standartai.sh
 ```
 
 ## Windows („x64 Native Tools Command Prompt for VS 2022“, iš repozitorijos šaknies)

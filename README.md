@@ -96,6 +96,7 @@ Abiejų rezultatai sutampa:
 * **Sparta:** DI maiša ilgiems failams ≈ 2,1–2,3 karto greitesnė; mažoms įvestims – ≈ 1,3–1,4 karto.
 * **Testai neįrodo** saugumo, atsparumo kolizijoms ar pirmavaizdžiui; geras lavinos efektas galimas ir silpnai funkcijai.
 * **Pirmavaizdis:** mažą aibę abi perrenka per ≈ 1 ms – sunkumą lemia paieškos erdvė, ne maiša.
+* **Su standartais (11 sk.):** lavinos efektu MD5, SHA-1, SHA-256 ir abi mūsų maišos nesiskiria; DI maiša greičiausia.
 
 ## 10. Silpnybės
 
@@ -106,16 +107,40 @@ Abiejų rezultatai sutampa:
 
 Abiem: nerecenzuota, nėra rakto ir druskos. Ratas-256 failą įkelia į atmintį; DI maiša (nuo V0.12) skaito dalimis.
 
-## 11. DI naudojimas
+## 11. Papildoma užduotis: MD5, SHA-1, SHA-256
 
-DI naudota **DI maišai**, bendrai eksperimentų programai, bendram README ir spartos palyginimui: Claude Code (Anthropic), Claude Opus modeliai.
+![Sparta su standartinėmis maišomis](palyginimas/standartai.svg)
+
+Ta pati eksperimentų programa, tos pačios įvestys, tas pats kompiuteris (i9-10900K, Linux, g++ 15.2 `-O3`).
+Standartinės maišos – OpenSSL 3.6 realizacijos, patikrintos su Python `hashlib` (102/102). Procentai – pagal maišos ilgį.
+
+| | Ratas-256 | DI maiša | MD5 | SHA-1 | SHA-256 |
+|---|---|---|---|---|---|
+| Ilgis, bitai | 256 | 256 | 128 | 160 | 256 |
+| 70 B, µs | 0,135 | 0,103 | 0,160 | 0,153 | 0,280 |
+| 75 595 B, µs | 72,18 | 34,44 | 74,03 | 54,37 | 119,56 |
+| MB/s | 1 047 | 2 195 | 1 021 | 1 390 | 632 |
+| Bitų skirtumas, % | 50,01 | 50,00 | 49,99 | 49,98 | 50,00 |
+| Std. nuokrypis (idealus), % | 3,12 (3,12) | 3,12 (3,12) | 4,43 (4,42) | 3,95 (3,95) | 3,12 (3,12) |
+| Hex skirtumas, % | 93,75 | 93,75 | 93,74 | 93,75 | 93,74 |
+
+* **Sparta:** DI maiša greičiausia, Ratas-256 ≈ MD5, SHA-256 lėčiausia – šis procesorius neturi SHA instrukcijų (SHA-NI).
+  OpenSSL naudoja asemblerį (AVX2), mūsų maišos – paprastas C++.
+* **Lavinos efektas:** visų ≈ 50 %, sklaida lygi idealiai savo ilgiui – šis testas maišų **neišskiria**.
+* MD5 ir SHA-1 kolizijos randamos praktiškai, nors jų lavinos efektas toks pat geras – tai neįrodo atsparumo kolizijoms.
+  → [visos lentelės](palyginimas/standartai.md)
+
+## 12. DI naudojimas
+
+DI naudota **DI maišai**, bendrai eksperimentų programai, bendram README, spartos ir standartinių maišų palyginimui: Claude Code (Anthropic), Claude Opus modeliai.
 Užklausos, priimti ir atmesti pasiūlymai, patikra – [DI maišos README, 18 skyrius](Rokas%20-%20AI/README.md#18-di-naudojimas).
 Ratas-256 sukurta be DI.
 
-## 12. Versija
+## 13. Versija
 
 * `V0.1` – be DI sukurta Ratas-256 ir DI maiša, palygintos šiame README.
 * `V0.11` – pataisytas bendras CRLF testinis failas (anksčiau jame buvo LF), abiejų 1–3 eksperimentų rezultatai sugeneruoti iš naujo;
   DI maišos testai ir eksperimentų patikros sugriežtinti, maišos reikšmės nepakito. Ratas-256 algoritmas nekeistas.
 * `V0.12` – DI maiša: failai skaitomi dalimis, iki 3 % greitesnė, nauji testai; maišos reikšmės nepakito.
   Spartos palyginimas pakartotas Linux (Windows matavimai palikti). Ratas-256 nekeistas.
+* DI maišos versijos V0.11 ir V0.12 – ir atskiros šakos `AI-V0.11`, `AI-V0.12`.
