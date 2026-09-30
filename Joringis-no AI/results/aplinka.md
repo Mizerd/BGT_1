@@ -11,7 +11,7 @@
 | Spartos matavimai | be branduolio prisegimo (`taskset` Windows'e nėra) |
 | Generatorius | `std::mt19937_64`, simbolis = `'!' + (x mod 94)`, bazinis seed 20260920 |
 | Duomenys | bendras poros rinkinys `Joringis-no AI/data/` (`exp1/`, `konstitucija.txt`) |
-| Realizacija | `ratas.cpp` v0.2 (v0.12 – commit 9b3a3ca, v0.11 – commit 6b0dd58, v0.1 – commit c6622a9) |
+| Realizacija | `ratas.cpp` v0.2 – commit f4978e8 ir vėlesni pataisymai, maišos reikšmių nekeitę (`git log -- ratas.cpp`); v0.12 – commit 9b3a3ca, v0.11 – commit 6b0dd58, v0.1 – commit 5ba8837 (c6622a9 pakeitė tik komentarus) |
 | Eksperimentų programa | `Rokas - AI/experiments/experiments.cpp`, nepakeista; adapteris `experiments/impl_ratas.cpp` |
 
 ## Atkūrimas

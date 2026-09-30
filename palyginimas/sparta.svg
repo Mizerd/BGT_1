@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="760" height="430" viewBox="0 0 760 430" role="img" aria-label="Vienos maišos laikas pagal įvesties dydį (tas pats kompiuteris, Linux)">
-<style>text{font-family:system-ui,-apple-system,'Segoe UI',sans-serif} .bg{fill:#fcfcfb} .t{fill:#0b0b0b} .t2{fill:#52514e} .grid{stroke:#e4e3de} .f-beDI{fill:#eb6834} .s-beDI{stroke:#eb6834} .f-di{fill:#2a78d6} .s-di{stroke:#2a78d6} .ring{stroke:#fcfcfb} @media (prefers-color-scheme: dark){.bg{fill:#1a1a19} .t{fill:#ffffff} .t2{fill:#c3c2b7} .grid{stroke:#353533} .f-beDI{fill:#d95926} .s-beDI{stroke:#d95926} .f-di{fill:#3987e5} .s-di{stroke:#3987e5} .ring{stroke:#1a1a19}}</style>
+<style>text{font-family:system-ui,-apple-system,'Segoe UI',sans-serif} .bg{fill:#fcfcfb} .t{fill:#0b0b0b} .t2{fill:#52514e} .grid{stroke:#e4e3de} .f-ratas{fill:#eb6834} .s-ratas{stroke:#eb6834} .f-di{fill:#2a78d6} .s-di{stroke:#2a78d6} .ring{stroke:#fcfcfb} @media (prefers-color-scheme: dark){.bg{fill:#1a1a19} .t{fill:#ffffff} .t2{fill:#c3c2b7} .grid{stroke:#353533} .f-ratas{fill:#d95926} .s-ratas{stroke:#d95926} .f-di{fill:#3987e5} .s-di{stroke:#3987e5} .ring{stroke:#1a1a19}}</style>
 <rect class="bg" fill="#fcfcfb" width="760" height="430"/>
 <text class="t" x="78" y="26" font-size="16" font-weight="600">Vienos maišos laikas pagal įvesties dydį (tas pats kompiuteris, Linux)</text>
-<rect class="f-beDI" fill="#eb6834" x="78" y="38" width="12" height="12" rx="3"/><text class="t2" x="95" y="48" font-size="12">Ratas-256</text>
+<rect class="f-ratas" fill="#eb6834" x="78" y="38" width="12" height="12" rx="3"/><text class="t2" x="95" y="48" font-size="12">Ratas-256</text>
 <rect class="f-di" fill="#2a78d6" x="248" y="38" width="12" height="12" rx="3"/><text class="t2" x="265" y="48" font-size="12">DI maiša</text>
 <line class="grid" stroke="#e4e3de" x1="78.0" y1="64" x2="78.0" y2="368"/><text class="t2" x="78.0" y="386" font-size="12" text-anchor="middle">10</text>
 <line class="grid" stroke="#e4e3de" x1="211.0" y1="64" x2="211.0" y2="368"/><text class="t2" x="211.0" y="386" font-size="12" text-anchor="middle">100</text>
@@ -16,18 +16,18 @@
 <line class="grid" stroke="#e4e3de" x1="78" y1="64.0" x2="610" y2="64.0"/><text class="t2" x="70" y="68.0" font-size="12" text-anchor="end">1 000</text>
 <text class="t2" x="344.0" y="414" font-size="13" text-anchor="middle">Įvesties dydis, baitai (log. skalė)</text>
 <text class="t2" transform="translate(20 216.0) rotate(-90)" font-size="13" text-anchor="middle">Laikas vienai maišai, µs (log. skalė)</text>
-<path class="s-beDI" stroke="#eb6834" fill="none" stroke-width="2" stroke-linejoin="round" d="M190.4,338.3 L223.0,326.7 L252.5,313.2 L285.3,296.4 L343.8,265.0 L379.3,245.3 L419.8,222.5 L471.9,192.8 L518.2,166.4 L566.9,138.6 L593.8,123.3"/>
-<circle class="f-beDI ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="2" cx="190.4" cy="338.3" r="4.5"><title>Ratas-256: 70 B – 0,246 µs</title></circle>
-<circle class="f-beDI ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="2" cx="223.0" cy="326.7" r="4.5"><title>Ratas-256: 123 B – 0,350 µs</title></circle>
-<circle class="f-beDI ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="2" cx="252.5" cy="313.2" r="4.5"><title>Ratas-256: 205 B – 0,526 µs</title></circle>
-<circle class="f-beDI ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="2" cx="285.3" cy="296.4" r="4.5"><title>Ratas-256: 362 B – 0,874 µs</title></circle>
-<circle class="f-beDI ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="2" cx="343.8" cy="265.0" r="4.5"><title>Ratas-256: 996 B – 2,267 µs</title></circle>
-<circle class="f-beDI ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="2" cx="379.3" cy="245.3" r="4.5"><title>Ratas-256: 1 841 B – 4,113 µs</title></circle>
-<circle class="f-beDI ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="2" cx="419.8" cy="222.5" r="4.5"><title>Ratas-256: 3 712 B – 8,211 µs</title></circle>
-<circle class="f-beDI ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="2" cx="471.9" cy="192.8" r="4.5"><title>Ratas-256: 9 155 B – 20,170 µs</title></circle>
-<circle class="f-beDI ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="2" cx="518.2" cy="166.4" r="4.5"><title>Ratas-256: 20 409 B – 44,878 µs</title></circle>
-<circle class="f-beDI ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="2" cx="566.9" cy="138.6" r="4.5"><title>Ratas-256: 47 434 B – 104,252 µs</title></circle>
-<circle class="f-beDI ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="2" cx="593.8" cy="123.3" r="4.5"><title>Ratas-256: 75 595 B – 165,962 µs</title></circle>
+<path class="s-ratas" stroke="#eb6834" fill="none" stroke-width="2" stroke-linejoin="round" d="M190.4,338.3 L223.0,326.7 L252.5,313.2 L285.3,296.4 L343.8,265.0 L379.3,245.3 L419.8,222.5 L471.9,192.8 L518.2,166.4 L566.9,138.6 L593.8,123.3"/>
+<circle class="f-ratas ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="2" cx="190.4" cy="338.3" r="4.5"><title>Ratas-256: 70 B – 0,246 µs</title></circle>
+<circle class="f-ratas ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="2" cx="223.0" cy="326.7" r="4.5"><title>Ratas-256: 123 B – 0,350 µs</title></circle>
+<circle class="f-ratas ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="2" cx="252.5" cy="313.2" r="4.5"><title>Ratas-256: 205 B – 0,526 µs</title></circle>
+<circle class="f-ratas ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="2" cx="285.3" cy="296.4" r="4.5"><title>Ratas-256: 362 B – 0,874 µs</title></circle>
+<circle class="f-ratas ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="2" cx="343.8" cy="265.0" r="4.5"><title>Ratas-256: 996 B – 2,267 µs</title></circle>
+<circle class="f-ratas ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="2" cx="379.3" cy="245.3" r="4.5"><title>Ratas-256: 1 841 B – 4,113 µs</title></circle>
+<circle class="f-ratas ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="2" cx="419.8" cy="222.5" r="4.5"><title>Ratas-256: 3 712 B – 8,211 µs</title></circle>
+<circle class="f-ratas ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="2" cx="471.9" cy="192.8" r="4.5"><title>Ratas-256: 9 155 B – 20,170 µs</title></circle>
+<circle class="f-ratas ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="2" cx="518.2" cy="166.4" r="4.5"><title>Ratas-256: 20 409 B – 44,878 µs</title></circle>
+<circle class="f-ratas ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="2" cx="566.9" cy="138.6" r="4.5"><title>Ratas-256: 47 434 B – 104,252 µs</title></circle>
+<circle class="f-ratas ring" fill="#eb6834" stroke="#fcfcfb" stroke-width="2" cx="593.8" cy="123.3" r="4.5"><title>Ratas-256: 75 595 B – 165,962 µs</title></circle>
 <text class="t" x="603.8" y="127.3" font-size="12">Ratas-256</text>
 <path class="s-di" stroke="#2a78d6" fill="none" stroke-width="2" stroke-linejoin="round" d="M190.4,339.9 L223.0,335.8 L252.5,326.0 L285.3,314.4 L343.8,288.6 L379.3,270.9 L419.8,248.4 L471.9,220.1 L518.2,194.1 L566.9,166.2 L593.8,151.2"/>
 <circle class="f-di ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="190.4" cy="339.9" r="4.5"><title>DI maiša: 70 B – 0,234 µs</title></circle>

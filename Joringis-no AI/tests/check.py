@@ -1,3 +1,4 @@
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -6,10 +7,11 @@ from ratas_ref import ratas256
 
 HERE = Path(__file__).resolve().parent.parent
 BUILD = HERE / "build"
+EXE = ".exe" if os.name == "nt" else ""
 
 
 def cli_hash(path):
-    out = subprocess.run([str(BUILD / "ratas.exe"), str(path)], capture_output=True,
+    out = subprocess.run([str(BUILD / f"ratas{EXE}"), str(path)], capture_output=True,
                          stdin=subprocess.DEVNULL).stdout.decode("utf-8", "replace")
     for line in out.splitlines():
         if line.startswith("Ratas-256: "):
@@ -28,7 +30,7 @@ def main():
             print("NESUTAMPA failas:", f.name)
     print(f"programa ir Python realizacija, failai: {ok}/{total}")
 
-    run = subprocess.run([str(BUILD / "stream_test.exe")], capture_output=True, text=True)
+    run = subprocess.run([str(BUILD / f"stream_test{EXE}")], capture_output=True, text=True)
     lines = run.stdout.split()
     ok2 = total2 = 0
     for n, h in zip(lines[0:-2:2], lines[1:-2:2]):

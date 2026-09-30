@@ -8,10 +8,10 @@ import sys
 from collections import defaultdict
 
 RAW, OUT = sys.argv[1], sys.argv[2]
-IMPLS = ["beDI", "di"]
-NAMES = {"beDI": "Ratas-256", "di": "DI maiša"}
-LIGHT = {"bg": "#fcfcfb", "text": "#0b0b0b", "text2": "#52514e", "grid": "#e4e3de", "di": "#2a78d6", "beDI": "#eb6834"}
-DARK = {"bg": "#1a1a19", "text": "#ffffff", "text2": "#c3c2b7", "grid": "#353533", "di": "#3987e5", "beDI": "#d95926"}
+IMPLS = ["ratas", "di"]
+NAMES = {"ratas": "Ratas-256", "di": "DI maiša"}
+LIGHT = {"bg": "#fcfcfb", "text": "#0b0b0b", "text2": "#52514e", "grid": "#e4e3de", "di": "#2a78d6", "ratas": "#eb6834"}
+DARK = {"bg": "#1a1a19", "text": "#ffffff", "text2": "#c3c2b7", "grid": "#353533", "di": "#3987e5", "ratas": "#d95926"}
 
 
 def num(x, d):

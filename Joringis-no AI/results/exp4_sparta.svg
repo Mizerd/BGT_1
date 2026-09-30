@@ -14,16 +14,16 @@
 <line class="grid" stroke="#e4e3de" x1="78" y1="52.0" x2="720" y2="52.0"/><text class="t2" x="70" y="56.0" font-size="12" text-anchor="end">1 000</text>
 <text class="t2" x="399.0" y="404" font-size="13" text-anchor="middle">Įvesties dydis, baitai (log. skalė)</text>
 <text class="t2" transform="translate(20 205.0) rotate(-90)" font-size="13" text-anchor="middle">Laikas vienai maišai, µs (log. skalė)</text>
-<path class="ss" stroke="#2a78d6" fill="none" stroke-width="2" stroke-linejoin="round" d="M213.6,331.9 L252.9,321.2 L288.5,308.8 L328.2,292.4 L398.7,261.8 L441.5,242.3 L490.4,216.9 L553.3,185.7 L609.2,159.1 L668.0,135.0 L700.5,118.8"/>
-<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="213.6" cy="331.9" r="4.5"><title>70 B – 0,219 µs</title></circle>
-<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="252.9" cy="321.2" r="4.5"><title>123 B – 0,303 µs</title></circle>
-<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="288.5" cy="308.8" r="4.5"><title>205 B – 0,440 µs</title></circle>
-<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="328.2" cy="292.4" r="4.5"><title>362 B – 0,720 µs</title></circle>
-<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="398.7" cy="261.8" r="4.5"><title>996 B – 1,808 µs</title></circle>
-<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="441.5" cy="242.3" r="4.5"><title>1 841 B – 3,251 µs</title></circle>
-<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="490.4" cy="216.9" r="4.5"><title>3 712 B – 6,985 µs</title></circle>
-<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="553.3" cy="185.7" r="4.5"><title>9 155 B – 17,903 µs</title></circle>
-<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="609.2" cy="159.1" r="4.5"><title>20 409 B – 39,786 µs</title></circle>
-<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="668.0" cy="135.0" r="4.5"><title>47 434 B – 82,127 µs</title></circle>
-<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="700.5" cy="118.8" r="4.5"><title>75 595 B – 133,974 µs</title></circle>
+<path class="ss" stroke="#2a78d6" fill="none" stroke-width="2" stroke-linejoin="round" d="M213.6,331.1 L252.9,320.8 L288.5,308.5 L328.2,292.4 L398.7,260.1 L441.5,242.1 L490.4,219.7 L553.3,189.3 L609.2,162.9 L668.0,134.2 L700.5,118.5"/>
+<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="213.6" cy="331.1" r="4.5"><title>70 B – 0,224 µs</title></circle>
+<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="252.9" cy="320.8" r="4.5"><title>123 B – 0,306 µs</title></circle>
+<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="288.5" cy="308.5" r="4.5"><title>205 B – 0,443 µs</title></circle>
+<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="328.2" cy="292.4" r="4.5"><title>362 B – 0,721 µs</title></circle>
+<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="398.7" cy="260.1" r="4.5"><title>996 B – 1,904 µs</title></circle>
+<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="441.5" cy="242.1" r="4.5"><title>1 841 B – 3,271 µs</title></circle>
+<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="490.4" cy="219.7" r="4.5"><title>3 712 B – 6,431 µs</title></circle>
+<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="553.3" cy="189.3" r="4.5"><title>9 155 B – 16,065 µs</title></circle>
+<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="609.2" cy="162.9" r="4.5"><title>20 409 B – 35,483 µs</title></circle>
+<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="668.0" cy="134.2" r="4.5"><title>47 434 B – 84,312 µs</title></circle>
+<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="700.5" cy="118.5" r="4.5"><title>75 595 B – 135,141 µs</title></circle>
 </svg>

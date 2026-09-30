@@ -29,11 +29,11 @@ nix-shell -p openssl pkg-config --run ./palyginimas/standartai.sh   # reikia Ope
 ```bat
 mkdir palyginimas\build palyginimas\raw
 cl /nologo /std:c++20 /O2 /EHsc /utf-8 /DNDEBUG /I"Rokas - AI\experiments" /Fo:palyginimas\build\ ^
-   "Joringis-no AI\experiments\impl_ratas.cpp" "Rokas - AI\experiments\experiments.cpp" /Fe:palyginimas\build\bedi.exe
+   "Joringis-no AI\experiments\impl_ratas.cpp" "Rokas - AI\experiments\experiments.cpp" /Fe:palyginimas\build\ratas.exe
 cl /nologo /std:c++20 /O2 /EHsc /utf-8 /DNDEBUG /I"Rokas - AI\experiments" /I"Rokas - AI\include" /Fo:palyginimas\build\ ^
    "Rokas - AI\experiments\impl_dihash.cpp" "Rokas - AI\src\custom_hash.cpp" "Rokas - AI\experiments\experiments.cpp" ^
    /Fe:palyginimas\build\di.exe
-palyginimas\build\bedi.exe speed "Joringis-no AI\data\konstitucija.txt" >  palyginimas\raw\speed.csv
+palyginimas\build\ratas.exe speed "Joringis-no AI\data\konstitucija.txt" >  palyginimas\raw\speed.csv
 palyginimas\build\di.exe   speed "Joringis-no AI\data\konstitucija.txt" >> palyginimas\raw\speed.csv
 python -X utf8 palyginimas\palyginti.py palyginimas\raw palyginimas
 ```

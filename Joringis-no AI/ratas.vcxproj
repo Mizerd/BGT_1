@@ -37,7 +37,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <WarningLevel>Level4</WarningLevel>
       <!-- /utf-8: saltinio faile yra lietuvisku raidziu komentaruose. -->
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>

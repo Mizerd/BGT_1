@@ -12,14 +12,14 @@ import sys
 from collections import defaultdict
 
 RAW, OUT, EXP1 = sys.argv[1], sys.argv[2], sys.argv[3]
-IMPLS = ["beDI", "di", "md5", "sha1", "sha256"]
-NAMES = {"beDI": "Ratas-256", "di": "DI maiša", "md5": "MD5", "sha1": "SHA-1", "sha256": "SHA-256"}
-BITS = {"beDI": 256, "di": 256, "md5": 128, "sha1": 160, "sha256": 256}
+IMPLS = ["ratas", "di", "md5", "sha1", "sha256"]
+NAMES = {"ratas": "Ratas-256", "di": "DI maiša", "md5": "MD5", "sha1": "SHA-1", "sha256": "SHA-256"}
+BITS = {"ratas": 256, "di": 256, "md5": 128, "sha1": 160, "sha256": 256}
 STANDARD = {"md5", "sha1", "sha256"}
 LIGHT = {"bg": "#fcfcfb", "text": "#0b0b0b", "text2": "#52514e", "grid": "#e4e3de",
-         "beDI": "#eb6834", "di": "#2a78d6", "md5": "#1baf7a", "sha1": "#8a63d2", "sha256": "#c43d7a"}
+         "ratas": "#eb6834", "di": "#2a78d6", "md5": "#1baf7a", "sha1": "#8a63d2", "sha256": "#c43d7a"}
 DARK = {"bg": "#1a1a19", "text": "#ffffff", "text2": "#c3c2b7", "grid": "#353533",
-        "beDI": "#d95926", "di": "#3987e5", "md5": "#2fc48d", "sha1": "#a585e6", "sha256": "#e0619a"}
+        "ratas": "#d95926", "di": "#3987e5", "md5": "#2fc48d", "sha1": "#a585e6", "sha256": "#e0619a"}
 
 
 def num(x, d):

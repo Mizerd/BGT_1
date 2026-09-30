@@ -8,7 +8,7 @@
 
 namespace impl {
 
-const char* const kName = "beDI";
+const char* const kName = "ratas";
 
 Digest hash(const std::uint8_t* data, std::size_t size) {
     const std::vector<std::uint8_t> out = ratas256(data, size);

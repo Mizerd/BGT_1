@@ -156,7 +156,7 @@ private:
     unsigned counter_ = 0;
 };
 
-vector<uint8_t> ratas256(const uint8_t* data, size_t size) {
+[[maybe_unused]] vector<uint8_t> ratas256(const uint8_t* data, size_t size) {
     Ratas256 h;
     h.update(data, size);
     return h.finish();
@@ -211,7 +211,7 @@ bool hash_file(const string& path, Ratas256& h) {
     return !f.bad();
 }
 
-string read_line() {
+bool read_line(string& line) {
 #ifdef _WIN32
     HANDLE h = GetStdHandle(STD_INPUT_HANDLE);
     DWORD mode = 0;
@@ -219,19 +219,25 @@ string read_line() {
         wstring w;
         wchar_t buf[512];
         DWORD got = 0;
+        bool ended = false;
         while (ReadConsoleW(h, buf, 512, &got, nullptr) && got > 0) {
             w.append(buf, got);
-            if (w.back() == L'\n') break;
+            if (w.back() == L'\n') {
+                ended = true;
+                break;
+            }
         }
+        if (!ended || w.find(L'\x1a') != wstring::npos) return false;
         while (!w.empty() && (w.back() == L'\n' || w.back() == L'\r')) w.pop_back();
-        return utf8_from_wide(w);
+        line = utf8_from_wide(w);
+        return true;
     }
 #endif
-    string line;
-    if (!getline(cin, line)) line.clear();
+    if (!getline(cin, line) || cin.eof()) return false;
     if (!line.empty() && line.back() == '\r') line.pop_back();
-    return line;
+    return true;
 }
+
 void hold_console() {
 #ifdef _WIN32
     DWORD pids[2];
@@ -265,16 +271,28 @@ int run(int argc, char** argv) {
                 "  1 - ivesti teksta ranka\n"
                 "  2 - maisyti faila\n"
                 "Pasirinkimas: ";
-        const string choice = read_line();
+        string choice;
+        if (!read_line(choice)) {
+            cerr << "Klaida: ivestis baigesi, rezimas nepasirinktas\n";
+            return 1;
+        }
 
         if (choice == "1") {
             mode = "rankinis ivedimas";
             cout << "Iveskite teksta ir spauskite Enter (Enter neitraukiamas):\n";
-            const string line = read_line();
+            string line;
+            if (!read_line(line)) {
+                cerr << "Klaida: ivestis baigesi pries Enter, tekstas nemaisomas\n";
+                return 1;
+            }
             h.update(reinterpret_cast<const uint8_t*>(line.data()), line.size());
         } else if (choice == "2") {
             cout << "Failo kelias: ";
-            string path = read_line();
+            string path;
+            if (!read_line(path)) {
+                cerr << "Klaida: ivestis baigesi, failo kelias neivestas\n";
+                return 1;
+            }
             if (path.size() >= 2 && path.front() == '"' && path.back() == '"')
                 path = path.substr(1, path.size() - 2);
             mode = "failas: " + path;

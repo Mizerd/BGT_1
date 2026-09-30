@@ -25,7 +25,7 @@ commits() {  # last commits of each implementation's code (results files don't c
 flags=(-std=c++20 -O3 -DNDEBUG -I"$ai/experiments")
 g++ "${flags[@]}" -fno-tree-reassoc -I"$ai/include" "$ai/experiments/impl_dihash.cpp" "$ai/src/custom_hash.cpp" \
   "$ai/experiments/experiments.cpp" -o "$build/di"
-g++ "${flags[@]}" "$noai/experiments/impl_ratas.cpp" "$ai/experiments/experiments.cpp" -o "$build/bedi"
+g++ "${flags[@]}" "$noai/experiments/impl_ratas.cpp" "$ai/experiments/experiments.cpp" -o "$build/ratas"
 for spec in md5:MD5:16 sha1:SHA1:20 sha256:SHA256:32; do
   IFS=: read -r name algo bytes <<< "$spec"
   g++ "${flags[@]}" -DIMPL_NAME="\"$name\"" -DALGO="\"$algo\"" -DDIGEST_BYTES="$bytes" \
@@ -34,7 +34,7 @@ done
 
 : > "$raw/std_avalanche.csv"
 : > "$raw/std_inputs.csv"
-for b in bedi di md5 sha1 sha256; do
+for b in ratas di md5 sha1 sha256; do
   "$build/$b" avalanche >> "$raw/std_avalanche.csv"
 done
 for b in md5 sha1 sha256; do
@@ -53,7 +53,7 @@ spread() {
 : > "$raw/std_speed.csv"
 worst=0
 repeated=0
-for b in bedi di md5 sha1 sha256; do
+for b in ratas di md5 sha1 sha256; do
   for try in $(seq 20); do
     read -r busy1 total1 <<< "$(cpu)"
     "${pin[@]}" "$build/$b" speed "$noai/data/konstitucija.txt" > "$build/$b.speed"

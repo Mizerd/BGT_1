@@ -25,7 +25,7 @@ commits() {  # last commits of each implementation's code (results files don't c
 flags=(-std=c++20 -O3 -DNDEBUG -I"$ai/experiments")
 g++ "${flags[@]}" -fno-tree-reassoc -I"$ai/include" "$ai/experiments/impl_dihash.cpp" "$ai/src/custom_hash.cpp" \
   "$ai/experiments/experiments.cpp" -o "$build/di"
-g++ "${flags[@]}" "$noai/experiments/impl_ratas.cpp" "$ai/experiments/experiments.cpp" -o "$build/bedi"
+g++ "${flags[@]}" "$noai/experiments/impl_ratas.cpp" "$ai/experiments/experiments.cpp" -o "$build/ratas"
 
 if [[ "$mode" == sparta || "$mode" == viskas ]]; then
   # Kaip standartai.sh: paleidimas kartojamas, jei CPU apkrova > 12 % arba sklaida > 10 %.
@@ -37,7 +37,7 @@ if [[ "$mode" == sparta || "$mode" == viskas ]]; then
              END { w = 0; for (k in s) { v = 100 * (hi[k] - lo[k]) / (s[k] / n[k]); if (v > w) w = v }; printf "%d", w }' "$1"
   }
   : > "$raw/speed_linux.csv"
-  for b in bedi di; do
+  for b in ratas di; do
     for try in $(seq 20); do
       read -r busy1 total1 <<< "$(cpu)"
       "${pin[@]}" "$build/$b" speed "$noai/data/konstitucija.txt" > "$build/$b.speed"
@@ -56,7 +56,7 @@ fi
 
 if [[ "$mode" == atkartojamumas || "$mode" == viskas ]]; then
   : > "$raw/atkartojamumas.csv"
-  for pair in "bedi:$noai" "di:$ai"; do
+  for pair in "ratas:$noai" "di:$ai"; do
     b="${pair%%:*}"
     dir="${pair#*:}"
     for e in inputs collisions structured avalanche; do
