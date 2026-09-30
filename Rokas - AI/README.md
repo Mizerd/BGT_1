@@ -145,20 +145,23 @@ UTF-8: `utf8_lt.txt` – 15 simbolių, 26 baitai. → [exp1_3_teisingumas.md](re
 
 | Baitai | µs vienai maišai | min–max |
 |---|---|---|
-| 70 | 0,235 | 0,235–0,236 |
-| 996 | 1,121 | 1,120–1,123 |
-| 20 409 | 19,695 | 19,651–19,744 |
-| 75 595 | 71,995 | 71,899–72,078 |
+| 70 | 0,234 | 0,234–0,235 |
+| 996 | 1,116 | 1,115–1,117 |
+| 20 409 | 19,613 | 19,526–19,655 |
+| 75 595 | 71,780 | 71,704–71,905 |
 
 * Laikas auga **tiesiškai**, ≈ **1,05 GB/s**; mažoms įvestims – pastovios 5 žingsnių išlaidos.
 * 3 apšilimai + 10 matavimų, be I/O; trukdžių paveikti matavimai kartojami. → [exp4_sparta.md](results/exp4_sparta.md)
 * Riba – **28 nuoseklios daugybos** bloke (2 raundai × 14): ≈ 143 ciklai 32 B blokui; išmatuota – ≈ 146.
 
-| Versija | 75 595 B, µs | `--file`, 2 GiB failas | Pastaba |
-|---|---|---|---|
-| V0.11 | 35,09 | 2,41 s, 2 GB RAM | |
-| V0.12 | 34,23 | 1,13 s, 4 MB RAM | failas skaitomas dalimis, GCC optimizavimas |
-| V0.13 | 72,00 | 2,18 s, 4 MB RAM | 2 raundai – ≈ 2 kartus lėčiau, bet V0.12 atakos nebeveikia |
+| Versija | 75 595 B, µs | Pastaba |
+|---|---|---|
+| V0.1–V0.11 | 35,19 | |
+| V0.12 | 34,19 | GCC optimizavimas; failas skaitomas dalimis, o ne visas į atmintį |
+| V0.13–V0.2 | 71,78 | 2 raundai – ≈ 2 kartus lėčiau, bet V0.12 atakos nebeveikia |
+
+Skaičiai – `results/raw/speed.csv` atitinkamoje versijoje. Visa programa su failo skaitymu matuojama atskirai:
+1 GiB per `--file` – 1,11 s, 3,7 MB atminties (`results/raw/file.csv`).
 
 ## 13. Kolizijos (5)
 
@@ -231,7 +234,8 @@ UTF-8: `utf8_lt.txt` – 15 simbolių, 26 baitai. → [exp1_3_teisingumas.md](re
 * **Įrankis:** Claude Code (Anthropic), Claude Opus modeliai.
 * **Užklausos:** sukurti savą 256 bitų maišą, neatkartojant žinomų; pašalinti silpnybes; atlikti 1–8 eksperimentus; rasti ir pataisyti silpnybes (V0.13).
 * **Atmesta:** pradinė 256 bitų būsena (maiša atskleisdavo visą būseną); xor-shift finalizatorius (per daug panašus į MurmurHash).
-* **Patikrinta:** nepriklausoma Python realizacija (`tests/reference_check.py`), V0.12 atakos (`tests/attack_v012.py`), ASan / UBSan, 62 + 33 patikros, konstantos palygintos su žinomomis.
+* **Patikrinta:** nepriklausoma Python realizacija (`tests/reference_check.py`), V0.12 atakos (`tests/attack_v012.py`), ASan / UBSan, 62 + 33 patikros, konstantos palygintos su žinomomis;
+  galutinę būseną peržiūrėjo atskiras DI agentas (Claude Sonnet).
 * Išsamiau – [DI sąveikos žurnalas](docs/DI_zurnalas.md).
 
 Peržiūrėtos SHA-2, SHA-3, BLAKE2/3, SipHash, MurmurHash3, xxHash, CityHash, FNV – jų konstantos ir funkcijos nenaudojamos.
@@ -251,3 +255,5 @@ VU BGT 1 užduotis ir kontrolinis sąrašas (2026) · [NIST Hash Functions](http
   CMake numatytai `Release`; pridėti srautinio maišymo ir Python palyginimo testai; sparta išmatuota iš naujo.
 * **V0.13** – maišos reikšmės **pasikeitė**: 2 raundai žingsnyje ir grįžtamasis ryšys, nes V0.12 buvo randamos kolizijos ir
   pirmavaizdžiai akimirksniu (13 sk.). Nauja schema, atakų testas, visi eksperimentai pakartoti. Šakos `AI-V0.11`, `AI-V0.12`, `AI-V0.13`.
+* **V0.2** – algoritmas ir maišos reikšmės **kaip V0.13**. Sutvarkyti kodo komentarai, vardų erdvė `dihash`,
+  programa su failu matuojama atskirai; visi rezultatai ir palyginimai pakartoti.
