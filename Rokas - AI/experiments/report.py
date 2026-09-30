@@ -119,7 +119,7 @@ def report_inputs():
     n = len(info)
 
     out = ["# 1–3 eksperimentai: įvestys, formatas, determinizmas", "",
-           "Įvestys – bendras poros rinkinys `Joringis-no AI/data/exp1/` (34 failai; turinys tikrinamas `tests/check_fixtures.py`).", ""]
+           "Įvestys – bendras poros rinkinys `Joringis-no AI/data/exp1/` (34 failai; turinys tikrinamas `Rokas - AI/tests/check_fixtures.py`).", ""]
     names = sorted(info)
     out += table(["Įvestis", "Baitai", "Simboliai (UTF-8)", "Aprašymas", "Maiša (pradžia)"],
                  [[f"`{x}`", info[x][0], info[x][1], DESC.get(x, ""), f"`{hexes[x][:16]}…`"] for x in names])
@@ -328,8 +328,9 @@ def report_guess():
             "Vienam taikiniui druska darbo nepadidina, bet iš anksto apskaičiuotos lentelės nebegalima panaudoti kitiems taikiniams.", "",
             "## Slaptas atsitiktinumas: H(input || r)", ""]
     c = d["commit"][0]
-    out += [f"Įsipareigojimas `c = H(\"{c[0]}\" || r)`, kur r – 16 slaptų baitų. Kol r nežinomas, paieškos erdvė – 10 000 · 2^128 "
-            "variantų, todėl perrinkimas neatliekamas. Atskleidus r, patikrai užtenka vienos maišos: teisinga įvestis patvirtinta – "
+    out += [f"Įsipareigojimas `c = H(\"{c[0]}\" || r)`, kur r – 16 baitų. Kad eksperimentas būtų atkuriamas, r čia gaunamas iš viešo "
+            "seed ir įrašytas `raw/guess.csv`, todėl tikrai slaptas jis nėra. Jei r būtų atsitiktinis ir nežinomas, paieškos erdvė – "
+            "10 000 · 2^128 variantų, todėl perrinkimas neatliekamas. Atskleidus r, patikrai užtenka vienos maišos: teisinga įvestis patvirtinta – "
             f"{'taip' if c[2] == '1' else 'ne'}, kita įvestis atmesta – {'taip' if c[3] == '1' else 'ne'}.", "",
             "Tai iliustruoja įsipareigojimo (commitment) idėją, bet neįrodo, kad konstrukcija saugiai paslepia pranešimą ar neleidžia "
             "jo pakeisti. Tai ir ne darbo įrodymo (proof-of-work) galvosūkis, kuriame ieškoma sąlygą tenkinančios nonce."]
