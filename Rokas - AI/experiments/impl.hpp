@@ -9,7 +9,11 @@
 // Interface between the experiments and the hash implementation.
 namespace impl {
 
-using Digest = std::array<std::uint8_t, 32>;
+// 32 bytes unless an adapter is built for a shorter digest (MD5: 16, SHA-1: 20).
+#ifndef DIGEST_BYTES
+#define DIGEST_BYTES 32
+#endif
+using Digest = std::array<std::uint8_t, DIGEST_BYTES>;
 
 extern const char* const kName;
 Digest hash(const std::uint8_t* data, std::size_t size);

@@ -27,6 +27,7 @@ constexpr std::uint64_t kSeed = 20260920;
 constexpr std::uint8_t kFirst = '!';
 constexpr unsigned kAlphabet = 94;  // '!'..'~'
 constexpr std::size_t kLengths[] = {10, 100, 500, 1000};
+constexpr std::size_t kDigestBits = 8 * std::tuple_size_v<impl::Digest>;
 
 volatile std::uint8_t g_sink = 0;
 
@@ -84,12 +85,12 @@ bool decode_hex(const std::string& hex, impl::Digest& out) {
   return true;
 }
 
-// 64 hex digits in one consistent letter case that decode back to the digest.
+// Two hex digits per digest byte, one consistent letter case, decoding back to the digest.
 bool format_ok(const std::string& hex, const impl::Digest& digest) {
   const bool lower = std::none_of(hex.begin(), hex.end(), [](char c) { return c >= 'A' && c <= 'F'; });
   const bool upper = std::none_of(hex.begin(), hex.end(), [](char c) { return c >= 'a' && c <= 'f'; });
   impl::Digest back{};
-  return hex.size() == 64 && (lower || upper) && decode_hex(hex, back) && back == digest;
+  return hex.size() == 2 * digest.size() && (lower || upper) && decode_hex(hex, back) && back == digest;
 }
 
 std::size_t utf8_chars(const Bytes& b) {
@@ -154,7 +155,7 @@ int cmd_speed(const std::string& path) {
     const Bytes input(text.begin(), text.begin() + static_cast<std::ptrdiff_t>(ends[lines - 1]));
     const auto run = [&](std::size_t reps) {
       const auto t0 = Clock::now();
-      for (std::size_t r = 0; r < reps; ++r) g_sink = g_sink ^ H(input)[r & 31];
+      for (std::size_t r = 0; r < reps; ++r) g_sink = g_sink ^ H(input)[r % sizeof(impl::Digest)];
       return Clock::now() - t0;
     };
     std::size_t reps = 1;
@@ -357,7 +358,7 @@ int cmd_avalanche() {
   for (int mode = 0; mode < 2; ++mode) {
     const char* name = mode == 0 ? "simbolis" : "bitas";
     Stats all_bits, all_hex;
-    std::array<std::uint64_t, 257> hist{};
+    std::array<std::uint64_t, kDigestBits + 1> hist{};
     for (const std::size_t L : kLengths) {
       std::mt19937_64 rng(kSeed + (mode == 0 ? 100 : 200) + L);
       Stats bits, hex;
@@ -387,7 +388,7 @@ int cmd_avalanche() {
         int diff_bits = 0, diff_hex = 0;
         for (std::size_t k = 0; k < xa.size(); ++k) diff_bits += std::popcount(static_cast<unsigned>(xa[k] ^ xb[k]));
         for (std::size_t k = 0; k < ha.size(); ++k) diff_hex += ha[k] != hb[k];
-        const double bp = 100.0 * diff_bits / 256, hp = 100.0 * diff_hex / 64;
+        const double bp = 100.0 * diff_bits / kDigestBits, hp = 100.0 * diff_hex / (kDigestBits / 4);
         bits.add(bp);
         hex.add(hp);
         all_bits.add(bp);
