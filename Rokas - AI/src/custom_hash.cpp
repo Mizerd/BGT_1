@@ -7,48 +7,35 @@
 namespace eduhash {
 namespace {
 
-// ---------------------------------------------------------------------------
-// Constants.
-//
-// Every constant below comes from one documented procedure unrelated to any
-// existing hash function: the decimal digits of n^n (n = 2, 3, 4, ...) are
-// concatenated, cut into 20 digit chunks, and each chunk is reduced modulo
-// 2^64 with its lowest bit forced to 1.  A chunk is accepted only if its
-// population count lies between 26 and 38.  The rotation amounts come from the
-// following chunks, mapped to [9, 55] and required to be distinct.
-// See README.md, "Constants".
-// ---------------------------------------------------------------------------
-
-// Starting values of the eight lanes.
+// Constants: decimal digits of n^n (n = 2, 3, ...) cut into 20-digit chunks,
+// each taken mod 2^64 with the low bit set; only chunks with 26..38 one bits
+// are kept. The rotations come from the next chunks, mapped to 9..55.
 constexpr std::array<std::uint64_t, 8> kLaneInit = {
     0x50EFEF418AACDDB3ull, 0x06837D22C9EC9F1Bull, 0x93ED2CF209AF0CA9ull,
     0x1511760347A610CBull, 0xE0613E1645D94F07ull, 0x7AA3E75445026145ull,
     0x0976B9398CFCD1FFull, 0x2B84EC77CA013781ull,
 };
 
-// Odd multipliers, one per sweep direction.
+// Odd, so multiplying by them can't lose information.
 constexpr std::uint64_t kMulForward = 0x2AD26360F20D2A3Dull;
 constexpr std::uint64_t kMulBackward = 0x65D3D764F8ED45F5ull;
 
-// Tag constants: block position, tail length, finalization.
-constexpr std::uint64_t kTagStep = 0xC5E512181F592E6Bull;
-constexpr std::uint64_t kTagTail = 0x9C019A9E6A275255ull;
-constexpr std::uint64_t kTagEnd = 0x0C2605DFE6C8B025ull;
+constexpr std::uint64_t kTagStep = 0xC5E512181F592E6Bull;  // times the block number
+constexpr std::uint64_t kTagTail = 0x9C019A9E6A275255ull;  // times (leftover bytes + 1)
+constexpr std::uint64_t kTagEnd = 0x0C2605DFE6C8B025ull;   // length and drain steps
 
-// Rotation amounts: forward sweep, backward sweep, output fold.
 constexpr int kRotForward = 41;
 constexpr int kRotBackward = 53;
 constexpr int kRotFold = 40;
 
-constexpr std::size_t kLanes = 8;         // 512 bits of internal state
-constexpr std::size_t kBlockBytes = 32;   // four 64 bit words per block
-constexpr int kRounds = 2;                // mixing rounds per step
-constexpr int kDrainSteps = 3;            // input-free steps before folding
+constexpr std::size_t kLanes = 8;  // 8 x 64 = 512-bit state
+constexpr std::size_t kBlockBytes = 32;
+constexpr int kRounds = 2;  // one round can be solved backwards, see tests/attack_v012.py
+constexpr int kDrainSteps = 3;
 
 using State = std::array<std::uint64_t, kLanes>;
 
-/// Reads eight bytes as one big-endian 64 bit word.  Written with explicit
-/// shifts so that the result does not depend on the byte order of the host.
+// Big-endian by hand, so the digest does not depend on the machine.
 std::uint64_t load_be64(const std::uint8_t* bytes) {
   std::uint64_t word = 0;
   for (std::size_t i = 0; i < 8; ++i) {
@@ -57,40 +44,31 @@ std::uint64_t load_be64(const std::uint8_t* bytes) {
   return word;
 }
 
-/// Writes one 64 bit word as eight big-endian bytes.
 void store_be64(std::uint64_t word, std::uint8_t* bytes) {
   for (std::size_t i = 0; i < 8; ++i) {
     bytes[i] = static_cast<std::uint8_t>(word >> (56 - 8 * i));
   }
 }
 
-/// One mixing round: sweeps the eight lanes once upwards and once downwards.
-/// The forward sweep carries everything up to lane 7, the backward sweep
-/// carries it back down to lane 0, so after one round every lane depends on
-/// every other lane.  The multiplications by fixed odd constants are the
-/// non-linear part; the rotations feed the high bits a multiplication produces
-/// back into low bit positions.
+// One round. The upward sweep carries every change to lane 7 and the downward
+// sweep brings it back to lane 0, so afterwards each lane depends on all others.
+// Multiplication only moves bits upwards; the rotations bring them back down.
 void mix(State& s) {
-  for (std::size_t i = 1; i < kLanes; ++i) {  // upwards: lane 0 -> lane 7
+  for (std::size_t i = 1; i < kLanes; ++i) {
     s[i] = (s[i] ^ std::rotl(s[i - 1], kRotForward)) * kMulForward;
   }
-  for (std::size_t i = kLanes - 1; i-- > 0;) {  // downwards: lane 7 -> lane 0
+  for (std::size_t i = kLanes - 1; i-- > 0;) {
     s[i] = (s[i] + std::rotl(s[i + 1], kRotBackward)) * kMulBackward;
   }
 }
 
-/// The step: absorbs one block of four message words plus a tag.
-///
-/// The words enter four alternating lanes, using addition and XOR in turn so
-/// that the entry points are not algebraically identical.  Two rounds follow:
-/// with a single round the message words could be chosen to set the other four
-/// lanes to any value, which gave instant collisions (see tests/attack_v012.py).
-/// Finally the state from before the step is XORed back in (feed-forward), so
-/// a step can no longer be run backwards from its result.
+// Absorbs one block: the words go into every other lane (+ and ^ alternate),
+// then two rounds, then the old state is XORed back in (feed-forward) so the
+// step can't be run backwards from its output.
 void step(State& s, std::uint64_t word0, std::uint64_t word1, std::uint64_t word2,
           std::uint64_t word3, std::uint64_t tag) {
   const State before = s;
-  s[0] += word0 ^ tag;  // the position tag rides along with the first word
+  s[0] += word0 ^ tag;
   s[2] ^= word1;
   s[4] += word2;
   s[6] ^= word3;
@@ -102,11 +80,10 @@ void step(State& s, std::uint64_t word0, std::uint64_t word1, std::uint64_t word
   }
 }
 
-/// Stage 1: absorbs `count` whole 32 byte blocks.  Each block is tagged with
-/// its position in the whole input (1, 2, 3, ...), so that the same block
-/// contributes differently at different offsets.
+// `first` is the 1-based number of the first block. Tagging blocks by position
+// makes the same block count differently at different offsets.
 void absorb_blocks(State& state, const std::uint8_t* data, std::size_t count, std::uint64_t first) {
-  State s = state;  // a local copy stays in registers; input bytes cannot alias it
+  State s = state;  // local copy stays in registers; the input bytes may alias `state`
   for (std::size_t i = 0; i < count; ++i) {
     const std::uint8_t* block = data + i * kBlockBytes;
     step(s, load_be64(block), load_be64(block + 8), load_be64(block + 16),
@@ -115,15 +92,13 @@ void absorb_blocks(State& state, const std::uint8_t* data, std::size_t count, st
   state = s;
 }
 
-/// Stages 2-5, after all whole blocks: tail, length, drain and fold.
-/// Inlined so that short inputs do not pay for a call and a state copy.
+// Tail, length, drain steps and the 512 -> 256 bit fold.
+// inline: short inputs would otherwise pay for a call and a state copy.
 inline Digest256 finalize(State state, const std::uint8_t* rest, std::size_t rest_size, std::uint64_t blocks) {
   const std::uint64_t length = blocks * kBlockBytes + rest_size;
 
-  // Stage 2: exactly one tail step, performed even when the input divides
-  // evenly into blocks.  The leftover bytes go to the front of a zero filled
-  // block; no delimiter byte is appended.  Instead the number of leftover bytes
-  // is folded into the tag, which is what keeps "ab" and "ab\0" apart.
+  // Runs even with 0 leftover bytes. There is no padding byte; the leftover
+  // count goes into the tag instead, which is what keeps "ab" and "ab\0" apart.
   std::uint8_t tail[kBlockBytes] = {};
   std::copy_n(rest, rest_size, tail);
   const std::uint64_t tail_tag = (blocks + 1) * kTagStep +
@@ -131,20 +106,14 @@ inline Digest256 finalize(State state, const std::uint8_t* rest, std::size_t res
   step(state, load_be64(tail), load_be64(tail + 8), load_be64(tail + 16),
        load_be64(tail + 24), tail_tag);
 
-  // Stage 3: the total byte count gets its own step, so a digest always
-  // depends on the exact input length.
   step(state, length, std::rotl(length, 32), 0, 0, kTagEnd);
 
-  // Stage 4: a few more steps with no message input, so the last bytes of the
-  // input are mixed as much as the first ones.  The changing tag keeps these
-  // steps from being identical repetitions.
+  // Extra steps without input, so the last block is mixed as well as the first.
   for (int i = 1; i <= kDrainSteps; ++i) {
     step(state, 0, 0, 0, 0, kTagEnd + static_cast<std::uint64_t>(i) * kTagStep);
   }
 
-  // Stage 5: fold the 512 bit state down to 256 bits.  Each output word pairs
-  // a low lane with a rotated high lane, so the digest is a function of all
-  // eight lanes while no lane is ever published on its own.
+  // Every output word combines two lanes, so no lane is ever output directly.
   Digest256 digest{};
   for (std::size_t i = 0; i < 4; ++i) {
     const std::uint64_t folded = state[i] ^ std::rotl(state[i + 4], kRotFold);
@@ -165,7 +134,7 @@ Digest256 custom_hash(std::span<const std::uint8_t> input) {
 Hasher::Hasher() : state_(kLaneInit) {}
 
 void Hasher::update(std::span<const std::uint8_t> bytes) {
-  if (pending_size_ > 0) {
+  if (pending_size_ > 0) {  // top up the block left over from the previous call
     const std::size_t take = std::min(kBlockBytes - pending_size_, bytes.size());
     std::copy_n(bytes.begin(), take, pending_.begin() + pending_size_);
     pending_size_ += take;

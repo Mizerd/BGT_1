@@ -52,7 +52,7 @@ def svg_save(name, s):
         f.write("\n".join(s + ["</svg>"]) + "\n")
 
 
-# ---------------------------------------------------------------- 1-3
+# Experiments 1-3
 DESC = {
     "empty.bin": "tuščias failas",
     "a.bin": "vienas baitas `a`, be naujos eilutės",
@@ -159,7 +159,7 @@ def report_inputs():
     write("exp1_3_teisingumas.md", out)
 
 
-# ---------------------------------------------------------------- 4
+# Experiment 4
 def report_speed():
     groups, size = defaultdict(list), {}
     for _, _, lines, nbytes, _, _, _, per in rows("speed"):
@@ -201,7 +201,7 @@ def report_speed():
     svg_save("exp4_sparta.svg", s)
 
 
-# ---------------------------------------------------------------- 5
+# Experiment 5
 def report_collisions():
     pairs, trunc, examples = {}, defaultdict(lambda: [0, 0.0]), []
     for r in rows("collisions"):
@@ -233,7 +233,7 @@ def report_collisions():
     write("exp5_kolizijos.md", out)
 
 
-# ---------------------------------------------------------------- 6
+# Experiment 6
 def report_avalanche():
     stats, hist = defaultdict(dict), defaultdict(dict)
     for r in rows("avalanche"):
@@ -292,7 +292,7 @@ def report_avalanche():
     svg_save("exp6_histograma.svg", s)
 
 
-# ---------------------------------------------------------------- 7
+# Experiment 7
 def report_guess():
     d = defaultdict(list)
     for r in rows("guess"):

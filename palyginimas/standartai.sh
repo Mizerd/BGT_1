@@ -34,8 +34,8 @@ for b in md5 sha1 sha256; do
   "$build/$b" inputs "$noai/data/exp1" >> "$raw/std_inputs.csv"
 done
 
-# Sparta. Kiti procesai iškraipo matavimus, todėl paleidimas kartojamas, jei jo metu visas CPU buvo apkrautas
-# > 12 % (vienas matavimas – ≈ 5 %) arba kurio nors dydžio sklaida (max − min) viršijo 10 % vidurkio.
+# Sparta: paleidimas kartojamas, jei kitos programos apkrovė CPU (> 12 %; vienas matavimas ≈ 5 %)
+# arba kurio nors dydžio sklaida viršijo 10 % vidurkio.
 pin=()
 command -v taskset > /dev/null && pin=(taskset -c 2)
 cpu() { read -r _ a b c d e f g h _ < /proc/stat; echo "$((a + b + c + f + g + h)) $((a + b + c + d + e + f + g + h))"; }

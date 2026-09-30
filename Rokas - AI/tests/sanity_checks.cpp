@@ -1,9 +1,5 @@
-// Minimal correctness checks for the hashing core.
-//
-// These are deliberately small: they establish that the implementation runs,
-// is deterministic, produces the right shape of output and reacts to input
-// changes.  The statistical experiments (collisions, avalanche, benchmarks)
-// are in experiments/.
+// Quick correctness checks for the hash core. Statistics (collisions, avalanche,
+// speed) are in experiments/.
 
 #include <algorithm>
 #include <array>
@@ -54,7 +50,6 @@ bool is_lowercase_hex(const std::string& text) {
 }  // namespace
 
 int main() {
-  // Accepted inputs, including the empty one.
   const std::vector<std::string> inputs = {"", "a", "b", "hello", "Hello", "abc", "cba"};
   for (const std::string& input : inputs) {
     const eduhash::Digest256 digest = hash_of(input);
@@ -65,14 +60,13 @@ int main() {
     check(is_lowercase_hex(hex), "digest of \"" + label + "\" is lowercase hex");
   }
 
-  // Determinism inside one process: hash A, B, A.
+  // A, B, A catches state leaking from one call into the next.
   const std::string first_a = hex_of("A");
   const std::string only_b = hex_of("B");
   const std::string second_a = hex_of("A");
   check(first_a == second_a, "hashing A, B, A gives identical results for A");
   check(first_a != only_b, "A and B give different results");
 
-  // Repeating the same input many times must not drift.
   bool stable = true;
   const std::string reference = hex_of("stability");
   for (int i = 0; i < 1000; ++i) {
@@ -80,15 +74,13 @@ int main() {
   }
   check(stable, "1000 repeated calls return the same digest");
 
-  // Input sensitivity.
   check(hex_of("hello") != hex_of("Hello"), "hello differs from Hello");
   check(hex_of("abc") != hex_of("cba"), "abc differs from cba (order matters)");
   check(hex_of("hello") != hex_of("hello\n"), "hello differs from hello with newline");
   check(hex_of("") != hex_of(std::string_view("\0", 1)), "empty differs from one zero byte");
   check(hex_of(std::string_view("a\0", 2)) != hex_of("a"), "trailing zero byte changes the digest");
 
-  // Every input byte is used, including bytes far inside a long input and the
-  // very last byte of a block-aligned input.
+  // The middle of a long input and the last byte of a full block must count too.
   const std::string long_input(1000, 'x');
   std::string long_changed = long_input;
   long_changed[500] = 'y';
@@ -98,7 +90,6 @@ int main() {
   aligned_changed[31] = 'Z';
   check(hex_of(aligned) != hex_of(aligned_changed), "the last byte of a block-aligned input matters");
 
-  // Binary input, including bytes that are not printable ASCII.
   std::vector<std::uint8_t> binary(256);
   for (std::size_t i = 0; i < binary.size(); ++i) {
     binary[i] = static_cast<std::uint8_t>(i);
@@ -110,11 +101,10 @@ int main() {
   check(eduhash::to_hex(eduhash::custom_hash(binary_swapped)) != binary_hex,
         "reordering binary bytes changes the digest");
 
-  // Length is incorporated: inputs that differ only in length must differ.
   check(hex_of(std::string(16, '\0')) != hex_of(std::string(17, '\0')),
         "16 zero bytes differ from 17 zero bytes");
 
-  // Block boundary lengths, and changes at the beginning, middle and end.
+  // Lengths around the 32-byte block boundary.
   auto pattern = [](std::size_t n) {
     std::string text;
     for (std::size_t i = 0; i < n; ++i) {
@@ -150,8 +140,8 @@ int main() {
   }
   check(boundary_distinct, "the six boundary lengths give six different digests");
 
-  // Known answers, computed with an independent Python reimplementation.
-  // Any accidental change to the algorithm or output format breaks these.
+  // Known answers from the Python version in tests/reference_check.py. They
+  // change only if the algorithm changes.
   std::string pattern1000;
   for (int i = 0; i < 1000; ++i) pattern1000.push_back(static_cast<char>((i * 7 + 3) & 0xff));
   std::string all_bytes;
@@ -174,20 +164,18 @@ int main() {
   }
   check(all_known, "10 known-answer vectors match the reference implementation");
 
-  // Leading zero bytes and nibbles must survive hex formatting.
   eduhash::Digest256 zeros{};
   zeros[1] = 0x0a;
   zeros[31] = 0x01;
   check(eduhash::to_hex(zeros) == std::string("000a") + std::string(58, '0') + "01",
         "to_hex keeps leading zero bytes and nibbles");
 
-  // Every single-byte input gets its own digest.
   std::vector<std::string> single;
   for (int i = 0; i < 256; ++i) single.push_back(hex_of(std::string(1, static_cast<char>(i))));
   std::sort(single.begin(), single.end());
   check(std::adjacent_find(single.begin(), single.end()) == single.end(), "all 256 one-byte inputs give distinct digests");
 
-  // Incremental hashing: any split of the same bytes gives the one-shot digest.
+  // Hasher must give the same digest however the input is split.
   auto streamed = [](std::string_view text, const std::vector<std::size_t>& pieces) {
     eduhash::Hasher hasher;
     std::size_t at = 0;
@@ -229,13 +217,8 @@ int main() {
         "Hasher: finish() leaves the hasher unchanged, more input can follow");
   check(eduhash::to_hex(eduhash::Hasher().finish()) == hex_of(""), "Hasher: no input gives the empty-input digest");
 
-  // Structural illustration of the change made in this revision.  The digest is
-  // a fold of a 512 bit state, output[i] = lane[i] XOR rotl(lane[i + 4], 40),
-  // so many internal states share one digest.  Previously the state was 256
-  // bits and was written out unchanged, which meant a digest named the final
-  // state exactly and the computation could be unwound from it directly.  This
-  // check only shows that the fold is many-to-one; it says nothing about how
-  // hard it is to find an input for a given digest.
+  // The 512 -> 256 fold is many-to-one: a digest does not pin down the state.
+  // (It says nothing about how hard it is to find an input for a digest.)
   auto fold = [](const std::array<std::uint64_t, 8>& lanes) {
     std::array<std::uint64_t, 4> out{};
     for (std::size_t i = 0; i < 4; ++i) {

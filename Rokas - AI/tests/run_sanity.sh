@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# Command line level sanity checks: separate process executions, file mode and
-# binary input.  Usage:  tests/run_sanity.sh [path-to-build-directory]
+# Checks of the command line program.  Usage: tests/run_sanity.sh [build directory]
 set -u
 
 build_dir="${1:-build}"
@@ -30,7 +29,7 @@ check() {
 work_dir="$(mktemp -d)"
 trap 'rm -rf "${work_dir}"' EXIT
 
-# --- output shape -----------------------------------------------------------
+# Output shape
 for text in "" "a" "b" "hello" "Hello" "abc" "cba"; do
   digest="$(run --text "${text}")"
   if [[ ${#digest} -eq 64 && "${digest}" =~ ^[0-9a-f]{64}$ ]]; then
@@ -40,7 +39,7 @@ for text in "" "a" "b" "hello" "Hello" "abc" "cba"; do
   fi
 done
 
-# --- determinism across separate program executions -------------------------
+# Determinism across separate program executions
 a_first="$(run --text "A")"
 b_only="$(run --text "B")"
 a_second="$(run --text "A")"
@@ -48,7 +47,7 @@ a_second="$(run --text "A")"
                                     || check no  "A is identical in two separate executions"
 [[ "${a_first}" != "${b_only}" ]] && check yes "A and B differ" || check no "A and B differ"
 
-# --- input sensitivity ------------------------------------------------------
+# Input sensitivity
 [[ "$(run --text 'hello')" != "$(run --text 'Hello')" ]] \
   && check yes "hello differs from Hello" || check no "hello differs from Hello"
 [[ "$(run --text 'abc')" != "$(run --text 'cba')" ]] \
@@ -59,7 +58,7 @@ printf 'hello'   > "${work_dir}/without_newline"
   && check yes "hello differs from hello with a trailing newline" \
   || check no  "hello differs from hello with a trailing newline"
 
-# --- file mode hashes the contents, not the name ----------------------------
+# File mode hashes the contents, not the name
 printf 'hello' > "${work_dir}/name_one"
 printf 'hello' > "${work_dir}/completely_different_name"
 [[ "$(run --file "${work_dir}/name_one")" == "$(run --file "${work_dir}/completely_different_name")" ]] \
@@ -69,13 +68,13 @@ printf 'hello' > "${work_dir}/completely_different_name"
   && check yes "file mode and text mode agree on the same bytes" \
   || check no  "file mode and text mode agree on the same bytes"
 
-# --- line endings are not rewritten ----------------------------------------
+# Line endings are not rewritten
 printf 'line\r\n' > "${work_dir}/crlf"
 printf 'line\n'   > "${work_dir}/lf"
 [[ "$(run --file "${work_dir}/crlf")" != "$(run --file "${work_dir}/lf")" ]] \
   && check yes "CRLF and LF files hash differently" || check no "CRLF and LF files hash differently"
 
-# --- binary file containing every byte value --------------------------------
+# Binary file containing every byte value
 binary_file="${work_dir}/all_bytes.bin"
 : > "${binary_file}"
 for value in $(seq 0 255); do
@@ -91,7 +90,7 @@ binary_digest="$(run --file "${binary_file}")"
   && check yes "binary file digest is stable across executions" \
   || check no  "binary file digest is stable across executions"
 
-# --- large file read in pieces, also through a pipe --------------------------
+# Large file read in pieces, also through a pipe
 head -c 300001 /dev/urandom > "${work_dir}/large"
 large_digest="$(run --file "${work_dir}/large")"
 [[ "${large_digest}" =~ ^[0-9a-f]{64}$ && "$(run --file /dev/stdin < "${work_dir}/large")" == "${large_digest}" \
@@ -99,12 +98,12 @@ large_digest="$(run --file "${work_dir}/large")"
   && check yes "a 300 001 byte file gives the same digest when read from a pipe" \
   || check no  "a 300 001 byte file gives the same digest when read from a pipe"
 
-# --- empty file -------------------------------------------------------------
+# Empty file
 : > "${work_dir}/empty"
 [[ "$(run --file "${work_dir}/empty")" == "$(run --text '')" ]] \
   && check yes "an empty file matches the empty string" || check no "an empty file matches the empty string"
 
-# --- manual input mode -----------------------------------------------------
+# Manual input mode
 typed="$(printf 'hello\n' | "${binary}" 2>/dev/null)"
 [[ "${typed}" == "$(run --text 'hello' 2>/dev/null)" ]] \
   && check yes "typed hello + Enter equals --text hello (Enter not included)" \
@@ -124,7 +123,7 @@ else
   check yes "no typed line at all returns a non-zero exit status"
 fi
 
-# --- UTF-8, edge spaces and carriage returns in every mode ------------------
+# UTF-8, edge spaces and carriage returns in every mode
 printf 'ąčęėįšųūž €' > "${work_dir}/utf8"
 utf8_text="$(run --text 'ąčęėįšųūž €')"
 [[ "${utf8_text}" == "$(run --file "${work_dir}/utf8")" && "${utf8_text}" == "$(printf 'ąčęėįšųūž €\n' | run)" ]] \
@@ -141,7 +140,7 @@ printf 'a\r' > "${work_dir}/a_cr"
   && check yes "typing a line ending in CRLF drops only the LF" \
   || check no  "typing a line ending in CRLF drops only the LF"
 
-# --- bad arguments ------------------------------------------------------------
+# Bad arguments
 bad_args=0
 for args in "--text" "--bogus x" "--text a b"; do
   # shellcheck disable=SC2086
@@ -150,7 +149,7 @@ done
 [[ "${bad_args}" -eq 0 ]] && check yes "malformed arguments exit with status 1" \
                           || check no  "malformed arguments exit with status 1"
 
-# --- read failures are reported, never hashed as empty ----------------------
+# Read failures are reported, never hashed as empty
 if "${binary}" --file "${work_dir}/does_not_exist" > "${work_dir}/out" 2> "${work_dir}/err"; then
   check no "a missing file returns a non-zero exit status"
 else

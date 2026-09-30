@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""Instant collision, second preimage and preimage for V0.12, and a check that they fail on the current program.
+"""Breaks V0.12 (collision, second preimage, preimage) and checks the attacks fail on the current program.
 
-In V0.12 one step was a single invertible round.  The block words set lanes 0, 2, 4, 6 to any value, and every
-operation of the round can be undone lane by lane, so the words of one block can be solved that put lanes 1, 3, 5, 7
-to any target; the next block then sets the even lanes.  Two blocks therefore reach any chosen internal state.
+V0.12 had one round per block. The words set lanes 0, 2, 4, 6 freely and every operation can be undone lane
+by lane, so one block's words can be solved to put lanes 1, 3, 5, 7 anywhere; the next block sets the rest.
 
 Usage: attack_v012.py [build directory] [data directory]   (defaults: build, ../Joringis-no AI/data)
 """
@@ -77,7 +76,7 @@ def state_after(blocks):
 
 
 def steer(s, target, tag):
-    """Words that make lanes 1, 3, 5, 7 after the round equal the target's odd lanes."""
+    """Block words that make lanes 1, 3, 5, 7 after the round equal target's."""
     f, b = [0] * 8, [0] * 8
     b[7] = f[7] = target[7]
     f[6] = rotr(((target[7] * INV_F) & MASK) ^ s[7], 41)
@@ -91,12 +90,12 @@ def steer(s, target, tag):
 
 
 def settle(s, x, tag):
-    """Words that make the injected state equal x (whose odd lanes already equal s's)."""
+    """Block words that turn s into x; the odd lanes must already match."""
     return [((x[0] - s[0]) & MASK) ^ tag, x[2] ^ s[2], (x[4] - s[4]) & MASK, x[6] ^ s[6]]
 
 
 def reach(first_block, x3):
-    """Three blocks: any first block, then two solved blocks whose third injected state is x3."""
+    """Any first block, then two solved blocks so that block 3 starts from x3."""
     s1 = state_after([first_block])
     w2 = steer(s1, x3, tag_of(2))
     s2 = state_after([first_block, w2])
@@ -112,18 +111,18 @@ data = sys.argv[2] if len(sys.argv) > 2 else os.path.join("..", "Joringis-no AI"
 binary = os.path.join(build, "hash-generator")
 book = open(os.path.join(data, "konstitucija.txt"), "rb").read()
 
-# Collision: two different first blocks steered to the same injected state of block 3.
+# Collision: two different first blocks steered to the same state.
 target = inject(state_after([words_of(b"A" * 32), words_of(b"B" * 32)]), words_of(b"C" * 32), tag_of(3))
 suffix = "Bendra pabaiga gali būti bet kokia.\n".encode()
 collision = [to_bytes(reach(words_of(first.ljust(32, b".")), target)) + suffix
              for first in (b"Pirmas failas", b"Antras failas")]
 
-# Second preimage: a different start for konstitucija.txt that reaches the same state after 96 bytes.
+# Second preimage: a different start for konstitucija.txt, same state after 96 bytes.
 original = [words_of(book[32 * i:32 * i + 32]) for i in range(3)]
 goal = inject(state_after(original[:2]), original[2], tag_of(3))
 forged = to_bytes(reach(words_of(b"PAKEISTA: tai ne originalas.....".ljust(32, b".")), goal)) + book[96:]
 
-# Preimage: run the finalization backwards from the digest 000...0, choosing the hidden lanes freely.
+# Preimage: run the finalization backwards from digest 000...0 (hidden lanes chosen freely).
 hidden = [0x1111111111111111 * k for k in (1, 2, 3, 4)]
 s = [rotl(hidden[i], 40) for i in range(4)] + hidden
 for j in (3, 2, 1):

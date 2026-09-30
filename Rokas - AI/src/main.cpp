@@ -17,8 +17,8 @@ void print_usage(std::ostream& out, const char* program) {
       << "  " << program << " --file <kelias>     maišomas failo turinys\n";
 }
 
-// Hashes the file in 64 KiB pieces, so memory use does not depend on its size.
-// False on open or read failure.
+// Reads in 64 KiB pieces, so memory use doesn't grow with the file.
+// Returns false if the file can't be opened or read.
 bool hash_file(const std::string& path, eduhash::Digest256& digest) {
   std::ifstream file(path, std::ios::binary);
   if (!file) {
@@ -53,7 +53,7 @@ int main(int argc, char** argv) {
   const char* program = (argc > 0 && argv[0] != nullptr) ? argv[0] : "hash-generator";
 
   if (argc == 1) {
-    // One typed line; the newline produced by Enter is not part of the input.
+    // One line; the Enter newline is not hashed.
     std::cerr << "Režimas: ranka įvestas tekstas (Enter neįtraukiamas)\nĮveskite tekstą: ";
     std::string line;
     if (!std::getline(std::cin, line)) {

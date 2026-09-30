@@ -85,7 +85,7 @@ bool decode_hex(const std::string& hex, impl::Digest& out) {
   return true;
 }
 
-// Two hex digits per digest byte, one consistent letter case, decoding back to the digest.
+// Right length, one letter case, and decodes back to the same digest.
 bool format_ok(const std::string& hex, const impl::Digest& digest) {
   const bool lower = std::none_of(hex.begin(), hex.end(), [](char c) { return c >= 'A' && c <= 'F'; });
   const bool upper = std::none_of(hex.begin(), hex.end(), [](char c) { return c >= 'a' && c <= 'f'; });

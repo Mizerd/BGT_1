@@ -6,10 +6,10 @@
 #include <cstdint>
 #include <string>
 
-// Interface between the experiments and the hash implementation.
+// What an implementation must provide to be run by experiments.cpp.
 namespace impl {
 
-// 32 bytes unless an adapter is built for a shorter digest (MD5: 16, SHA-1: 20).
+// 32 bytes unless built for a shorter digest (MD5: 16, SHA-1: 20).
 #ifndef DIGEST_BYTES
 #define DIGEST_BYTES 32
 #endif

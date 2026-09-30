@@ -26,8 +26,8 @@ mkdir -p "$raw"
 pin=()
 command -v taskset > /dev/null && pin=(taskset -c 2)
 
-# Timings are repeated when other processes disturbed them: the whole CPU more than 12 % busy during the
-# run (one measurement alone is about 5 %), or for speed a size whose max - min exceeds 10 % of its mean.
+# A timing run is repeated if other programs were using the CPU (over 12 % in total; our run
+# alone is about 5 %) or, for speed, if any size varies by more than 10 %.
 cpu() { read -r _ a b c d e f g h _ < /proc/stat; echo "$((a + b + c + f + g + h)) $((a + b + c + d + e + f + g + h))"; }
 spread() {
   awk -F, '{ s[$3] += $8; n[$3]++; if (!($3 in lo) || $8 < lo[$3]) lo[$3] = $8; if ($8 > hi[$3]) hi[$3] = $8 }

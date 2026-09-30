@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bendra spartos lentelė ir grafikas abiem realizacijoms iš raw/speed.csv."""
+"""Spartos lentelės (Windows ir Linux) ir grafikas (Windows) abiem realizacijoms."""
 
 import csv
 import math

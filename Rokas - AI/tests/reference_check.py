@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compares hash-generator with an independent Python implementation of the same algorithm.
+"""Compares hash-generator with a separate Python implementation of the algorithm.
 
 Usage: reference_check.py [build directory]   (default: build)
 """
