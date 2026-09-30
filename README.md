@@ -20,7 +20,7 @@ Paleidimas, pseudokodas ir sprendimų pagrindimas – kiekvieno kataloge README.
 | | Ratas-256 | DI maiša |
 |---|---|---|
 | Būsena | 8 × 32 b = 256 b | 8 × 64 b = 512 b |
-| Blokas | 16 B, 2 pasukimai | 32 B, perėjimas pirmyn ir atgal |
+| Blokas | 16 B, 2 pasukimai | 32 B, 2 raundai (pirmyn ir atgal), grįžtamasis ryšys |
 | Netiesiškumas | nuo duomenų priklausantis posūkis | daugyba iš nelyginių konstantų |
 | Pabaiga | PKCS#7, ilgis, 4 pasukimai | likučio ilgis žymėje, ilgis, 3 tušti žingsniai |
 | Išvestis | dvi būsenos pusės, tarp jų – 2 pasukimai | 512 → 256 sulenkimas |
@@ -47,35 +47,36 @@ Paleidimas, pseudokodas ir sprendimų pagrindimas – kiekvieno kataloge README.
 
 Abi realizacijos tame pačiame kompiuteryje; 3 apšilimai + 10 matavimų, be I/O. Vidurkis, µs:
 
-| Kompiuteris | 70 B: Ratas-256 / DI | 75 595 B: Ratas-256 / DI | DI greitesnė |
+| Kompiuteris | Versijos: Ratas-256 / DI | 70 B: Ratas-256 / DI | 75 595 B: Ratas-256 / DI |
 |---|---|---|---|
-| Ryzen 9 7900X, Windows 11, MSVC `/O2` (grafikas) | 0,155 / 0,112 | 74,08 / 32,27 | 1,4× / 2,3× |
-| i9-10900K, Linux, g++ 15.2 `-O3` | 0,131 / 0,101 | 70,94 / 34,26 | 1,3× / 2,1× |
+| Ryzen 9 7900X, Windows 11, MSVC `/O2` (grafikas) | v0.1 / V0.1 | 0,155 / 0,112 | 74,08 / 32,27 |
+| i9-10900K, Linux, g++ 15.2 `-O3` | v0.11 / V0.13 | 0,171 / 0,234 | 69,42 / 71,46 |
 
-Abiejų laikas auga tiesiškai; santykis abiejuose kompiuteriuose panašus. Windows matavimai – V0.1 kodas
-(maišos reikšmės tos pačios). → [visos lentelės](palyginimas/sparta.md)
+Abiejų laikas auga tiesiškai. V0.1 DI maiša buvo ≈ 2,3 karto greitesnė; V0.13 turi 2 raundus (13 sk.) –
+ilgiems failams abi maišos vienodos spartos, trumpoms DI ≈ 1,4 karto lėtesnė. → [visos lentelės](palyginimas/sparta.md)
 
 ## 6. Kolizijos (5)
 
-| | Tikėtina | Ratas-256 | DI maiša |
+| | Tikėtina | Ratas-256 v0.1 | DI maiša V0.13 |
 |---|---|---|---|
 | 4 × 100 000 porų ir 4 × 200 000 įvesčių | ≈ 10^(−67) | 0 | 0 |
 | 119 374 struktūruotos įvestys | ≈ 0 | 0 | 0 |
-| maiša sutrumpinta iki 24 bitų | 4 768 | 4 743 | 4 654 |
-| maiša sutrumpinta iki 32 bitų | 18,6 | 13 | 19 |
+| maiša sutrumpinta iki 24 bitų | 4 768 | 4 743 | 4 718 |
+| maiša sutrumpinta iki 32 bitų | 18,6 | 13 | 20 |
+| struktūrinė ataka (13 sk.) | – | netirta | V0.12: akimirksniu; V0.13: nebeveikia |
 
 * Nulis 256 bitų maišai – įprastas ir **nieko neįrodo**.
 * Sutrumpintos maišos atitinka gimtadienio paradoksą – abi elgiasi kaip atsitiktinės.
 
 ## 7. Lavinos efektas (6)
 
-| 100 000 porų | Idealu | Ratas-256 | DI maiša |
+| 100 000 porų | Idealu | Ratas-256 v0.1 | DI maiša V0.13 |
 |---|---|---|---|
 | bitų skirtumas | 50 % | 50,01 % | 50,00 % |
-| min–max | – | 36,3–63,3 % | 36,7–64,5 % |
-| standartinis nuokrypis | 3,13 % | 3,12 % | 3,12 % |
-| hex skirtumas | 93,75 % | 93,75 % | 93,75 % |
-| apverstas 1 įvesties bitas | 50 % | 49,99 % | 50,01 % |
+| min–max | – | 36,3–63,3 % | 37,5–63,7 % |
+| standartinis nuokrypis | 3,13 % | 3,12 % | 3,11 % |
+| hex skirtumas | 93,75 % | 93,75 % | 93,76 % |
+| apverstas 1 įvesties bitas | 50 % | 49,99 % | 49,99 % |
 
 Histogramos: [Ratas-256](Joringis-no%20AI/results/exp6_lavina.md) · [DI maiša](Rokas%20-%20AI/results/exp6_lavina.md)
 
@@ -85,7 +86,7 @@ Abiejų rezultatai sutampa:
 
 | Atvejis | Maišų | Rezultatas |
 |---|---|---|
-| `0000`–`9999` be druskos | 3 984, ≈ 1 ms | vienintelis sutapimas `3983` |
+| `0000`–`9999` be druskos | 3 984, ≈ 1–2 ms | vienintelis sutapimas `3983` |
 | viena lentelė 5 taikiniams | 10 000 | 5/5 |
 | vieša druska, atskira kiekvienam | 5 × 10 000 | 5/5 |
 | slaptas 16 B `r` | 10 000 · 2^128 | neperrenkama |
@@ -93,17 +94,19 @@ Abiejų rezultatai sutampa:
 ## 9. Išvados (8)
 
 * **Statistiškai nesiskiria:** abi praeina 1–3, 0 kolizijų, lavinos efektas ≈ idealus.
-* **Sparta:** DI maiša ilgiems failams ≈ 2,1–2,3 karto greitesnė; mažoms įvestims – ≈ 1,3–1,4 karto.
+* **Sparta:** V0.1 DI maiša buvo ≈ 2,3 karto greitesnė; V0.13 (2 raundai) ilgiems failams tokia pat kaip Ratas-256.
+* **Struktūrinė analizė:** V0.12 DI maišai rastos akimirksniu veikiančios kolizijos ir pirmavaizdžiai, nors visi
+  statistiniai testai buvo geri; V0.13 šią ataką pašalino. Statistika tokios silpnybės nemato.
 * **Testai neįrodo** saugumo, atsparumo kolizijoms ar pirmavaizdžiui; geras lavinos efektas galimas ir silpnai funkcijai.
 * **Pirmavaizdis:** mažą aibę abi perrenka per ≈ 1 ms – sunkumą lemia paieškos erdvė, ne maiša.
-* **Su standartais (11 sk.):** lavinos efektu MD5, SHA-1, SHA-256 ir abi mūsų maišos nesiskiria; DI maiša greičiausia.
+* **Su standartais (11 sk.):** lavinos efektu MD5, SHA-1, SHA-256 ir abi mūsų maišos nesiskiria.
 
 ## 10. Silpnybės
 
-| Ratas-256 | DI maiša |
+| Ratas-256 v0.1 | DI maiša |
 |---|---|
-| būsena lygi išvesties dydžiui (256 b) | vienas maišymo žingsnis 32 B blokui |
-| `rotl(a, d)` nieko nesuka, kai d mod 32 = 0 | tiesinis 512 → 256 sulenkimas |
+| būsena lygi išvesties dydžiui (256 b) | V0.12: vienas raundas – kolizijos ir pirmavaizdžiai akimirksniu (pataisyta V0.13) |
+| `rotl(a, d)` nieko nesuka, kai d mod 32 = 0 | V0.13: 2 raundų saugumo atsarga neįvertinta |
 
 Abiem: nerecenzuota, nėra rakto ir druskos. Ratas-256 failą įkelia į atmintį; DI maiša (nuo V0.12) skaito dalimis.
 
@@ -111,20 +114,20 @@ Abiem: nerecenzuota, nėra rakto ir druskos. Ratas-256 failą įkelia į atmint�
 
 ![Sparta su standartinėmis maišomis](palyginimas/standartai.svg)
 
-Ta pati eksperimentų programa, tos pačios įvestys, tas pats kompiuteris (i9-10900K, Linux, g++ 15.2 `-O3`); Ratas-256 – v0.11.
+Ta pati eksperimentų programa, tos pačios įvestys, tas pats kompiuteris (i9-10900K, Linux, g++ 15.2 `-O3`); Ratas-256 – v0.11, DI maiša – V0.13.
 Standartinės maišos – OpenSSL 3.6 realizacijos, patikrintos su Python `hashlib` (102/102). Procentai – pagal maišos ilgį.
 
 | | Ratas-256 | DI maiša | MD5 | SHA-1 | SHA-256 |
 |---|---|---|---|---|---|
 | Ilgis, bitai | 256 | 256 | 128 | 160 | 256 |
-| 70 B, µs | 0,171 | 0,102 | 0,159 | 0,153 | 0,279 |
-| 75 595 B, µs | 69,14 | 34,49 | 73,87 | 54,16 | 119,62 |
-| MB/s | 1 093 | 2 192 | 1 023 | 1 396 | 632 |
+| 70 B, µs | 0,172 | 0,235 | 0,160 | 0,154 | 0,280 |
+| 75 595 B, µs | 72,21 | 70,90 | 73,89 | 54,28 | 120,33 |
+| MB/s | 1 047 | 1 066 | 1 023 | 1 393 | 628 |
 | Bitų skirtumas, % | 49,98 | 50,00 | 49,99 | 49,98 | 50,00 |
-| Std. nuokrypis (idealus), % | 3,11 (3,12) | 3,12 (3,12) | 4,43 (4,42) | 3,95 (3,95) | 3,12 (3,12) |
-| Hex skirtumas, % | 93,75 | 93,75 | 93,74 | 93,75 | 93,74 |
+| Std. nuokrypis (idealus), % | 3,11 (3,12) | 3,11 (3,12) | 4,43 (4,42) | 3,95 (3,95) | 3,12 (3,12) |
+| Hex skirtumas, % | 93,75 | 93,76 | 93,74 | 93,75 | 93,74 |
 
-* **Sparta:** DI maiša greičiausia, Ratas-256 ≈ MD5, SHA-256 lėčiausia – šis procesorius neturi SHA instrukcijų (SHA-NI).
+* **Sparta:** SHA-1 greičiausia; DI maiša, Ratas-256 ir MD5 – panašios; SHA-256 lėčiausia – šis procesorius neturi SHA instrukcijų (SHA-NI).
   OpenSSL naudoja asemblerį (AVX2), mūsų maišos – paprastas C++.
 * **Lavinos efektas:** visų ≈ 50 %, sklaida lygi idealiai savo ilgiui – šis testas maišų **neišskiria**.
 * MD5 ir SHA-1 kolizijos randamos praktiškai, nors jų lavinos efektas toks pat geras – tai neįrodo atsparumo kolizijoms.

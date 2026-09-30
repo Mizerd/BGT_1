@@ -10,6 +10,7 @@
 | V0.11 patikra (09-29) | Išsamiai patikrinti realizaciją, pataisyti tikras problemas, nekeičiant algoritmo | Pataisyti CRLF testinį failą; pridėti žinomų atsakymų testus; griežtesnės lavinos patikros; duomenų kontrolinės sumos | Priimta. Atmesta: algoritmo pakeitimai – atidėta V0.12 | Maišos reikšmės nepakito (10 žinomų atsakymų, nepriklausoma Python realizacija); 57 + 32 patikros; rezultatai sugeneruoti iš naujo |
 | V0.12 optimizavimas ir testai (09-30) | Išmatuoti spartą neapkrautame kompiuteryje, optimizuoti ir daugiau testuoti, nekeičiant maišos reikšmių | Išmatuoti ciklus žingsniui ir palyginti su teorine riba (14 nuoseklių daugybų ≈ 71 ciklas); `Hasher` failams skaityti dalimis; GCC `-fno-tree-reassoc`; CMake numatytai `Release` | Priimta. Atmesta: greitesnis algoritmas (didesni blokai) – keistų visas maišas ir silpnintų maišymą; `always_inline` – nestandartinis, standartinio `inline` pakako | 62 + 33 patikros, 312 įvesčių su Python realizacija, mutacijų testai; ASan / UBSan, clang++, `-O0` / `-O2` / `-march=native` – 1, 5, 6 eksperimentų rezultatai sutapo baitas į baitą; 5 GiB srautu = visa atmintyje |
 | Palyginimas su standartais (09-30) | Papildoma užduotis: palyginti abi poros maišas su MD5, SHA-1, SHA-256 pagal spartą ir lavinos efektą | OpenSSL `EVP` adapteris bendrai eksperimentų programai; maišos ilgis – kompiliavimo parametras; procentai ir idealus nuokrypis pagal maišos ilgį; sparta kartojama, kai kiti procesai iškraipo matavimą (apkrova > 12 % ar sklaida > 10 %) | Priimta. Atmesta: Python `hashlib` spartai (matuotų interpretatorių, ne maišą); vienkartinis `EVP_Digest` (OpenSSL 3 kaskart ieško algoritmo) | Adapteriai sutapo su Python `hashlib` (102/102); DI ir Ratas-256 rezultatai su pakeista programa – baitas į baitą kaip anksčiau; rasta ir pataisyta: spartos cikle skaitytas 32 B maišos baitas (MD5 – tik 16 B) |
+| V0.13 silpnybės (09-30) | Kokią silpnybę taisyti? Pataisyti silpnybes kode, atnaujinti schemą | Struktūrinė analizė: vienas raundas atsukamas dalis po dalies, žodžiai laisvai nustato 4 dalis – vieno bloko žodžius galima išspręsti; pataisymas – 2 raundai ir grįžtamasis ryšys | Priimta. Atmesta: tik grįžtamasis ryšys (pusės būsenos valdymas liktų, mūsų vertinimu ≈ 2^64 kelias); žodžius įterpti į visas 8 dalis (visą būseną valdyti būtų dar lengviau); mažiau tuščių žingsnių (daugiau pakeitimų) | Atakos patikrintos tikra programa: kolizija, antrasis pirmavaizdis, pirmavaizdis (64 nuliai); `tests/attack_v012.py` – V0.13 jos nebeveikia; naujos žinomos reikšmės sutampa su nepriklausoma Python realizacija (312/312); ASan / UBSan, clang++; schema patikrinta naršyklėje (21 rodyklė prijungta) |
 
 ## V0.11 rastos ir pataisytos problemos
 
@@ -25,3 +26,10 @@
 * GCC pergrupuodavo XOR taip, kad dvi operacijos atsidurdavo daugybų grandinėje: 73,5 ciklo žingsniui vietoj ≈ 71.
 * `--file` įkeldavo visą failą į atmintį: 2 GiB – 2 GB RAM ir 2,4 s. Dabar 64 KiB dalimis: 4 MB, 1,1 s.
 * Pirmasis `Hasher` variantas trumpoms įvestims buvo iki 15 % lėtesnis (būsena ėjo per atmintį) – pataisyta prieš įrašant.
+
+## V0.13 rastos ir pataisytos problemos
+
+* V0.12 kolizijos, antrieji pirmavaizdžiai ir pirmavaizdžiai buvo skaičiuojami akimirksniu, be paieškos, nors visi statistiniai
+  testai (0 kolizijų, 50 % lavinos efektas) buvo geri. Pataisyta: 2 raundai žingsnyje ir grįžtamasis ryšys; sparta ≈ 2 kartus mažesnė.
+* Algoritmo schema neatitiko naujo žingsnio – nubraižyta iš naujo (`docs/algoritmo-schema.*`).
+* Spartos matavimus kartais iškraipydavo kiti kompiuterio procesai – dabar tokie paleidimai kartojami automatiškai.
