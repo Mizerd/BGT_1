@@ -17,6 +17,7 @@ cmake -S "$here" -B "$build" -DCMAKE_BUILD_TYPE=Release > /dev/null
 cmake --build "$build" -j > /dev/null
 "$build/sanity-checks" > /dev/null || { echo "nepraėjo sanity-checks" >&2; exit 1; }
 "$here/tests/run_sanity.sh" "$build" > /dev/null || { echo "nepraėjo run_sanity.sh" >&2; exit 1; }
+python3 "$here/tests/reference_check.py" "$build" > /dev/null || { echo "nepraėjo reference_check.py" >&2; exit 1; }
 
 rm -rf "$results"
 mkdir -p "$raw"

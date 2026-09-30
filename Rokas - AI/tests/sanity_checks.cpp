@@ -187,6 +187,48 @@ int main() {
   std::sort(single.begin(), single.end());
   check(std::adjacent_find(single.begin(), single.end()) == single.end(), "all 256 one-byte inputs give distinct digests");
 
+  // Incremental hashing: any split of the same bytes gives the one-shot digest.
+  auto streamed = [](std::string_view text, const std::vector<std::size_t>& pieces) {
+    eduhash::Hasher hasher;
+    std::size_t at = 0;
+    for (std::size_t i = 0; at < text.size(); ++i) {
+      const std::string_view part = text.substr(at, pieces[i % pieces.size()]);
+      hasher.update({reinterpret_cast<const std::uint8_t*>(part.data()), part.size()});
+      at += part.size();
+    }
+    return eduhash::to_hex(hasher.finish());
+  };
+  bool two_pieces = true;
+  for (std::size_t n = 0; n <= 100; ++n) {
+    const std::string text = pattern1000.substr(0, n);
+    for (std::size_t k = 0; k <= n; ++k) {
+      two_pieces = two_pieces && streamed(text, {k, n}) == hex_of(text);
+    }
+  }
+  check(two_pieces, "Hasher: every split of 0-100 byte inputs into two pieces matches custom_hash");
+  bool fixed_pieces = true;
+  for (std::size_t piece = 1; piece <= 70; ++piece) {
+    fixed_pieces = fixed_pieces && streamed(pattern1000, {piece}) == hex_of(pattern1000);
+  }
+  check(fixed_pieces, "Hasher: 1000 bytes fed in pieces of 1-70 bytes match custom_hash");
+  std::string big;
+  for (std::size_t i = 0; i < 100000; ++i) big.push_back(static_cast<char>((i * 131 + 7) % 251));
+  std::vector<std::size_t> random_pieces;
+  for (std::uint64_t x = 1; random_pieces.size() < 200;) {
+    x = x * 6364136223846793005ull + 1442695040888963407ull;
+    random_pieces.push_back(static_cast<std::size_t>(x >> 33) % 1500);  // includes empty pieces
+  }
+  check(streamed(big, random_pieces) == hex_of(big), "Hasher: 100 000 bytes in irregular pieces (0-1499 B) match custom_hash");
+  eduhash::Hasher hasher;
+  const std::string first_part = "hello, ", second_part = "world";
+  hasher.update({reinterpret_cast<const std::uint8_t*>(first_part.data()), first_part.size()});
+  const bool same_twice = eduhash::to_hex(hasher.finish()) == hex_of(first_part) &&
+                          eduhash::to_hex(hasher.finish()) == hex_of(first_part);
+  hasher.update({reinterpret_cast<const std::uint8_t*>(second_part.data()), second_part.size()});
+  check(same_twice && eduhash::to_hex(hasher.finish()) == hex_of(first_part + second_part),
+        "Hasher: finish() leaves the hasher unchanged, more input can follow");
+  check(eduhash::to_hex(eduhash::Hasher().finish()) == hex_of(""), "Hasher: no input gives the empty-input digest");
+
   // Structural illustration of the change made in this revision.  The digest is
   // a fold of a 512 bit state, output[i] = lane[i] XOR rotl(lane[i + 4], 40),
   // so many internal states share one digest.  Previously the state was 256

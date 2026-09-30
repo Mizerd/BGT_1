@@ -91,6 +91,14 @@ binary_digest="$(run --file "${binary_file}")"
   && check yes "binary file digest is stable across executions" \
   || check no  "binary file digest is stable across executions"
 
+# --- large file read in pieces, also through a pipe --------------------------
+head -c 300001 /dev/urandom > "${work_dir}/large"
+large_digest="$(run --file "${work_dir}/large")"
+[[ "${large_digest}" =~ ^[0-9a-f]{64}$ && "$(run --file /dev/stdin < "${work_dir}/large")" == "${large_digest}" \
+   && "$(cat "${work_dir}/large" | run --file /dev/stdin)" == "${large_digest}" ]] \
+  && check yes "a 300 001 byte file gives the same digest when read from a pipe" \
+  || check no  "a 300 001 byte file gives the same digest when read from a pipe"
+
 # --- empty file -------------------------------------------------------------
 : > "${work_dir}/empty"
 [[ "$(run --file "${work_dir}/empty")" == "$(run --text '')" ]] \
