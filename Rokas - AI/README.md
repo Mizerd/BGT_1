@@ -249,7 +249,7 @@ A. Menezes, P. van Oorschot, S. Vanstone, *Handbook of Applied Cryptography*, 9.
 
 ## 20. Versijos
 
-Kiekvieno leidimo (`V0.1`–`V0.13`) `results/` – tos versijos rezultatai.
+Kiekvieno leidimo (`V0.1`–`V0.2`) `results/` – tos versijos rezultatai.
 
 * **V0.1** – algoritmas, rankinis įvedimas, 1–8 eksperimentai.
 * **V0.11** – maišos reikšmės **nepakito** (tikrina 10 žinomų atsakymų). Pataisytas CRLF testinis failas, pridėti žinomų atsakymų

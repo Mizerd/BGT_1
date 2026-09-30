@@ -147,13 +147,13 @@ Standartinės maišos – OpenSSL 3.6 realizacijos, patikrintos su Python `hashl
 | `V0.13` | 2 raundai ir grįžtamasis ryšys – V0.12 ataka nebeveikia | kaip v0.12 |
 | `V0.2` | kodo tvarkymas; algoritmas kaip V0.13 | 3 pasukimai, feed-forward ir pabaigoje, failas dalimis |
 
-* Leidimai `V0.1`, `V0.11`, `V0.12`, `V0.13` – abi realizacijos toje pačioje versijoje. `V0.11`–`V0.13` sudaryti šakose
+* Leidimai `V0.1`, `V0.11`, `V0.12`, `V0.13`, `V0.2` – abi realizacijos toje pačioje versijoje. `V0.11`–`V0.13` sudaryti šakose
   `shared-V0.11`…`shared-V0.13`: abiejų autorių tos versijos commit'ai perkelti (cherry-pick) į vieną būseną, todėl jų
   hash'ai skiriasi nuo `main`, kurioje tie patys pakeitimai eina vienas po kito.
 * Ankstesnių versijų rezultatai – kiekvieno leidimo `results/` kataloguose.
 * V0.1 leidime testinis failas `struct_newline_crlf.txt` faktiškai turėjo LF (tikras CRLF tikrintas tik atmintyje);
   nuo V0.11 faile tikras CRLF, todėl 21 pora ir 34 failai (V0.1 – 22 ir 35).
-* `V0.2` – šakos `main` būsena, žymė dar nesukurta.
+* `V0.2` – galutinė versija, pažymėta žyme `V0.2` (commit `c73dc9b`); vėlesni `main` commit'ai keičia tik dokumentaciją.
 
 ## 13. DI naudojimas
 
