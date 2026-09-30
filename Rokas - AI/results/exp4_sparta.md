@@ -4,20 +4,20 @@
 
 | Eilutės | Baitai | Vidurkis, µs | Min–max, µs | MB/s |
 |---|---|---|---|---|
-| 1 | 70 | 0,235 | 0,235–0,236 | 297 |
-| 2 | 123 | 0,266 | 0,265–0,268 | 461 |
-| 4 | 205 | 0,354 | 0,353–0,355 | 578 |
-| 8 | 362 | 0,513 | 0,512–0,513 | 706 |
-| 16 | 996 | 1,116 | 1,115–1,118 | 892 |
-| 32 | 1 841 | 1,909 | 1,908–1,910 | 964 |
-| 64 | 3 712 | 3,694 | 3,691–3,699 | 1 004 |
-| 128 | 9 155 | 8,894 | 8,880–8,904 | 1 029 |
-| 256 | 20 409 | 19,669 | 19,628–19,697 | 1 037 |
-| 512 | 47 434 | 45,275 | 45,176–45,362 | 1 047 |
-| 789 | 75 595 | 72,098 | 71,847–72,254 | 1 048 |
+| 1 | 70 | 0,236 | 0,234–0,244 | 297 |
+| 2 | 123 | 0,266 | 0,265–0,268 | 462 |
+| 4 | 205 | 0,353 | 0,352–0,354 | 580 |
+| 8 | 362 | 0,513 | 0,511–0,520 | 706 |
+| 16 | 996 | 1,116 | 1,114–1,120 | 892 |
+| 32 | 1 841 | 1,924 | 1,905–1,995 | 956 |
+| 64 | 3 712 | 3,721 | 3,680–3,850 | 997 |
+| 128 | 9 155 | 8,882 | 8,854–8,923 | 1 030 |
+| 256 | 20 409 | 19,708 | 19,639–19,816 | 1 035 |
+| 512 | 47 434 | 45,387 | 45,131–45,853 | 1 045 |
+| 789 | 75 595 | 72,014 | 71,732–72,383 | 1 049 |
 
 Neapdoroti matavimai: `raw/speed.csv`.
 
 ## Visa programa su I/O (matuojama atskirai)
 
-`hash-generator --file`, 1 GiB per kanalą (`/dev/stdin`): 1,13 s (951 MB/s), didžiausia atmintis 3,7 MB. Failas skaitomas 64 KiB dalimis, todėl atmintis nuo failo dydžio nepriklauso. Neapdoroti duomenys: `raw/file.csv`.
+`hash-generator --file`, 1 GiB per kanalą (`/dev/stdin`): 1,13 s (948 MB/s), didžiausia atmintis 3,7 MB. Failas skaitomas 64 KiB dalimis, todėl atmintis nuo failo dydžio nepriklauso. Neapdoroti duomenys: `raw/file.csv`.

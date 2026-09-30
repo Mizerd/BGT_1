@@ -13,16 +13,16 @@
 <line class="grid" stroke="#e4e3de" x1="78" y1="52.0" x2="720" y2="52.0"/><text class="t2" x="70" y="56.0" font-size="12" text-anchor="end">100</text>
 <text class="t2" x="399.0" y="404" font-size="13" text-anchor="middle">Įvesties dydis, baitai (log. skalė)</text>
 <text class="t2" transform="translate(20 205.0) rotate(-90)" font-size="13" text-anchor="middle">Laikas vienai maišai, µs (log. skalė)</text>
-<path class="ss" stroke="#2a78d6" fill="none" stroke-width="2" stroke-linejoin="round" d="M213.6,320.1 L252.9,314.6 L288.5,302.0 L328.2,285.6 L398.7,251.1 L441.5,227.4 L490.4,198.1 L553.3,159.2 L609.2,124.0 L668.0,87.1 L700.5,66.5"/>
-<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="213.6" cy="320.1" r="4.5"><title>70 B – 0,235 µs</title></circle>
-<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="252.9" cy="314.6" r="4.5"><title>123 B – 0,266 µs</title></circle>
-<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="288.5" cy="302.0" r="4.5"><title>205 B – 0,354 µs</title></circle>
+<path class="ss" stroke="#2a78d6" fill="none" stroke-width="2" stroke-linejoin="round" d="M213.6,320.0 L252.9,314.7 L288.5,302.1 L328.2,285.6 L398.7,251.1 L441.5,227.0 L490.4,197.8 L553.3,159.3 L609.2,123.9 L668.0,87.0 L700.5,66.5"/>
+<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="213.6" cy="320.0" r="4.5"><title>70 B – 0,236 µs</title></circle>
+<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="252.9" cy="314.7" r="4.5"><title>123 B – 0,266 µs</title></circle>
+<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="288.5" cy="302.1" r="4.5"><title>205 B – 0,353 µs</title></circle>
 <circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="328.2" cy="285.6" r="4.5"><title>362 B – 0,513 µs</title></circle>
 <circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="398.7" cy="251.1" r="4.5"><title>996 B – 1,116 µs</title></circle>
-<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="441.5" cy="227.4" r="4.5"><title>1 841 B – 1,909 µs</title></circle>
-<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="490.4" cy="198.1" r="4.5"><title>3 712 B – 3,694 µs</title></circle>
-<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="553.3" cy="159.2" r="4.5"><title>9 155 B – 8,894 µs</title></circle>
-<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="609.2" cy="124.0" r="4.5"><title>20 409 B – 19,669 µs</title></circle>
-<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="668.0" cy="87.1" r="4.5"><title>47 434 B – 45,275 µs</title></circle>
-<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="700.5" cy="66.5" r="4.5"><title>75 595 B – 72,098 µs</title></circle>
+<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="441.5" cy="227.0" r="4.5"><title>1 841 B – 1,924 µs</title></circle>
+<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="490.4" cy="197.8" r="4.5"><title>3 712 B – 3,721 µs</title></circle>
+<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="553.3" cy="159.3" r="4.5"><title>9 155 B – 8,882 µs</title></circle>
+<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="609.2" cy="123.9" r="4.5"><title>20 409 B – 19,708 µs</title></circle>
+<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="668.0" cy="87.0" r="4.5"><title>47 434 B – 45,387 µs</title></circle>
+<circle class="fs ring" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2" cx="700.5" cy="66.5" r="4.5"><title>75 595 B – 72,014 µs</title></circle>
 </svg>
