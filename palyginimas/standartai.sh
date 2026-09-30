@@ -15,6 +15,12 @@ mkdir -p "$build" "$raw"
 
 ssl="$(pkg-config --cflags --libs libcrypto)" || { echo "nerastas OpenSSL (pkg-config libcrypto)" >&2; exit 1; }
 read -r -a ssl <<< "$ssl"
+commits() {
+  local dirty=""
+  git -C "$root" status --porcelain -- "Rokas - AI" "Joringis-no AI" | grep -q . && dirty=" (+ neįrašyti pakeitimai)"
+  echo "Ratas-256 commit $(git -C "$root" log -1 --format=%h -- "Joringis-no AI"), DI maiša commit $(git -C "$root" log -1 --format=%h -- "Rokas - AI")$dirty"
+}
+
 flags=(-std=c++20 -O3 -DNDEBUG -I"$ai/experiments")
 g++ "${flags[@]}" -fno-tree-reassoc -I"$ai/include" "$ai/experiments/impl_dihash.cpp" "$ai/src/custom_hash.cpp" \
   "$ai/experiments/experiments.cpp" -o "$build/di"
@@ -64,6 +70,6 @@ for b in bedi di md5 sha1 sha256; do
 done
 echo "$(grep -m1 'model name' /proc/cpuinfo | cut -d: -f2 | sed 's/^ *//'), $(uname -sr), $(g++ --version | head -1) -O3," \
   "OpenSSL $(pkg-config --modversion libcrypto); CPU apkrova matuojant ≤ ${worst} %, sklaida ≤ 10 %," \
-  "dėl kitų procesų pakartotų paleidimų: ${repeated}" > "$raw/std_aplinka.txt"
+  "dėl kitų procesų pakartotų paleidimų: ${repeated}; $(commits)" > "$raw/std_aplinka.txt"
 
 python3 "$out/standartai.py" "$raw" "$out" "$noai/data/exp1"

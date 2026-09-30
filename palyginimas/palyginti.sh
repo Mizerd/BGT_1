@@ -15,6 +15,12 @@ build="$out/build"
 raw="$out/raw"
 mkdir -p "$build" "$raw"
 
+commits() {
+  local dirty=""
+  git -C "$root" status --porcelain -- "Rokas - AI" "Joringis-no AI" | grep -q . && dirty=" (+ neįrašyti pakeitimai)"
+  echo "Ratas-256 commit $(git -C "$root" log -1 --format=%h -- "Joringis-no AI"), DI maiša commit $(git -C "$root" log -1 --format=%h -- "Rokas - AI")$dirty"
+}
+
 flags=(-std=c++20 -O3 -DNDEBUG -I"$ai/experiments")
 g++ "${flags[@]}" -fno-tree-reassoc -I"$ai/include" "$ai/experiments/impl_dihash.cpp" "$ai/src/custom_hash.cpp" \
   "$ai/experiments/experiments.cpp" -o "$build/di"
@@ -43,7 +49,7 @@ if [[ "$mode" == sparta || "$mode" == viskas ]]; then
     done
     cat "$build/$b.speed" >> "$raw/speed_linux.csv"
   done
-  echo "$(grep -m1 'model name' /proc/cpuinfo | cut -d: -f2 | sed 's/^ *//'), $(uname -sr), $(g++ --version | head -1), -O3" \
+  echo "$(grep -m1 'model name' /proc/cpuinfo | cut -d: -f2 | sed 's/^ *//'), $(uname -sr), $(g++ --version | head -1), -O3; $(commits)" \
     > "$raw/speed_linux.txt"
 fi
 
