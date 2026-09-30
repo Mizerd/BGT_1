@@ -102,8 +102,8 @@ HASH(input):
 ## 8. Kodėl taip
 
 * **Du perėjimai** – pokytis pasiekia visą būseną per vieną raundą.
-* **Du raundai** – su vienu žodžius galima parinkti taip, kad būsena taptų bet kokia (V0.12 ataka, 13 sk.).
-* **Grįžtamasis ryšys** – žingsnio nebeįmanoma atsukti nuo rezultato atgal.
+* **Du raundai** – su vienu raundu (V0.12) dviejų blokų žodžius buvo galima išspręsti taip, kad būsena taptų bet kokia (13 sk.).
+* **Grįžtamasis ryšys** (kaip Davies–Meyer konstrukcijoje) – žingsnio nebeatsuksi raundas po raundo, kaip V0.12 atakoje.
 * **Nelyginė daugyba** – netiesiška ir apverčiama, informacija neprarandama.
 * **Žymės** vietoj `0x80` baito – pozicija ir ilgis įmaišomi skaičiais.
 * **512 → 256** – maiša neatskleidžia visos būsenos.
@@ -117,14 +117,15 @@ HASH(input):
 | `--file` | tikslūs failo baitai; neperskaitomas failas – klaida |
 
 * Režimas parašomas `stderr`, maiša – `stdout`; rezultatas visada 64 mažosios hex raidės.
-* `--file` skaito 64 KiB dalimis – atmintis nepriklauso nuo failo dydžio; ilgis – `uint64_t`.
+* `--file` skaito 64 KiB dalimis – atmintis nepriklauso nuo failo dydžio.
+* Ribos: ilgis – iki 2^64 − 1 baitų (`uint64_t`); `--text` – kiek leidžia OS argumento ilgis; ranka – viena eilutė.
 
 ## 10. Eksperimentų sąlygos
 
 | | |
 |---|---|
 | Aplinka | i9-10900K, Linux 6.18, g++ 15.2, `-O3`, 1 gija ([aplinka.md](results/aplinka.md)) |
-| Duomenys | bendras poros rinkinys: `exp1` failai, `konstitucija.txt` |
+| Duomenys | bendras poros rinkinys: `exp1` failai, `konstitucija.txt` (kurso medžiaga, [nuoroda](https://bit.ly/33nYy2v)) |
 | Atsitiktinės įvestys | `std::mt19937_64`, seed 20260920, abėcėlė `!`..`~` (94 simboliai) |
 | Atkūrimas | `./experiments/run_all.sh`, neapdoroti duomenys – `results/raw/` |
 
@@ -145,23 +146,23 @@ UTF-8: `utf8_lt.txt` – 15 simbolių, 26 baitai. → [exp1_3_teisingumas.md](re
 
 | Baitai | µs vienai maišai | min–max |
 |---|---|---|
-| 70 | 0,234 | 0,234–0,235 |
-| 996 | 1,116 | 1,115–1,117 |
-| 20 409 | 19,613 | 19,526–19,655 |
-| 75 595 | 71,780 | 71,704–71,905 |
+| 70 | 0,235 | 0,235–0,236 |
+| 996 | 1,116 | 1,115–1,118 |
+| 20 409 | 19,669 | 19,628–19,697 |
+| 75 595 | 72,098 | 71,847–72,254 |
 
 * Laikas auga **tiesiškai**, ≈ **1,05 GB/s**; mažoms įvestims – pastovios 5 žingsnių išlaidos.
 * 3 apšilimai + 10 matavimų, be I/O; trukdžių paveikti matavimai kartojami. → [exp4_sparta.md](results/exp4_sparta.md)
-* Riba – **28 nuoseklios daugybos** bloke (2 raundai × 14): ≈ 143 ciklai 32 B blokui; išmatuota – ≈ 146.
+* Riba – **28 nuoseklios daugybos** bloke (2 raundai × 14), todėl ≈ 2 kartus lėčiau nei su vienu raundu.
 
 | Versija | 75 595 B, µs | Pastaba |
 |---|---|---|
 | V0.1–V0.11 | 35,19 | |
 | V0.12 | 34,19 | GCC optimizavimas; failas skaitomas dalimis, o ne visas į atmintį |
-| V0.13–V0.2 | 71,78 | 2 raundai – ≈ 2 kartus lėčiau, bet V0.12 atakos nebeveikia |
+| V0.13–V0.2 | 72,10 | 2 raundai – ≈ 2 kartus lėčiau, bet V0.12 atakos nebeveikia |
 
 Skaičiai – `results/raw/speed.csv` atitinkamoje versijoje. Visa programa su failo skaitymu matuojama atskirai:
-1 GiB per `--file` – 1,11 s, 3,7 MB atminties (`results/raw/file.csv`).
+1 GiB per `--file` – 1,13 s, 3,7 MB atminties (`results/raw/file.csv`).
 
 ## 13. Kolizijos (5)
 
@@ -183,10 +184,9 @@ Skaičiai – `results/raw/speed.csv` atitinkamoje versijoje. Visa programa su f
 | antrasis pirmavaizdis | pakeistas `konstitucija.txt` (94 B kitokie), ta pati maiša | nebeveikia |
 | pirmavaizdis | 96 B įvestis, kurios maiša – 64 nuliai | nebeveikia |
 
-* Viename raunde kiekvieną operaciją galima atsukti dalis po dalies, o žodžiai laisvai nustato s0, s2, s4, s6 –
-  todėl vieno bloko žodžius galima **išspręsti**, kad s1, s3, s5, s7 taptų bet kokie; kitas blokas nustato likusias.
-* Viskas skaičiuojama iš karto, be paieškos. → `tests/attack_v012.py`
-* V0.13: antras raundas ir grįžtamasis ryšys šį sprendimą panaikina. Saugumo tai **neįrodo** – tik ši ataka nebeveikia.
+* Viename raunde operacijas galima atsukti dalis po dalies, o žodžiai laisvai nustato s0, s2, s4, s6 – todėl dviejų blokų
+  žodžius galima **išspręsti** (be paieškos), kad būsena taptų bet kokia. → `tests/attack_v012.py`
+* V0.13 antras raundas ir grįžtamasis ryšys šį sprendimą panaikina. Saugumo tai **neįrodo** – tik ši ataka nebeveikia.
 
 ## 14. Lavinos efektas (6)
 
@@ -207,10 +207,10 @@ Skaičiai – `results/raw/speed.csv` atitinkamoje versijoje. Visa programa su f
 
 | Atvejis | Maišų | Rezultatas |
 |---|---|---|
-| be druskos, `0000`–`9999` | 3 984 (1,79 ms) | rasta `3983` |
+| be druskos, `0000`–`9999` | 3 984 (1,80 ms) | rasta `3983` |
 | viena lentelė 5 taikiniams | 10 000 | 5/5 |
 | vieša druska, atskira kiekvienam | 5 × 10 000 | 5/5 |
-| slaptas `r` (16 B) | 10 000 · 2^128 | neperrenkama |
+| slaptas `r` (16 B) | 10 000 · 2^128, jei `r` nežinomas | čia `r` iš viešo seed – tik demonstracija |
 
 * Sunkumą lemia **paieškos erdvė**, ne maišos „atsitiktinumas“.
 * Druska neleidžia vienos lentelės naudoti visiems. → [exp7_spejimas.md](results/exp7_spejimas.md)
@@ -225,17 +225,17 @@ Skaičiai – `results/raw/speed.csv` atitinkamoje versijoje. Visa programa su f
 
 ## 17. Apribojimai
 
-* nerecenzuota, be saugumo garantijų; 2 raundų atsarga neįvertinta;
-* tiesinis sulenkimas – būsenos prieš jį neatsuksi, bet struktūra paprasta;
-* nėra rakto ir druskos; testai paleisti tik Linux (g++, clang++).
+* nepriklausomai neperžiūrėta, be saugumo garantijų; neįvertinta, kiek raundų iš tikrųjų pakanka;
+* sulenkimas 512 → 256 – paprastas XOR: informacija prarandama, bet saugumo tai neįrodo;
+* nėra rakto ir druskos; testai paleisti tik Linux.
 
 ## 18. DI naudojimas
 
-* **Įrankis:** Claude Code (Anthropic), Claude Opus modeliai.
+* **Įrankiai:** Claude Code (Anthropic), Claude Opus modeliai (paskutiniame etape – Claude Opus 5.5); auditai – Claude Sonnet 5.5 ir ChatGPT.
 * **Užklausos:** sukurti savą 256 bitų maišą, neatkartojant žinomų; pašalinti silpnybes; atlikti 1–8 eksperimentus; rasti ir pataisyti silpnybes (V0.13).
 * **Atmesta:** pradinė 256 bitų būsena (maiša atskleisdavo visą būseną); xor-shift finalizatorius (per daug panašus į MurmurHash).
-* **Patikrinta:** nepriklausoma Python realizacija (`tests/reference_check.py`), V0.12 atakos (`tests/attack_v012.py`), ASan / UBSan, 62 + 33 patikros, konstantos palygintos su žinomomis;
-  galutinę būseną peržiūrėjo atskiras DI agentas (Claude Sonnet).
+* **Patikrinta:** nepriklausoma Python realizacija (`tests/reference_check.py`), V0.12 atakos (`tests/attack_v012.py`), ASan / UBSan,
+  62 + 33 patikros, konstantos palygintos su žinomomis.
 * Išsamiau – [DI sąveikos žurnalas](docs/DI_zurnalas.md).
 
 Peržiūrėtos SHA-2, SHA-3, BLAKE2/3, SipHash, MurmurHash3, xxHash, CityHash, FNV – jų konstantos ir funkcijos nenaudojamos.
@@ -244,16 +244,19 @@ Peržiūrėtos SHA-2, SHA-3, BLAKE2/3, SipHash, MurmurHash3, xxHash, CityHash, F
 
 VU BGT 1 užduotis ir kontrolinis sąrašas (2026) · [NIST Hash Functions](https://csrc.nist.gov/projects/hash-functions) ·
 [BLAKE2](https://www.blake2.net/) · [SipHash](https://cr.yp.to/siphash/siphash-20120918.pdf) ·
-[xxHash](https://github.com/Cyan4973/xxHash/blob/dev/doc/xxhash_spec.md) · [MurmurHash3](https://github.com/aappleby/smhasher)
+[xxHash](https://github.com/Cyan4973/xxHash/blob/dev/doc/xxhash_spec.md) · [MurmurHash3](https://github.com/aappleby/smhasher) ·
+A. Menezes, P. van Oorschot, S. Vanstone, *Handbook of Applied Cryptography*, 9.4 sk. (Davies–Meyer)
 
 ## 20. Versijos
 
+Kiekvieno leidimo (`V0.1`–`V0.13`) `results/` – tos versijos rezultatai.
+
 * **V0.1** – algoritmas, rankinis įvedimas, 1–8 eksperimentai.
 * **V0.11** – maišos reikšmės **nepakito** (tikrina 10 žinomų atsakymų). Pataisytas CRLF testinis failas, pridėti žinomų atsakymų
-  ir komandinės eilutės testai, griežtesnės lavinos patikros, duomenų kontrolinės sumos; rezultatai sugeneruoti iš naujo.
+  ir komandinės eilutės testai, griežtesnės lavinos patikros, duomenų kontrolinės sumos; 1–3 eksperimentų rezultatai sugeneruoti iš naujo.
 * **V0.12** – maišos reikšmės **nepakito**. Failai skaitomi dalimis (`Hasher`), GCC kodas pasiekia daugybų grandinės ribą,
   CMake numatytai `Release`; pridėti srautinio maišymo ir Python palyginimo testai; sparta išmatuota iš naujo.
 * **V0.13** – maišos reikšmės **pasikeitė**: 2 raundai žingsnyje ir grįžtamasis ryšys, nes V0.12 buvo randamos kolizijos ir
   pirmavaizdžiai akimirksniu (13 sk.). Nauja schema, atakų testas, visi eksperimentai pakartoti.
-* **V0.2** – algoritmas ir maišos reikšmės **kaip V0.13**. Sutvarkyti kodo komentarai, vardų erdvė `dihash`,
+* **V0.2** – algoritmas ir maišos reikšmės **kaip V0.13**. Sutvarkyti kodo komentarai ir per griežti teiginiai, vardų erdvė `dihash`,
   programa su failu matuojama atskirai; visi rezultatai ir palyginimai pakartoti.

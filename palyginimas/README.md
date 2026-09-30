@@ -14,7 +14,7 @@ skiriasi tik adapteris `experiments/impl_*.cpp`.
 
 Windows: AMD Ryzen 9 7900X, Windows 11, MSVC 19.44, `/std:c++20 /O2 /DNDEBUG`, viena gija, V0.1 kodas.
 Linux: Intel i9-10900K, g++ 15.2, `-O3` (DI maišai ir `-fno-tree-reassoc`, kaip CMake), viena gija; kurios realizacijų versijos matuotos –
-įrašyta `raw/speed_linux.txt` ir `raw/std_aplinka.txt` (commit'ai).
+įrašyta `raw/speed_linux.txt` ir `raw/std_aplinka.txt` (commit'ai). Po paskutinio matavimo DI maišos kode keisti tik komentarai.
 
 ## Linux
 

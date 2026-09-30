@@ -12,7 +12,7 @@ Porinis darbas: dvi atskiros realizacijos – Ratas-256 ir DI maiša – palygin
 | Kalba | C++17, vienas failas `ratas.cpp` | C++20, CMake |
 | Indėlis į bendrą dalį | duomenų rinkinys: `data/exp1`, `konstitucija.txt` | eksperimentų programa: `experiments.cpp`, `report.py`, palyginimai |
 
-Paleidimas, pseudokodas ir sprendimų pagrindimas – kiekvieno kataloge README.
+Paleidimas, pseudokodas ir sprendimų pagrindimas – kiekvieno kataloge README; palyginimo atkartojimas – [palyginimas/README.md](palyginimas/README.md).
 
 ## 2. Du algoritmai (dabartinės versijos)
 
@@ -29,7 +29,7 @@ Grįžtamasis ryšys (feed-forward) abiem atsirado vėliau: Ratas-256 – v0.12,
 ## 3. Vienodos sąlygos
 
 * **Ta pati eksperimentų programa** – skiriasi tik adapteris `experiments/impl_*.cpp`.
-* **Tie patys duomenys:** `exp1` (34 failai, turinys tikrinamas `check_fixtures.py`), `konstitucija.txt`, seed 20260920, abėcėlė `!`..`~`.
+* **Tie patys duomenys:** `exp1` (34 failai, turinys tikrinamas `check_fixtures.py`), `konstitucija.txt` (14 sk.), seed 20260920, abėcėlė `!`..`~`.
 * **Atkartojamumas:** 1–3, 5 ir 6 eksperimentų rezultatai paleidus iš naujo sutampa **baitas į baitą** (Ratas-256 – net Windows / MSVC ir Linux / g++).
 * **Sparta:** abi realizacijos tame pačiame kompiuteryje (`palyginimas/`); duomenyse įrašyti abiejų realizacijų commit'ai.
 
@@ -54,8 +54,9 @@ Abi realizacijos tame pačiame kompiuteryje; 3 apšilimai + 10 matavimų, be I/O
 | Ryzen 9 7900X, Windows 11, MSVC `/O2` | v0.1 / V0.1 | 0,155 / 0,112 | 74,08 / 32,27 |
 
 * Abiejų laikas auga tiesiškai. Ilgiems failams DI maiša ≈ 2,3 karto greitesnė, trumpoms įvestims – panašios.
-* Abi po pataisymų sulėtėjo (daugiau maišymo bloke): DI maiša V0.1 → V0.2 ≈ 2 kartus, Ratas-256 v0.1 → v0.2 ≈ 1,8 karto (jo rezultatai).
-* Visa programa su failo skaitymu matuojama atskirai (DI maiša: 1 GiB – 1,11 s, 3,7 MB atminties). → [visos lentelės](palyginimas/sparta.md)
+* Lyginti galima tik eilutės viduje (skirtingi kompiuteriai). Versijų sulėtėjimas – kiekvienos kompiuteryje: DI maiša
+  35,19 → 72,10 µs (Linux), Ratas-256 74,7 → 134,0 µs (Windows, jo rezultatai) – daugiau maišymo bloke.
+* Visa programa su failo skaitymu matuojama atskirai (DI maiša: 1 GiB – 1,13 s, 3,7 MB atminties). → [visos lentelės](palyginimas/sparta.md)
 
 ## 6. Kolizijos (5)
 
@@ -65,10 +66,10 @@ Abi realizacijos tame pačiame kompiuteryje; 3 apšilimai + 10 matavimų, be I/O
 | 119 374 struktūruotos įvestys | ≈ 0 | 0 | 0 |
 | maiša sutrumpinta iki 24 bitų | 4 768 | 4 771 | 4 718 |
 | maiša sutrumpinta iki 32 bitų | 18,6 | 14 | 20 |
-| struktūrinė ataka | – | netirta | V0.12: akimirksniu; nuo V0.13 – nebeveikia |
+| struktūrinė ataka | – | netirta | V0.12: randama akimirksniu; nuo V0.13 šis atakos testas nebeveikia |
 
 * Nulis 256 bitų maišai – įprastas ir **nieko neįrodo**.
-* Sutrumpintos maišos atitinka gimtadienio paradoksą – abi elgiasi kaip atsitiktinės.
+* Sutrumpintų maišų kolizijų skaičius neprieštarauja gimtadienio paradokso prognozei.
 
 ## 7. Lavinos efektas (6)
 
@@ -91,12 +92,13 @@ Abiejų rezultatai sutampa:
 | `0000`–`9999` be druskos | 3 984, ≈ 1–2 ms | vienintelis sutapimas `3983` |
 | viena lentelė 5 taikiniams | 10 000 | 5/5 |
 | vieša druska, atskira kiekvienam | 5 × 10 000 | 5/5 |
-| slaptas 16 B `r` | 10 000 · 2^128 | neperrenkama |
+| slaptas 16 B `r` | 10 000 · 2^128, jei `r` nežinomas | čia `r` iš viešo seed – tik demonstracija |
 
 ## 9. Išvados (8)
 
 * **Statistiškai nesiskiria:** abi praeina 1–3, 0 kolizijų, lavinos efektas ≈ idealus – kiekvienoje versijoje.
-* **Struktūrinė analizė:** V0.12 DI maišai rastos akimirksniu veikiančios kolizijos ir pirmavaizdžiai, nors statistika buvo gera.
+* **Struktūrinė analizė:** V0.12 DI maišai rastos akimirksniu veikiančios kolizijos ir pirmavaizdžiai, nors statistika buvo gera;
+  nuo V0.13 šis atakos testas nebeveikia (kitos atakos netirtos).
   Abi realizacijos galiausiai pridėjo grįžtamąjį ryšį ir daugiau maišymo bloke – tai lėmė analizė, ne statistiniai testai.
 * **Sparta:** pataisymai kainavo spartą; dabar DI maiša ilgiems failams ≈ 2,3 karto greitesnė už Ratas-256.
 * **Testai neįrodo** saugumo, atsparumo kolizijoms ar pirmavaizdžiui; geras lavinos efektas galimas ir silpnai funkcijai.
@@ -109,13 +111,14 @@ Abiejų rezultatai sutampa:
 | būsena lygi išvesties dydžiui (256 b) | 2 raundų saugumo atsarga neįvertinta |
 | SAC matuoja tik pavienius bitus – diferencialai per kelis pasukimus netirti (jo README) | tiesinis 512 → 256 sulenkimas (prieš jį – neatsukami žingsniai) |
 
-Abiem: nerecenzuota, nėra rakto ir druskos. Abi failą skaito dalimis (DI maiša – nuo V0.12, Ratas-256 – nuo v0.2).
+Abi funkcijos nerecenzuotos, neturi rakto ir druskos. Abi failą skaito dalimis (DI maiša – nuo V0.12, Ratas-256 – nuo v0.2).
 
 ## 11. Papildoma užduotis: MD5, SHA-1, SHA-256
 
 ![Sparta su standartinėmis maišomis](palyginimas/standartai.svg)
 
-Ta pati eksperimentų programa, tos pačios įvestys, tas pats kompiuteris (i9-10900K, Linux, g++ 15.2 `-O3`); Ratas-256 v0.2, DI maiša V0.2.
+Ta pati eksperimentų programa, tos pačios įvestys, tas pats kompiuteris (i9-10900K, Linux, g++ 15.2 `-O3`); Ratas-256 v0.2, DI maiša V0.2;
+atskiras paleidimas, todėl laikai gali skirtis nuo 5 sk. keliais procentais.
 Standartinės maišos – OpenSSL 3.6 realizacijos, patikrintos su Python `hashlib` (102/102). Procentai – pagal maišos ilgį.
 
 | | Ratas-256 | DI maiša | MD5 | SHA-1 | SHA-256 |
@@ -144,11 +147,23 @@ Standartinės maišos – OpenSSL 3.6 realizacijos, patikrintos su Python `hashl
 | `V0.13` | 2 raundai ir grįžtamasis ryšys – V0.12 ataka nebeveikia | kaip v0.12 |
 | `V0.2` | kodo tvarkymas; algoritmas kaip V0.13 | 3 pasukimai, feed-forward ir pabaigoje, failas dalimis |
 
-* Leidimai `V0.1`, `V0.11`, `V0.12`, `V0.13` – abi realizacijos toje pačioje versijoje (šakos `shared-V0.11`…`shared-V0.13`).
+* Leidimai `V0.1`, `V0.11`, `V0.12`, `V0.13` – abi realizacijos toje pačioje versijoje. `V0.11`–`V0.13` sudaryti šakose
+  `shared-V0.11`…`shared-V0.13`: abiejų autorių tos versijos commit'ai perkelti (cherry-pick) į vieną būseną, todėl jų
+  hash'ai skiriasi nuo `main`, kurioje tie patys pakeitimai eina vienas po kito.
+* Ankstesnių versijų rezultatai – kiekvieno leidimo `results/` kataloguose.
+* V0.1 leidime testinis failas `struct_newline_crlf.txt` faktiškai turėjo LF (tikras CRLF tikrintas tik atmintyje);
+  nuo V0.11 faile tikras CRLF, todėl 21 pora ir 34 failai (V0.1 – 22 ir 35).
 * `V0.2` – šakos `main` būsena, žymė dar nesukurta.
 
 ## 13. DI naudojimas
 
 DI maiša, bendra eksperimentų programa, bendras README ir palyginimai – Claude Code (Anthropic), Claude Opus modeliai;
 galutinę būseną papildomai peržiūrėjo Claude Sonnet. Užklausos, priimti ir atmesti pasiūlymai, patikra –
-[DI maišos README, 18 skyrius](Rokas%20-%20AI/README.md#18-di-naudojimas).
+[DI maišos README, 18 skyrius](Rokas%20-%20AI/README.md#18-di-naudojimas). Kiekvienos realizacijos kūrimo eiga aprašyta jos kataloge.
+
+## 14. Šaltiniai
+
+* `konstitucija.txt` – Lietuvos Respublikos Konstitucijos tekstas iš kurso medžiagos ([nuoroda užduotyje](https://bit.ly/33nYy2v)),
+  75 595 B, SHA-256 `ccd6bc7bf8bf3da2…`.
+* Standartinės maišos – OpenSSL 3.6.3, patikra – Python `hashlib`; [NIST Hash Functions](https://csrc.nist.gov/projects/hash-functions).
+* VU BGT 1 užduotis ir kontrolinis sąrašas (2026); kiti šaltiniai – kiekvienos realizacijos README.
