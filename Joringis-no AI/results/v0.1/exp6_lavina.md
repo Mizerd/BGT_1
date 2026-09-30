@@ -4,17 +4,17 @@
 
 | Ilgis | Porų | Bitai: vid. % | min % | max % | st. nuokr. % | Hex: vid. % | min % | max % |
 |---|---|---|---|---|---|---|---|---|
-| 10 | 25 000 | 49,97 | 38,28 | 61,72 | 3,10 | 93,74 | 79,69 | 100,00 |
-| 100 | 25 000 | 49,97 | 35,94 | 62,50 | 3,12 | 93,75 | 78,12 | 100,00 |
-| 500 | 25 000 | 49,99 | 37,50 | 62,11 | 3,13 | 93,75 | 78,12 | 100,00 |
-| 1000 | 25 000 | 49,99 | 37,50 | 64,06 | 3,10 | 93,74 | 78,12 | 100,00 |
-| visi | 100 000 | 49,98 | 35,94 | 64,06 | 3,11 | 93,75 | 78,12 | 100,00 |
+| 10 | 25 000 | 50,02 | 39,06 | 62,50 | 3,13 | 93,74 | 79,69 | 100,00 |
+| 100 | 25 000 | 50,00 | 36,33 | 61,72 | 3,14 | 93,72 | 78,12 | 100,00 |
+| 500 | 25 000 | 50,02 | 37,50 | 62,50 | 3,12 | 93,78 | 79,69 | 100,00 |
+| 1000 | 25 000 | 49,99 | 38,28 | 63,28 | 3,11 | 93,76 | 78,12 | 100,00 |
+| visi | 100 000 | 50,01 | 36,33 | 63,28 | 3,12 | 93,75 | 78,12 | 100,00 |
 
 Idealiam atsitiktiniam atvejiui bitų skirtumo standartinis nuokrypis √(256·0,25)/256 = 3,13 %.
 
 ## Papildomai: apverstas tiksliai vienas įvesties bitas
 
-Tie patys ilgiai ir porų skaičius, bet apverčiamas vienas bitas (baitų režimu; seed = 20260920 + 200 + ilgis): bitų skirtumas 50,00 % (36,33–64,06 %), hex skirtumas 93,75 % (78,12–100,00 %).
+Tie patys ilgiai ir porų skaičius, bet apverčiamas vienas bitas (baitų režimu; seed = 20260920 + 200 + ilgis): bitų skirtumas 49,99 % (37,50–63,28 %), hex skirtumas 93,73 % (78,12–100,00 %).
 
 ![Bitų skirtumo histograma](exp6_histograma.svg)
 
