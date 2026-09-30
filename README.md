@@ -1,6 +1,6 @@
 # BGT 1 užduotis: dvi 256 bitų maišos funkcijos · V0.12
 
-Porinis darbas: dvi atskiros realizacijos – viena be DI, kita su DI – palygintos tomis pačiomis sąlygomis.
+Porinis darbas: dvi atskiros realizacijos – Ratas-256 ir DI maiša – palygintos tomis pačiomis sąlygomis.
 
 > Abi funkcijos kriptografiškai neanalizuotos – netinka slaptažodžiams ir saugumui.
 
@@ -9,7 +9,6 @@ Porinis darbas: dvi atskiros realizacijos – viena be DI, kita su DI – palygi
 | | Ratas-256 | DI maiša |
 |---|---|---|
 | Katalogas | [`Joringis-no AI/`](Joringis-no%20AI/README.md) | [`Rokas - AI/`](Rokas%20-%20AI/README.md) |
-| DI | nenaudotas v0.1–v0.12 (pasak autoriaus README) | naudotas nuo pradžių |
 | Kalba | C++17, vienas failas `ratas.cpp` | C++20, CMake |
 | Indėlis į bendrą dalį | duomenų rinkinys: `data/exp1`, `konstitucija.txt` | eksperimentų programa: `experiments.cpp`, `report.py` |
 
@@ -109,15 +108,14 @@ Abiem: nerecenzuota, nėra rakto ir druskos. Ratas-256 failą įkelia į atmint�
 
 DI naudota **DI maišai**, bendrai eksperimentų programai, bendram README ir spartos palyginimui: Claude Code (Anthropic), Claude Opus modeliai.
 Užklausos, priimti ir atmesti pasiūlymai, patikra – [DI maišos README, 18 skyrius](Rokas%20-%20AI/README.md#18-di-naudojimas).
-Ratas-256 v0.1–v0.12 – be DI (pasak autoriaus README); v0.12 – geriausia be DI versija.
 
 ## 12. Versija
 
-* `V0.1` – be DI sukurta Ratas-256 ir DI maiša, palygintos šiame README.
+* `V0.1` – Ratas-256 ir DI maiša, palygintos šiame README.
 * `V0.11` – DI maiša: pataisytas bendras CRLF testinis failas, nauji testai, maišos reikšmės nepakito.
   Ratas-256 v0.11: posūkis 0 → 1, ne ASCII failų vardai (Windows).
 * `V0.12` – abi realizacijos V0.12:
   * DI maiša: failai skaitomi dalimis, iki 3 % greitesnė, nauji testai; maišos reikšmės nepakito.
-  * Ratas-256 v0.12: feed-forward po kiekvieno bloko, 64 b bloko numeris; geriausia be DI versija
+  * Ratas-256 v0.12: feed-forward po kiekvieno bloko, 64 b bloko numeris
     (commit'ai `6b0dd58` ir `9b3a3ca` perkelti į šią šaką).
   * Spartos palyginimas pakartotas Linux su šiomis versijomis (Windows matavimai – V0.1 kodas).
