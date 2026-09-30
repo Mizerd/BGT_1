@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="760" height="430" viewBox="0 0 760 430" role="img" aria-label="Vienos maišos laikas pagal įvesties dydį (tas pats kompiuteris)">
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="430" viewBox="0 0 760 430" role="img" aria-label="Vienos maišos laikas pagal įvesties dydį (tas pats kompiuteris, Linux)">
 <style>text{font-family:system-ui,-apple-system,'Segoe UI',sans-serif} .bg{fill:#fcfcfb} .t{fill:#0b0b0b} .t2{fill:#52514e} .grid{stroke:#e4e3de} .f-beDI{fill:#eb6834} .s-beDI{stroke:#eb6834} .f-di{fill:#2a78d6} .s-di{stroke:#2a78d6} .ring{stroke:#fcfcfb} @media (prefers-color-scheme: dark){.bg{fill:#1a1a19} .t{fill:#ffffff} .t2{fill:#c3c2b7} .grid{stroke:#353533} .f-beDI{fill:#d95926} .s-beDI{stroke:#d95926} .f-di{fill:#3987e5} .s-di{stroke:#3987e5} .ring{stroke:#1a1a19}}</style>
 <rect class="bg" fill="#fcfcfb" width="760" height="430"/>
-<text class="t" x="78" y="26" font-size="16" font-weight="600">Vienos maišos laikas pagal įvesties dydį (tas pats kompiuteris)</text>
+<text class="t" x="78" y="26" font-size="16" font-weight="600">Vienos maišos laikas pagal įvesties dydį (tas pats kompiuteris, Linux)</text>
 <rect class="f-beDI" fill="#eb6834" x="78" y="38" width="12" height="12" rx="3"/><text class="t2" x="95" y="48" font-size="12">Ratas-256</text>
 <rect class="f-di" fill="#2a78d6" x="248" y="38" width="12" height="12" rx="3"/><text class="t2" x="265" y="48" font-size="12">DI maiša</text>
 <line class="grid" stroke="#e4e3de" x1="78.0" y1="64" x2="78.0" y2="368"/><text class="t2" x="78.0" y="386" font-size="12" text-anchor="middle">10</text>
