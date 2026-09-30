@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Abi realizacijos toje pačioje aplinkoje.
-#   palyginti.sh sparta          – perrašo raw/speed.csv ir grafiką (matuoti tik neapkrautame kompiuteryje)
+#   palyginti.sh sparta          – perrašo raw/speed_linux.csv (matuoti tik neapkrautame kompiuteryje);
+#                                  Windows matavimai raw/speed.csv nekeičiami
 #   palyginti.sh atkartojamumas  – tikrina, ar deterministiniai rezultatai sutampa su įrašytais
 #   palyginti.sh                 – abu
 set -euo pipefail
@@ -22,10 +23,12 @@ g++ "${flags[@]}" "$noai/experiments/impl_ratas.cpp" "$ai/experiments/experiment
 if [[ "$mode" == sparta || "$mode" == viskas ]]; then
   pin=()
   command -v taskset > /dev/null && pin=(taskset -c 2)
-  : > "$raw/speed.csv"
+  : > "$raw/speed_linux.csv"
   for b in bedi di; do
-    "${pin[@]}" "$build/$b" speed "$noai/data/konstitucija.txt" >> "$raw/speed.csv"
+    "${pin[@]}" "$build/$b" speed "$noai/data/konstitucija.txt" >> "$raw/speed_linux.csv"
   done
+  echo "$(grep -m1 'model name' /proc/cpuinfo | cut -d: -f2 | sed 's/^ *//'), $(uname -sr), $(g++ --version | head -1), -O3" \
+    > "$raw/speed_linux.txt"
 fi
 
 if [[ "$mode" == atkartojamumas || "$mode" == viskas ]]; then

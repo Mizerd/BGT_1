@@ -18,20 +18,40 @@ def num(x, d):
     return f"{x:,.{d}f}".replace(",", " ").replace(".", ",")
 
 
-times, size = defaultdict(list), {}
-with open(os.path.join(RAW, "speed.csv"), newline="") as f:
-    for _, impl, lines, nbytes, _, _, _, per in csv.reader(f):
-        times[(impl, int(lines))].append(float(per) / 1000)
-        size[int(lines)] = int(nbytes)
+WINDOWS = "AMD Ryzen 9 7900X, Windows 11, MSVC 19.44 `/O2`"
+
+
+def load(name):
+    times, size = defaultdict(list), {}
+    with open(os.path.join(RAW, name), newline="") as f:
+        for _, impl, lines, nbytes, _, _, _, per in csv.reader(f):
+            times[(impl, int(lines))].append(float(per) / 1000)
+            size[int(lines)] = int(nbytes)
+    return times, size
+
+
+def table(times, size):
+    mean = {k: sum(v) / len(v) for k, v in times.items()}
+    rows = ["| Baitai | " + " | ".join(f"{NAMES[i]}, µs" for i in IMPLS) + " |", "|---|---|---|"]
+    for n in sorted(size):
+        rows.append(f"| {num(size[n], 0)} | " + " | ".join(
+            f"{num(mean[(i, n)], 3)} ({num(min(times[(i, n)]), 3)}–{num(max(times[(i, n)]), 3)})" for i in IMPLS) + " |")
+    return rows
+
+
+times, size = load("speed.csv")
 order = sorted(size)
 mean = {k: sum(v) / len(v) for k, v in times.items()}
-
-rows = ["| Baitai | " + " | ".join(f"{NAMES[i]}, µs" for i in IMPLS) + " |", "|---|---|---|"]
-for n in order:
-    rows.append(f"| {num(size[n], 0)} | " + " | ".join(
-        f"{num(mean[(i, n)], 3)} ({num(min(times[(i, n)]), 3)}–{num(max(times[(i, n)]), 3)})" for i in IMPLS) + " |")
+rows = table(times, size)
+text = ["Laikas vienai maišai, µs: vidurkis (min–max), 10 matavimų.", "", f"**Windows:** {WINDOWS} (grafikas `sparta.svg`)", ""] + rows
+if os.path.exists(os.path.join(RAW, "speed_linux.csv")):
+    with open(os.path.join(RAW, "speed_linux.txt")) as f:
+        linux = f.read().strip()
+    rows_linux = table(*load("speed_linux.csv"))
+    text += ["", f"**Linux:** {linux}", ""] + rows_linux
+    rows = rows + [""] + rows_linux
 with open(os.path.join(OUT, "sparta.md"), "w") as f:
-    f.write("Laikas vienai maišai, µs: vidurkis (min–max), 10 matavimų.\n\n" + "\n".join(rows) + "\n")
+    f.write("\n".join(text) + "\n")
 
 W, H, L, R, T, B = 760, 430, 78, 150, 64, 62
 x0, x1 = math.floor(math.log10(min(size.values()))), math.ceil(math.log10(max(size.values())))
