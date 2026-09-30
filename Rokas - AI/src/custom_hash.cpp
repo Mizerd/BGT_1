@@ -30,7 +30,7 @@ constexpr int kRotFold = 40;
 
 constexpr std::size_t kLanes = 8;  // 8 x 64 = 512-bit state
 constexpr std::size_t kBlockBytes = 32;
-constexpr int kRounds = 2;  // one round can be solved backwards, see tests/attack_v012.py
+constexpr int kRounds = 2;  // with one, block words can be solved to reach any state (tests/attack_v012.py)
 constexpr int kDrainSteps = 3;
 
 using State = std::array<std::uint64_t, kLanes>;
@@ -63,8 +63,8 @@ void mix(State& s) {
 }
 
 // Absorbs one block: the words go into every other lane (+ and ^ alternate),
-// then two rounds, then the old state is XORed back in (feed-forward) so the
-// step can't be run backwards from its output.
+// then two rounds, then the old state is XORed back in (feed-forward), so the
+// step can no longer be undone round by round from its output.
 void step(State& s, std::uint64_t word0, std::uint64_t word1, std::uint64_t word2,
           std::uint64_t word3, std::uint64_t tag) {
   const State before = s;
