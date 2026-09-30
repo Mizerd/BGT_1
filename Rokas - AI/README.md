@@ -254,6 +254,6 @@ VU BGT 1 užduotis ir kontrolinis sąrašas (2026) · [NIST Hash Functions](http
 * **V0.12** – maišos reikšmės **nepakito**. Failai skaitomi dalimis (`Hasher`), GCC kodas pasiekia daugybų grandinės ribą,
   CMake numatytai `Release`; pridėti srautinio maišymo ir Python palyginimo testai; sparta išmatuota iš naujo.
 * **V0.13** – maišos reikšmės **pasikeitė**: 2 raundai žingsnyje ir grįžtamasis ryšys, nes V0.12 buvo randamos kolizijos ir
-  pirmavaizdžiai akimirksniu (13 sk.). Nauja schema, atakų testas, visi eksperimentai pakartoti. Šakos `AI-V0.11`, `AI-V0.12`, `AI-V0.13`.
+  pirmavaizdžiai akimirksniu (13 sk.). Nauja schema, atakų testas, visi eksperimentai pakartoti.
 * **V0.2** – algoritmas ir maišos reikšmės **kaip V0.13**. Sutvarkyti kodo komentarai, vardų erdvė `dihash`,
   programa su failu matuojama atskirai; visi rezultatai ir palyginimai pakartoti.

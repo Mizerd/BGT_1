@@ -145,7 +145,7 @@ Standartinės maišos – OpenSSL 3.6 realizacijos, patikrintos su Python `hashl
 | `V0.2` | kodo tvarkymas; algoritmas kaip V0.13 | 3 pasukimai, feed-forward ir pabaigoje, failas dalimis |
 
 * Leidimai `V0.1`, `V0.11`, `V0.12`, `V0.13` – abi realizacijos toje pačioje versijoje (šakos `shared-V0.11`…`shared-V0.13`).
-* DI maišos versijos atskirai: šakos `AI-V0.11`, `AI-V0.12`, `AI-V0.13`. `V0.2` – šakos `main` būsena, žymė dar nesukurta.
+* `V0.2` – šakos `main` būsena, žymė dar nesukurta.
 
 ## 13. DI naudojimas
 
